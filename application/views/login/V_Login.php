@@ -65,8 +65,6 @@
       <br>
       <span style="font-weight: bold; font-size: 25px; color: black; font-family: Verdana;"><?=TITLE_SECOND?></span>
       <br>
-      <span style="font-weight: bold; font-size: 14px; color: black">BKPSDM Kota Manado</span>
-      <br>
       </center>
       <form action="<?=base_url('login/C_Login/authenticateAdmin')?>" method="post">
         <div class="input-group mb-3 mt-3">

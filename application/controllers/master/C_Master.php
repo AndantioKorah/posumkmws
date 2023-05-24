@@ -12,22 +12,30 @@ class C_Master extends CI_Controller
         };
     }
 
-    public function jenisPesan(){
-        render('master/V_MasterJenispesan', '', '', null);
+    public function masterMerchant(){
+        render('master/V_MasterMerchant', '', '', null);
     }
 
-    public function createMasterJenisPesan(){
-        $data = $this->input->post();
-        $data['created_by'] = $this->general_library->getId();
-        $this->master->insert('m_jenis_pesan', $data);
+    public function createMasterMerchant(){
+        $photo = $_FILES['logo_merchant']['name'];
+        $upload = $this->general_library->uploadLogoMerchant('logo_merchant','logo_merchant');
+        if($upload['code'] != 0){
+            $this->session->set_flashdata('message', $upload['message']);
+        } else {
+            $data = $this->input->post();
+            $data['logo'] =  $data['data']['file_name'];
+            $data['created_by'] = $this->general_library->getId();
+            $this->master->insert('m_merchant', $data);
+        }
+        redirect('master/merchant');
     }
 
-    public function loadJenisPesan(){
-        $data['list_jenis_pesan'] = $this->general->getAllWithOrder('m_jenis_pesan');
-        $this->load->view('master/V_MasterJenisPesanItem', $data);
+    public function loadAllMerchant(){
+        $data['list_jenis_pesan'] = $this->general->getAllWithOrder('m_merchant');
+        $this->load->view('master/V_MasterMerchantItem', $data);
     }
 
-    public function deleteJenisPesan($id){
-        $this->general->delete('id', $id, 'm_jenis_pesan');
+    public function deleteMerchant($id){
+        $this->general->delete('id', $id, 'm_merchant');
     }
 }

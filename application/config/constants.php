@@ -90,7 +90,7 @@ define('DEVELOPMENT_MODE', '1');
 define('DB_HOST', 'localhost');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');
-define('DB_NAME', 'db_smsgateway');
+define('DB_NAME', 'db_posumkmws');
 
 
 define('KODE_TRANSAKSI', '01');
@@ -98,14 +98,15 @@ define('KODE_TRANSAKSI_PEMBAYARAN', '02');
 define('KODE_TRANSAKSI_UANG_MUKA', '03');
 
 define('VERSION', 'Version 1.0');
-define('TITLES', 'SMS Gateway | BKPSDM Manado');
-define('TITLE_SECOND', 'SMS Gateway ');
+define('TITLES', 'NiKita Project | POS UMKM');
+define('TITLE_SECOND', 'POS UMKM');
 define('PROGRAMMER_PHONE', '082115407812');
-define('COPYRIGHT', 'Copyright &copy; '.date('Y').' <strong>BKPSDM Manado</strong>');
+define('COPYRIGHT', 'Copyright &copy; 2023 <strong>NiKita Project</strong>');
 // define('COPYRIGHT', 'Copyright &copy; '.date('Y').' <strong>PATRA LAB</strong>');
 define('TRANSAKSI_TABLE_VIEW', 1);
 define('USE_PRINT', '0');
 define('URI_UPLOAD', './assets/'); //local with xampp
+define('URI_UPLOAD_LOGO_MERCHANT', './assets/'); //local with xampp
 define('DB_BACKUP_FOLDER', 'db/backup/'); //local with xampp
 define('DB_RESTORE_FOLDER', 'db/restore/'); //local with xampp
 

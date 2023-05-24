@@ -11,9 +11,36 @@
             $this->db->insert($tablename, $data);
         }
 
+        public function userChangePassword($data){
+            $rs['code'] = 0;
+            $rs['message'] = '';
+            $user = $this->db->select('*')
+                            ->from('m_user')
+                            ->where('id', $data['id_m_user'])
+                            ->get()->row_array();
+            if($user){
+                if($data['new_password'] != $data['confirm_new_password']){
+                    $rs['code'] = 2;
+                    $rs['message'] = 'Password Baru dan Konfirmasi Password Baru tidak sama !';    
+                } else {
+                    $new_password = $this->general_library->encrypt($user['username'], $data['new_password']);
+                    $update['password'] = $new_password;
+                    $update['updated_by'] = $this->general_library->getId();
+                    $this->db->where('id', $data['id_m_user'])
+                            ->update('m_user', $update);
+                }
+            } else {
+                $rs['code'] = 1;
+                $rs['message'] = 'Terjadi Kesalahan ; Error Code : 1';
+            }
+
+            return $rs;
+        }
+
         public function getAllUsers(){
-            return $this->db->select('*, a.nama as nama_user')
+            return $this->db->select('a.*, a.nama as nama_user, b.nama_merchant')
                             ->from('m_user a')
+                            ->join('m_merchant b', 'a.id_m_merchant = b.id', 'left')
                             ->where('a.flag_active', 1)
                             ->order_by('a.nama')
                             ->get()->result_array();

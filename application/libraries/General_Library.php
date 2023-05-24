@@ -50,7 +50,7 @@ class General_library
     }
 
     public function getProfilePicture(){
-        $photo = 'assets/img/user2-160x160.jpg';
+        $photo = 'assets/img/default-profile-picture.png';
         if($this->userLoggedIn['profile_picture']){
             $photo = 'assets/profile_picture/'.$this->userLoggedIn['profile_picture'];
         }
@@ -198,6 +198,10 @@ class General_library
         return false;
     }
 
+    public function isProgrammer(){
+        return $this->getActiveRoleName() == 'programmer';
+    }
+
     public function isSessionExpired(){
         if(!$this->userLoggedIn){
             $this->nikita->session->set_userdata(['apps_error' => 'Sesi Anda telah habis. Silahkan Login kembali']);
@@ -286,38 +290,38 @@ class General_library
             return ['code' => '500', 'message' => $this->nikita->upload->error_msg[0]];
         }
         $image = $this->nikita->upload->data();
-        // $width_size = 160;
-        // $filesave = base_url('assets/profile_picture/').$image['file_name'];
+     
+        return ['code' => '0', 'data' => $image];
+    }
 
-        // // menentukan nama image setelah dibuat
-        // $resize_image = 'resize_'.$image['file_name'];
-
-        // // mendapatkan ukuran width dan height dari image
-        // list( $width, $height ) = getimagesize($filesave);
-
+    public function uploadLogoMerchant($path, $input_file_name){
+        if (!file_exists(URI_UPLOAD_LOGO_MERCHANT.$path)) {
+            mkdir(URI_UPLOAD_LOGO_MERCHANT.$path, 0777, true);
+        }
+        $file = $_FILES["$input_file_name"];
+        $fileName = date('ymdhis').'_'.$file['name'];
         
-        // // mendapatkan nilai pembagi supaya ukuran skala image yang dihasilkan sesuai dengan aslinya
-        // $k = $width / $width_size;
+        $_FILES[$input_file_name]['name'] = $file['name'];
+        $_FILES[$input_file_name]['type'] = $file['type'];
+        $_FILES[$input_file_name]['tmp_name'] = $file['tmp_name'];
+        $_FILES[$input_file_name]['error'] = $file['error'];
+        $_FILES[$input_file_name]['size'] = $file['size'];
+        
+        $config['upload_path'] = URI_UPLOAD_LOGO_MERCHANT.$path; //buat folder dengan nama assets di root folder
+        $config['file_name'] = $fileName;
+        $config['allowed_types'] = 'jpg|jpeg|png';
+        $config['max_size'] = '2000';
 
-        // // menentukan width yang baru
-        // $newwidth = $width / $k;
+        $this->nikita->load->library('upload', $config);
 
-        // // menentukan height yang baru
-        // $newheight = $height / $k;
-
-        // // fungsi untuk membuat image yang baru
-        // $thumb = imagecreatetruecolor($newwidth, $newheight);
-        // $source = imagecreatefromjpeg($filesave);
-
-        // // men-resize image yang baru
-        // imagecopyresized($thumb, $source, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-
-        // // menyimpan image yang baru
-        // imagejpeg($thumb, $resize_image);
-
-        // imagedestroy($thumb);
-        // imagedestroy($source);
-        // $image['file_name'] = $resize_image;
+        if(!$this->nikita->upload->do_upload($input_file_name)){
+            $this->nikita->upload->display_errors();
+        }
+        if($this->nikita->upload->error_msg){
+            return ['code' => '500', 'message' => $this->nikita->upload->error_msg[0]];
+        }
+        $image = $this->nikita->upload->data();
+     
         return ['code' => '0', 'data' => $image];
     }
 }

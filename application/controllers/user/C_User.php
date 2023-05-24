@@ -26,8 +26,8 @@ class C_User extends CI_Controller
     }
 
     public function users(){
-        // $data['roles'] = $this->general->getAllWithOrder('m_role', 'nama', 'asc');
-        render('user/V_Users', 'user_management', 'users', null);
+        $data['list_merchant'] = $this->general->getAllWithOrder('m_merchant', 'nama_merchant', 'asc');
+        render('user/V_Users', 'user_management', 'users', $data);
     }
 
     public function openAddRoleModal($id_m_user){
@@ -40,6 +40,10 @@ class C_User extends CI_Controller
         $data['list_user_role'] = $this->user->getUserRole($id_m_user);
         $data['id_m_user'] = $id_m_user;
         $this->load->view('user/V_RoleItemModal', $data);
+    }
+
+    public function userChangePassword(){
+        echo json_encode($this->user->userChangePassword($this->input->post()));
     }
 
     public function deleteRoleForUser($id_m_user){

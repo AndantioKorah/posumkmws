@@ -5,7 +5,7 @@
     <div class="card-body">
         <form id="form_tambah_user">
             <div class="row">
-                <div class="col-3">
+                <div class="col-2">
                     <div class="form-group">
                         <label class="bmd-label-floating">Nama</label>
                         <input required class="form-control" autocomplete="off" name="nama" id="nama"/>
@@ -13,11 +13,27 @@
                 </div>
                 <div class="col-2">
                     <div class="form-group">
-                        <label class="bmd-label-floating">Nomor HP</label>
-                        <input required class="form-control" autocomplete="off" name="no_hp" id="no_hp"/>
+                        <label class="bmd-label-floating">Merchant</label>
+                        <select class="form-control select2-navy" style="width: 100%"
+                            id="id_m_merchant" data-dropdown-css-class="select2-navy" name="id_m_merchant">
+                            <option value="0">Pilih Merchant</option>
+                            <?php if($list_merchant){
+                                foreach($list_merchant as $lp){
+                                ?>
+                                <option value="<?=$lp['id']?>">
+                                    <?=$lp['nama_merchant']?>
+                                </option>
+                            <?php } } ?>
+                        </select>
                     </div>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
+                    <div class="form-group">
+                        <label class="bmd-label-floating">Nomor HP</label>
+                        <input class="form-control" autocomplete="off" name="no_hp" id="no_hp"/>
+                    </div>
+                </div>
+                <div class="col-2">
                     <div class="form-group">
                         <label class="bmd-label-floating">Username</label>
                         <input required class="form-control" autocomplete="off" name="username" id="username"/>
@@ -80,6 +96,7 @@
 </div>
 <script>
     $(function(){
+        $('#id_m_merchant').select2()
         loadUsers()
     })
 

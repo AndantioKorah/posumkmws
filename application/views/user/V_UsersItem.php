@@ -5,6 +5,7 @@
                 <th class="text-center">No</th>
                 <th>Nama</th>
                 <th>Username</th>
+                <th>Merchant</th>
                 <th>Nomor HP</th>
                 <th>Pilihan</th>
             </thead>
@@ -14,10 +15,11 @@
                         <td align="center"><?=$no++;?></td>
                         <td><?=$rs['nama_user'];?></td>
                         <td><?=$rs['username'];?></td>
+                        <td><?=$rs['nama_merchant'];?></td>
                         <td><?=$rs['no_hp'];?></td>
                         <td>
                             <button type="button" data-toggle="modal" href="#add_role_modal" onclick="openAddRoleModal('<?=$rs['id']?>')" class="btn btn-sm btn-info"
-                            data-tooltip="tooltip" title="Tambah Role"><i class="fa fa-user"></i> Role</button>
+                            data-tooltip="tooltip" title="Setting"><i class="fa fa-cog"></i> Setting</button>
                             <?php if($this->general_library->getId() != $rs['id']){ ?>
                                 <button type="button" onclick="hapus('<?=$rs['id']?>')" class="btn btn-sm btn-danger"
                                 data-tooltip="tooltip" title="Hapus"><i class="fa fa-trash"></i> Hapus</button>

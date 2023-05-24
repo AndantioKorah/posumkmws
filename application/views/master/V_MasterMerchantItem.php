@@ -1,18 +1,20 @@
 <?php if($list_jenis_pesan){ ?>
     <div class="col-12">
-        <table class="table table-hover table-striped" id="table_jenis_pesan">
+        <table class="table table-hover table-striped" id="table_merchant">
             <thead>
                 <th class="text-center">No</th>
-                <th class="text-left">Nama Jenis Pesan</th>
+                <th class="text-left">Nama Merchant</th>
+                <th class="text-left">Alamat</th>
                 <th class="text-center">Pilihan</th>
             </thead>
             <tbody>
                 <?php $no=1; foreach($list_jenis_pesan as $lp){ ?>
                     <tr>
                         <td class="text-center"><?=$no++;?></td>
-                        <td class="text-left"><?=$lp['jenis_pesan']?></td>
+                        <td class="text-left"><?=$lp['nama_merchant']?></td>
+                        <td class="text-left"><?=$lp['alamat']?></td>
                         <td class="text-center">
-                            <button onclick="deleteJenisPesan('<?=$lp['id']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
+                            <button onclick="deleteMerchant('<?=$lp['id']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
                         </td>
                     </tr>
                 <?php } ?>
@@ -21,20 +23,20 @@
     </div>
     <script>
         $(function(){
-            $('#table_jenis_pesan').DataTable({
+            $('#table_merchant').DataTable({
                 responsive: false
             });
         })
 
-        function deleteJenisPesan(id){
+        function deleteMerchant(id){
             if(confirm('Apakah Anda yakin ingin menghapus data?')){
                 $.ajax({
-                    url: '<?=base_url("master/C_Master/deleteJenisPesan/")?>'+id,
+                    url: '<?=base_url("master/C_Master/deleteMerchant/")?>'+id,
                     method: 'post',
                     data: null,
                     success: function(){
                         successtoast('Data sudah terhapus')
-                        loadJenisPesan()
+                        loadMerchant()
                     }, error: function(e){
                         errortoast('Terjadi Kesalahan')
                     }
