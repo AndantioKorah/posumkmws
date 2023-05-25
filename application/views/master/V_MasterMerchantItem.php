@@ -36,7 +36,7 @@
                     data: null,
                     success: function(){
                         successtoast('Data sudah terhapus')
-                        loadMerchant()
+                        loadAllMerchant()
                     }, error: function(e){
                         errortoast('Terjadi Kesalahan')
                     }

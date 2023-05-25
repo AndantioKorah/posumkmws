@@ -14,6 +14,21 @@ function render($pageContent, $parent_active, $active, $data)
     $CI->load->view('base/V_BaseLayout', $data);
 }
 
+function imageToBase64($filename){
+    $type = pathinfo($filename, PATHINFO_EXTENSION);
+    $data = file_get_contents($filename);
+    $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+    return $base64;
+}
+
+function imageToBytes($filename){
+    // $filename = "mypic.jpg";//Image path
+    $file = fopen($filename, "rb");
+    $contents = fread($file, filesize($filename));
+    fclose($file);
+    dd($contents);
+}
+
 function generateNorm($last_norm){
     if($last_norm){
         $cur_count_norm = ltrim($last_norm, '0');

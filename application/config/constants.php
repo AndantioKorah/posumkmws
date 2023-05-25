@@ -118,5 +118,7 @@ define('FONT_CETAKAN', 'Verdana');
 define('ROW_PER_PAGE_CETAK_TAGIHAN', 55);
 define('ROW_PER_PAGE_CETAK_TINDAKAN', 45);
 
+define('API_KEY_MERCHANT_LENGTH', 30);
+
 define('VONAGE_API_KEY', 'b9e13f92');
 define('VONAGE_API_SECRET', 'd9b1754f4da78a5a');
