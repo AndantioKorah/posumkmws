@@ -15,10 +15,13 @@ function render($pageContent, $parent_active, $active, $data)
 }
 
 function imageToBase64($filename){
-    $type = pathinfo($filename, PATHINFO_EXTENSION);
-    $data = file_get_contents($filename);
-    $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-    return $base64;
+    if(file_exists($filename)){
+        $type = pathinfo($filename, PATHINFO_EXTENSION);
+        $data = file_get_contents($filename);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        return $base64;
+    } 
+    return null;
 }
 
 function imageToBytes($filename){

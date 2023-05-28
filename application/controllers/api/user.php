@@ -21,7 +21,9 @@ class user extends RestController
             $req = $this->input->post();
             $user = $this->m_user->loginWs($req);
             if($user){
-                $user['logo'] = imageToBase64(URI_UPLOAD_LOGO_MERCHANT.'logo_merchant/'.$user['logo']);
+                if($user['logo']){
+                    $user['logo'] = imageToBase64(URI_UPLOAD_LOGO_MERCHANT.'logo_merchant/'.$user['logo']);
+                }
                 $res['data'] = $user;
                 $res['code'] = 200;
             } else {
