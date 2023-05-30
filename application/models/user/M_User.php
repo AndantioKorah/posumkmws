@@ -461,21 +461,35 @@
         }
 
         public function loginWs($data){
-            $password = $this->general_library->encrypt($data['username'], $data['password']);
+            $resp = ['code' => 200, 'message' => '', 'data' => null];
+            
+            $user = $this->db->select('a.username, a.password, a.nama as nama_user, a.id as id_m_user, b.id as id_m_role, c.id as id_m_merchant,
+            d.nama as nama_role, d.role_name as kode_nama_role, c.id as id_m_merchant, c.nama_merchant, c.alamat, c.logo')
+            ->from('m_user a')
+            ->join('m_user_role b', 'a.id = b.id_m_user')
+            ->join('m_merchant c', 'a.id_m_merchant = c.id', 'left')
+            ->join('m_role d', 'b.id_m_role = d.id')
+            ->where('a.username', $data['username'])
+            // ->where('a.password', $password)
+            ->where('a.flag_active', 1)
+            ->where('b.flag_active', 1)
+            ->group_by('a.id')
+            // ->where('c.flag_active', 1)
+            ->get()->row_array();
 
-            return $this->db->select('a.username, a.password, a.nama as nama_user, a.id as id_m_user, b.id as id_m_role, c.id as id_m_merchant,
-                            d.nama as nama_role, d.role_name as kode_nama_role, c.id as id_m_merchant, c.nama_merchant, c.alamat, c.logo')
-                            ->from('m_user a')
-                            ->join('m_user_role b', 'a.id = b.id_m_user')
-                            ->join('m_merchant c', 'a.id_m_merchant = c.id', 'left')
-                            ->join('m_role d', 'b.id_m_role = d.id')
-                            ->where('a.username', $data['username'])
-                            ->where('a.password', $password)
-                            ->where('a.flag_active', 1)
-                            ->where('b.flag_active', 1)
-                            ->group_by('a.id')
-                            // ->where('c.flag_active', 1)
-                            ->get()->row_array();
+            if($user){
+                $password = $this->general_library->encrypt($data['username'], $data['password']);
+                if($user['password'] == $password){
+                    $resp = ['code' => 200, 'message' => '', 'data' => $user];
+                } else {
+                    $resp = ['code' => 404, 'message' => 'Password salah'];
+                }
+            } else {
+                $resp = ['code' => 404, 'message' => 'Username tidak ditemukan'];
+            }
+
+            return $resp;
+            
         }
 
         public function checkUserCredentials($data){

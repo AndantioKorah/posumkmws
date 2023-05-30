@@ -19,16 +19,16 @@ class user extends RestController
             $this->response($res, $res['code']);
         } else {
             $req = $this->input->post();
-            $user = $this->m_user->loginWs($req);
-            if($user){
-                if($user['logo']){
-                    $user['logo'] = imageToBase64(URI_UPLOAD_LOGO_MERCHANT.'logo_merchant/'.$user['logo']);
+            $user = $this->user->loginWs($req);
+            if($user['code'] == 200){
+                if($user['data']['logo']){
+                    $user['data']['logo'] = imageToBase64(URI_UPLOAD_LOGO_MERCHANT.'logo_merchant/'.$user['data']['logo']);
                 }
-                $res['data'] = $user;
+                $res['data'] = $user['data'];
                 $res['code'] = 200;
             } else {
-                $res['code'] = 404;
-                $res['message'] = "User tidak ditemukan";
+                $res['code'] = $user['code'];
+                $res['message'] = $user['message'];
             }
             $this->response($res, $res['code']);
         }
