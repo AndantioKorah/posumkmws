@@ -507,5 +507,18 @@
                             // ->where('c.flag_active', 1)
                             ->get()->row_array();
         }
+
+        public function changePasswordWs($data){
+            $res = ['code' => 0, 'message' => ''];
+            $new_password = $this->general_library->encrypt($data['username'], $data['new_password']);
+            $this->db->where('username', $data['username'])
+                    ->update('m_user', ['password' => $new_password]);
+            if($this->db->affected_rows() > 0){
+                $res = ['code' => 0, 'message' => 'Password Berhasil diubah', 'data' => $new_password];
+            } else {
+                $res = ['code' => 1, 'message' => 'Terjadi Keslahan. '.json_encode($this->db->error())];
+            }
+            return $res;
+        }
 	}
 ?>

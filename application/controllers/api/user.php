@@ -45,31 +45,41 @@ class user extends RestController
                 $old_password = $this->general_library->encrypt($req['username'], $req['old_password']);
                 $new_password = $this->general_library->encrypt($req['username'], $req['new_password']);
                 $confirm_new_password = $this->general_library->encrypt($req['username'], $req['confirm_new_password']);
-
-                if($user['password'] == $old_password){
-                    if($new_password == $confirm_new_password){
-                        if(strlen($req['new_password']) >= 6){
-                            $res['code'] = 200;
-                            $res['status'] = true;
-                            $res['data'] = $user;
-                            $res['message'] = "Password Berhasil diubah";
-                            // if($user['logo']){
-                            //     $user['logo'] = imageToBase64(URI_UPLOAD_LOGO_MERCHANT.'logo_merchant/'.$user['logo']);
-                            // }
+                if($new_password != $old_password){
+                    if($user['password'] == $old_password){ //cek jika password lama sama
+                        if($new_password == $confirm_new_password){ //cek jika password baru = konfirmasi passsword baru
+                            if(strlen($req['new_password']) >= 6){ //cek panjang password
+                                $change = $this->m_user->changePasswordWs($req);
+                                if($change['code'] == 0){ //cek jika ada error dari database
+                                    $res['code'] = 200;
+                                    $res['status'] = true;
+                                    $res['data'] = $change['data'];
+                                    $res['message'] = $change['message'];
+                                } else {
+                                    $res['code'] = 500;
+                                    $res['status'] = false;
+                                    $res['data'] = null;
+                                    $res['message'] = $change['message'];
+                                }
+                            } else {
+                                $res['code'] = 400;
+                                $res['status'] = false;
+                                $res['message'] = "Password harus lebih dari 6 karakter";
+                            }
                         } else {
                             $res['code'] = 400;
                             $res['status'] = false;
-                            $res['message'] = "Password harus lebih dari 6 karakter";
+                            $res['message'] = "Password Baru dan Konfirmasi Password Baru tidak sama";    
                         }
                     } else {
                         $res['code'] = 400;
                         $res['status'] = false;
-                        $res['message'] = "Password Baru dan Konfirmasi Password Baru tidak sama";    
+                        $res['message'] = "Password Lama salah";
                     }
                 } else {
                     $res['code'] = 400;
                     $res['status'] = false;
-                    $res['message'] = "Password Lama salah";
+                    $res['message'] = "Password Baru sama dengan Password Lama";
                 }
             } else {
                 $res['code'] = 404;

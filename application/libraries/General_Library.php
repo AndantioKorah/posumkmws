@@ -34,21 +34,21 @@ class General_library
             foreach($arr as $a){
                 if(!$this->nikita->input->post($a)){
                     $res['code'] = 403;
-                    $res['message'] = "Key '".$a."' Tidak Ditemukan";
+                    $res['message'] = strtoupper($a)." Tidak Boleh Kosong";
                 }
             }
         } else if($method == 'DELETE'){
             foreach($arr as $a){
                 if(!$this->nikita->delete($a)){
                     $res['code'] = 403;
-                    $res['message'] = "Key '".$a."' Tidak Ditemukan";
+                    $res['message'] = strtoupper($a)." Tidak Boleh Kosong";
                 }
             }
         } else if($method == 'GET'){
             foreach($arr as $a){
                 if(!$this->nikita->get($a)){
                     $res['code'] = 403;
-                    $res['message'] = "Key '".$a."' Tidak Ditemukan";
+                    $res['message'] = strtoupper($a)." Tidak Boleh Kosong";
                 }
             }
         } else {
