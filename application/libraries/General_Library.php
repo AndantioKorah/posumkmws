@@ -30,11 +30,19 @@ class General_library
         $res = ['code' => 200,'data' => null,'message' => ""];
         array_push($arr, 'username');
         array_push($arr, 'password');
+        $username = null;
+        $password = null;
         if($method == 'POST'){
             foreach($arr as $a){
                 if(!$this->nikita->input->post($a)){
                     $res['code'] = 403;
                     $res['message'] = strtoupper($a)." Tidak Boleh Kosong";
+                } else {
+                    if($a == 'username'){
+                        $this->nikita->input->post($a);
+                    } else if($a == 'password'){
+                        $this->nikita->input->post($a);
+                    }
                 }
             }
         } else if($method == 'DELETE'){
@@ -42,6 +50,12 @@ class General_library
                 if(!$this->nikita->delete($a)){
                     $res['code'] = 403;
                     $res['message'] = strtoupper($a)." Tidak Boleh Kosong";
+                } else {
+                    if($a == 'username'){
+                        $this->nikita->delete($a);
+                    } else if($a == 'password'){
+                        $this->nikita->delete($a);
+                    }
                 }
             }
         } else if($method == 'GET'){
@@ -49,12 +63,30 @@ class General_library
                 if(!$this->nikita->get($a)){
                     $res['code'] = 403;
                     $res['message'] = strtoupper($a)." Tidak Boleh Kosong";
+                } else {
+                    if($a == 'username'){
+                        $this->nikita->get($a);
+                    } else if($a == 'password'){
+                        $this->nikita->get($a);
+                    }
                 }
             }
         } else {
             $res['code'] = 403;
             $res['message'] = "Undefined Method";
         }
+        
+        if($res['code'] == 200){
+            $user = $this->nikita->m_user->checkUserCredentials(['username' => $username, 'password' => $password]);
+            if($user){
+                $res['data'] = $user;
+            } else {
+                $res['code'] = 403;
+                $res['status'] = false;
+                $res['message'] = "Bad Credentials, Username / Password salah";
+            }
+        }
+
         return $res;
     }
 
