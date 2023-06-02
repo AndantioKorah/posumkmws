@@ -508,6 +508,23 @@
                             ->get()->row_array();
         }
 
+        public function checkUserCredentialsLibrary($data){
+            // $data['password'] = $this->general_library->encrypt($data['username'], $data['password']);
+            return $this->db->select('a.username, a.password, a.nama as nama_user, a.id as id_m_user, b.id as id_m_role, c.id as id_m_merchant,
+                            d.nama as nama_role, d.role_name as kode_nama_role, c.id as id_m_merchant, c.nama_merchant, c.alamat, c.logo')
+                            ->from('m_user a')
+                            ->join('m_user_role b', 'a.id = b.id_m_user')
+                            ->join('m_merchant c', 'a.id_m_merchant = c.id', 'left')
+                            ->join('m_role d', 'b.id_m_role = d.id')
+                            ->where('a.username', $data['username'])
+                            ->where('a.password', $data['password'])
+                            ->where('a.flag_active', 1)
+                            ->where('b.flag_active', 1)
+                            ->group_by('a.id')
+                            // ->where('c.flag_active', 1)
+                            ->get()->row_array();
+        }
+
         public function changePasswordWs($data){
             $res = ['code' => 0, 'message' => ''];
             $new_password = $this->general_library->encrypt($data['username'], $data['new_password']);

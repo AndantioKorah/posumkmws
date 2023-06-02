@@ -14,7 +14,7 @@ class user extends RestController
         $this->res = ['code' => 200, 'status' => false, 'message' => null, 'data' => null];
     }
 
-    public function menu_get(){
+    public function getAllMenu_get(){
         $this->res = $this->general_library->validateParam(['id_m_merchant'], 'GET');
         if($this->res['code'] == 200){
             

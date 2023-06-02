@@ -26,7 +26,7 @@ class General_library
         return trim($info);
     }
 
-    function validateParam($arr, $method){
+    function validateParam($arr, $method, $flag_login = 0){
         $res = ['code' => 200,'data' => null,'message' => ""];
         array_push($arr, 'username');
         array_push($arr, 'password');
@@ -39,9 +39,9 @@ class General_library
                     $res['message'] = strtoupper($a)." Tidak Boleh Kosong";
                 } else {
                     if($a == 'username'){
-                        $this->nikita->input->post($a);
+                        $username = $this->nikita->input->post($a);
                     } else if($a == 'password'){
-                        $this->nikita->input->post($a);
+                        $password = $this->nikita->input->post($a);
                     }
                 }
             }
@@ -52,9 +52,9 @@ class General_library
                     $res['message'] = strtoupper($a)." Tidak Boleh Kosong";
                 } else {
                     if($a == 'username'){
-                        $this->nikita->delete($a);
+                        $username = $this->nikita->delete($a);
                     } else if($a == 'password'){
-                        $this->nikita->delete($a);
+                        $password = $this->nikita->delete($a);
                     }
                 }
             }
@@ -65,9 +65,9 @@ class General_library
                     $res['message'] = strtoupper($a)." Tidak Boleh Kosong";
                 } else {
                     if($a == 'username'){
-                        $this->nikita->get($a);
+                        $username = $this->nikita->get($a);
                     } else if($a == 'password'){
-                        $this->nikita->get($a);
+                        $password = $this->nikita->get($a);
                     }
                 }
             }
@@ -76,8 +76,8 @@ class General_library
             $res['message'] = "Undefined Method";
         }
         
-        if($res['code'] == 200){
-            $user = $this->nikita->m_user->checkUserCredentials(['username' => $username, 'password' => $password]);
+        if($res['code'] == 200 && $flag_login == 0){
+            $user = $this->nikita->m_user->checkUserCredentialsLibrary(['username' => $username, 'password' => $password]);
             if($user){
                 $res['data'] = $user;
             } else {

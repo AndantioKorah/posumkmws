@@ -14,7 +14,7 @@ class user extends RestController
     }
 
     public function login_post(){
-        $res = $this->general_library->validateParam([], 'POST');
+        $res = $this->general_library->validateParam([], 'POST', 1);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {

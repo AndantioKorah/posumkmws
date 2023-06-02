@@ -4,6 +4,7 @@ $route['user/setting'] = 'user/C_User/userSetting';
 $route['roles'] = 'user/C_User/roles';
 $route['menu'] = 'user/C_User/menu';
 $route['master/merchant'] = 'master/C_Master/masterMerchant';
+$route['master/merchant/menu'] = 'master/C_Master/menuMerchant';
 
 
 //api

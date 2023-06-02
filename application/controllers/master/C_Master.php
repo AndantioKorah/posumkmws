@@ -42,4 +42,11 @@ class C_Master extends CI_Controller
     public function deleteMerchant($id){
         $this->general->delete('id', $id, 'm_merchant');
     }
+
+    public function menuMerchant(){
+        $data['list_merchant'] = $this->master->getAllMerchant();
+        $data['list_jenis_menu'] = $this->master->getAllJenisMenu();
+        $data['list_kategori_menu'] = $this->master->getAllKategoriMenu();
+        render('master/V_MasterMenuMerchant', '', '', $data);
+    }
 }
