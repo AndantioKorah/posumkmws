@@ -25,15 +25,7 @@
                         <label class="bmd-label-floating">Jenis Menu</label>
                         <select class="form-control select2-navy" style="width: 100%"
                         id="id_m_jenis_menu" data-dropdown-css-class="select2-navy" name="id_m_jenis_menu">
-                            <?php if($list_jenis_menu){
-                                foreach($list_jenis_menu as $ljm){
-                                ?>
-                                <option value="<?=$ljm['id']?>">
-                                    <?=$ljm['nama_jenis_menu']?>
-                                </option>
-                            <?php } } ?>
                         </select>
-                        <!-- </div> -->
                     </div>
                 </div>
                 <div class="col-4">
@@ -41,14 +33,6 @@
                         <label class="bmd-label-floating">Kategori Menu</label>
                         <select class="form-control select2-navy" style="width: 100%"
                         id="id_m_kategori_menu" data-dropdown-css-class="select2-navy" name="id_m_kategori_menu">
-                            <option value="0" selected>Pilih Kategori</option>
-                            <?php if($list_kategori_menu){
-                                foreach($list_kategori_menu as $lkm){
-                                ?>
-                                <option value="<?=$lkm['id']?>">
-                                    <?=$lkm['nama_jenis_menu']?>
-                                </option>
-                            <?php } } ?>
                         </select>
                     </div>
                 </div>
@@ -89,7 +73,7 @@
         <h3 class="card-title">LIST MENU MERCHANT</h3>
     </div>
     <div class="card-body">
-        <div id="list_jenis_pesan" class="row">
+        <div id="list_menu_merchant" class="row">
         </div>
     </div>
 </div>
@@ -99,7 +83,8 @@
     $(function(){
         $('.select2-navy').select2();
 
-        loadAllMerchant()
+        getJenisMenuByMerchant()
+        loadAllMenuMerchant()
 
         $(function(){
             <?php if($this->session->flashdata('message') && $this->session->flashdata('message') != '0'){ ?>
@@ -111,28 +96,73 @@
         })
     })
 
-    function loadAllMerchant(){
-        $('#list_jenis_pesan').html('')
-        $('#list_jenis_pesan').append(divLoaderNavy)
-        $('#list_jenis_pesan').load('<?=base_url("master/C_Master/loadAllMerchant")?>', function(){
+    $('#id_m_merchant').on('change', function(){
+        loadAllMenuMerchant()
+        getJenisMenuByMerchant()
+    })
+
+    function getJenisMenuByMerchant(){
+        $.ajax({
+            url: '<?=base_url("master/C_Master/getJenisMenuByMerchant/")?>'+$('#id_m_merchant').val(),
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(res){
+                let rs = JSON.parse(res)
+                $('#id_m_jenis_menu').find('option').remove();
+                $('#id_m_jenis_menu').append('<option value="0">Pilih Jenis Menu</option>')
+                for(let i = 0; i < rs.length ; i++){
+                    $('#id_m_jenis_menu').append('<option value="'+rs[i].id+'">'+rs[i].nama_jenis_menu+'</option>')
+                }
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    }
+
+    $('#id_m_jenis_menu').on('change', function(){
+        getKategoriMenuByJenisMenu()
+    })
+
+    function getKategoriMenuByJenisMenu(){
+        $.ajax({
+            url: '<?=base_url("master/C_Master/getKategoriMenuByJenisMenu/")?>'+$('#id_m_jenis_menu').val(),
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(res){
+                let rs = JSON.parse(res)
+                $('#id_m_kategori_menu').find('option').remove();
+                $('#id_m_kategori_menu').append('<option value="0">Pilih Kategori Menu</option>')
+                for(let i = 0; i < rs.length ; i++){
+                    $('#id_m_kategori_menu').append('<option value="'+rs[i].id+'">'+rs[i].nama_kategori_menu+'</option>')
+                }
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    }
+
+    function loadAllMenuMerchant(){
+        $('#list_menu_merchant').html('')
+        $('#list_menu_merchant').append(divLoaderNavy)
+        $('#list_menu_merchant').load('<?=base_url("master/C_Master/loadAllMenuMerchant/")?>'+$('#id_m_merchant').val(), function(){
             $('#loader').hide()
         })
     }
 
-    // $('#form_tambah_jenis_pesan').on('submit', function(e){
-    //     e.preventDefault();
-    //     $.ajax({
-    //         url: '<?=base_url("master/C_Master/createMasterMerchant")?>',
-    //         method: 'post',
-    //         data: $(this).serialize(),
-    //         success: function(){
-    //             successtoast('Data berhasil ditambahkan')
-    //             loadAllMerchant()
-    //             $('#nama_jenis_pesan').val('')
-    //         }, error: function(e){
-    //             errortoast('Terjadi Kesalahan')
-    //         }
-    //     })
-    // })
+    $('#form_tambah_menu_merchant').on('submit', function(e){
+        e.preventDefault();
+        $.ajax({
+            url: '<?=base_url("master/C_Master/createMasterMenuMerchant")?>',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(){
+                successtoast('Data berhasil ditambahkan')
+                loadAllMenuMerchant()
+                $('#nama_jenis_pesan').val('')
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    })
 
 </script>

@@ -12,6 +12,50 @@ class C_Master extends CI_Controller
         };
     }
 
+    public function masterKategoriMenu(){
+        $data['list_merchant'] = $this->general->getAllWithOrder('m_merchant');
+        render('master/V_MasterKategoriMenu', '', '', $data);
+    }
+
+    public function loadJenisMenuByForMasterKategori($id_merchant){
+        echo json_encode($this->master->getAllJenisMenuByIdMerchant($id_merchant));
+    }
+
+    public function loadKategoriMenuMerchant($id_m_jenis_menu){
+        $data['result'] = $this->master->getKategoriMenuByIdJenis($id_m_jenis_menu);
+        $this->load->view('master/V_MasterKategoriMenuItem', $data);
+    }
+
+    public function createMasterKategoriMenu(){
+        $data = $this->input->post();
+        $data['created_by'] = $this->general_library->getId();
+        $this->master->insert('m_kategori_menu', $data);       
+    }
+
+    public function deleteKategoriMenu($id){
+        $this->master->deleteItem('m_kategori_menu', $id);
+    }
+
+    public function masterJenisMenu(){
+        $data['list_merchant'] = $this->general->getAllWithOrder('m_merchant');
+        render('master/V_MasterJenisMenu', '', '', $data);
+    }
+
+    public function loadJenisMenuByMerchant($id_merchant){
+        $data['result'] = $this->master->getAllJenisMenuByIdMerchant($id_merchant);
+        $this->load->view('master/V_MasterJenisMenuItem', $data);
+    }
+
+    public function deleteJenisMenu($id){
+        $this->master->deleteItem('m_jenis_menu', $id);
+    }
+
+    public function createMasterJenisMenu(){
+        $data = $this->input->post();
+        $data['created_by'] = $this->general_library->getId();
+        $this->master->insert('m_jenis_menu', $data);       
+    }
+
     public function masterMerchant(){
         render('master/V_MasterMerchant', '', '', null);
     }
@@ -45,8 +89,29 @@ class C_Master extends CI_Controller
 
     public function menuMerchant(){
         $data['list_merchant'] = $this->master->getAllMerchant();
-        $data['list_jenis_menu'] = $this->master->getAllJenisMenu();
-        $data['list_kategori_menu'] = $this->master->getAllKategoriMenu();
         render('master/V_MasterMenuMerchant', '', '', $data);
+    }
+
+    public function getJenisMenuByMerchant($id_merchant){
+        echo json_encode($this->master->getAllJenisMenuByIdMerchant($id_merchant));
+    }
+
+    public function getKategoriMenuByJenisMenu($id_m_jenis_menu){
+        echo json_encode($this->master->getKategoriMenuByIdJenis($id_m_jenis_menu));
+    }
+
+    public function createMasterMenuMerchant(){
+        $data = $this->input->post();
+        $data['created_by'] = $this->general_library->getId();
+        $this->master->insert('m_menu_merchant', $data);
+    }
+
+    public function loadAllMenuMerchant($id_merchant){
+        $data['result'] = $this->master->getAllMenuMerchant($id_merchant);
+        $this->load->view('master/V_MasterMenuMerchantItem', $data);
+    }
+
+    public function deleteMenuMerchant($id){
+        $this->general->delete('id', $id, 'm_menu_merchant');
     }
 }
