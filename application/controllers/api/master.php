@@ -2,23 +2,73 @@
 
 use chriskacerguis\RestServer\RestController;
 
-class user extends RestController 
+class master extends RestController 
 {
-    public $res;
+    public $response;
 
     public function __construct()
     {
         parent::__construct();
         $this->load->model('general/M_General', 'm_general');
         $this->load->model('user/M_User', 'user');
-        $this->res = ['code' => 200, 'status' => false, 'message' => null, 'data' => null];
+        $this->load->model('master/M_Master', 'master');
     }
 
-    public function getAllMenu_get(){
-        $this->res = $this->general_library->validateParam(['id_m_merchant'], 'GET');
-        if($this->res['code'] == 200){
-            
+    public function getAllJenisMenu_post(){
+        $res = $this->general_library->validateParam(['id_m_merchant'], 'POST', 1);
+        if($res['code'] != 200){
+            $this->response($res, $res['code']);
+        } else {
+            $req = $this->input->post();
+            $result = $this->master->getAllJenisMenuByIdMerchant($req['id_m_merchant']);
+            if(!$result){
+                $res['code'] = '404';
+                $res['message'] = 'Data Tidak Ditemukan';
+                $res['data'] = null;
+                $res['status'] = false;
+            } else {
+                $res['data'] = $result;
+            }
+            $this->response($res, $res['code']);
         }
-        $this->response($this->res, $this->res['code']);
     }
+
+    public function getAllKategoriMenu_post(){
+        $res = $this->general_library->validateParam(['id_m_merchant'], 'POST', 1);
+        if($res['code'] != 200){
+            $this->response($res, $res['code']);
+        } else {
+            $req = $this->input->post();
+            $result = $this->master->getKategoriMenuByIdMerchant($req['id_m_merchant']);
+            if(!$result){
+                $res['code'] = '404';
+                $res['message'] = 'Data Tidak Ditemukan';
+                $res['data'] = null;
+                $res['status'] = false;
+            } else {
+                $res['data'] = $result;
+            }
+            $this->response($res, $res['code']);
+        }
+    }
+
+    public function getAllMenu_post(){
+        $res = $this->general_library->validateParam(['id_m_merchant'], 'POST', 1);
+        if($res['code'] != 200){
+            $this->response($res, $res['code']);
+        } else {
+            $req = $this->input->post();
+            $result = $this->master->getAllMenuMerchantByIdMerchant($req['id_m_merchant']);
+            if(!$result){
+                $res['code'] = '404';
+                $res['message'] = 'Data Tidak Ditemukan';
+                $res['data'] = null;
+                $res['status'] = false;
+            } else {
+                $res['data'] = $result;
+            }
+            $this->response($res, $res['code']);
+        }
+    }
+
 }

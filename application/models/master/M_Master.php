@@ -26,6 +26,24 @@
                             ->get()->result_array();
         }
 
+        public function getKategoriMenuByIdMerchant($id_m_merchant){
+            return $this->db->select('*')
+                            ->from('m_kategori_menu a')
+                            ->where('a.id_m_merchant', $id_m_merchant)
+                            ->where('a.flag_active', 1)
+                            ->order_by('a.nama_kategori_menu', 'asc')
+                            ->get()->result_array();
+        }
+
+        public function getAllMenuMerchantByIdMerchant($id_m_merchant){
+            return $this->db->select('*')
+                            ->from('m_menu_merchant a')
+                            ->where('a.id_m_merchant', $id_m_merchant)
+                            ->where('a.flag_active', 1)
+                            ->order_by('a.nama_menu_merchant', 'asc')
+                            ->get()->result_array();
+        }
+
         public function getAllMerchant(){
             return $this->db->select('id, nama_merchant')
                             ->from('m_merchant')

@@ -403,7 +403,7 @@ $config['rest_key_name'] = 'MERCHANT-API-KEY';
 |   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 |
 */
-$config['rest_enable_logging'] = false;
+$config['rest_enable_logging'] = true;
 
 /*
 |--------------------------------------------------------------------------
@@ -414,7 +414,7 @@ $config['rest_enable_logging'] = false;
 | table name to match e.g. my_logs
 |
 */
-$config['rest_logs_table'] = 'logs';
+$config['rest_logs_table'] = 't_log_ws';
 
 /*
 |--------------------------------------------------------------------------
@@ -458,7 +458,7 @@ $config['rest_access_table'] = 'access';
 | Set to FALSE to log as serialized PHP
 |
 */
-$config['rest_logs_json_params'] = false;
+$config['rest_logs_json_params'] = true;
 
 /*
 |--------------------------------------------------------------------------
