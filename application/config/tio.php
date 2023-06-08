@@ -15,4 +15,5 @@ $route['api/login'] = 'api/C_User/';
 //master
 $route['api/master/menu/jenis'] = 'api/master/getAllJenisMenu';
 $route['api/master/menu/kategori'] = 'api/master/getAllKategoriMenu';
-$route['api/master/menu'] = 'api/master/getAllMenu';
+$route['api/master/merchant/menu'] = 'api/master/getAllMenu';
+$route['api/master/menu'] = 'api/master/getAllMasterMenu';
