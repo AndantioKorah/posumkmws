@@ -24,7 +24,7 @@ class master extends RestController
             $result['kategori_menu'] = $this->master->getKategoriMenuByIdMerchant($req['id_m_merchant']);
             $result['menu_merchant'] = $this->master->getAllMenuMerchantByIdMerchant($req['id_m_merchant']);
             if(!$result){
-                $res['code'] = '404';
+                $res['code'] = 404;
                 $res['message'] = 'Data Tidak Ditemukan';
                 $res['data'] = null;
                 $res['status'] = false;
@@ -43,7 +43,7 @@ class master extends RestController
             $req = $this->input->post();
             $result = $this->master->getAllJenisMenuByIdMerchant($req['id_m_merchant']);
             if(!$result){
-                $res['code'] = '404';
+                $res['code'] = 404;
                 $res['message'] = 'Data Tidak Ditemukan';
                 $res['data'] = null;
                 $res['status'] = false;
@@ -62,7 +62,7 @@ class master extends RestController
             $req = $this->input->post();
             $result = $this->master->getKategoriMenuByIdMerchant($req['id_m_merchant']);
             if(!$result){
-                $res['code'] = '404';
+                $res['code'] = 404;
                 $res['message'] = 'Data Tidak Ditemukan';
                 $res['data'] = null;
                 $res['status'] = false;
@@ -81,12 +81,42 @@ class master extends RestController
             $req = $this->input->post();
             $result = $this->master->getAllMenuMerchantByIdMerchant($req['id_m_merchant']);
             if(!$result){
-                $res['code'] = '404';
+                $res['code'] = 404;
                 $res['message'] = 'Data Tidak Ditemukan';
                 $res['data'] = null;
                 $res['status'] = false;
             } else {
                 $res['data'] = $result;
+            }
+            $this->response($res, $res['code']);
+        }
+    }
+
+    public function editJenisMenu_post(){
+        $res = $this->general_library->validateParam(['nama_jenis_menu', 'id', 'id_m_merchant'], 'POST', 1);
+        if($res['code'] != 200){
+            $this->response($res, $res['code']);
+        } else {
+            $req = $this->input->post();
+            $user = $this->m_user->checkUserCredentialsLibrary($req);
+            if($user){
+                $result = $this->master->editJenisMenu($req, $user['id_m_user']);
+                if($result == 1){
+                    $res['code'] = 200;
+                    $res['message'] = 'Data Berhasil Terupdate';
+                    $res['data'] = null;
+                    $res['status'] = true;
+                } else {
+                    $res['code'] = 500;
+                    $res['message'] = 'Terjadi kesalahan saat menyimpan data';
+                    $res['data'] = null;
+                    $res['status'] = false;
+                }
+            } else {
+                $res['code'] = 403;
+                $res['message'] = 'Bad Credentials';
+                $res['data'] = null;
+                $res['status'] = false;
             }
             $this->response($res, $res['code']);
         }

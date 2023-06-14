@@ -27,8 +27,9 @@
         }
 
         public function getKategoriMenuByIdMerchant($id_m_merchant){
-            return $this->db->select('*')
+            return $this->db->select('a.*, b.nama_jenis_menu')
                             ->from('m_kategori_menu a')
+                            ->join('m_jenis_menu b', 'a.id_m_jenis_menu = b.id', 'left')
                             ->where('a.id_m_merchant', $id_m_merchant)
                             ->where('a.flag_active', 1)
                             ->order_by('a.nama_kategori_menu', 'asc')
@@ -36,8 +37,10 @@
         }
 
         public function getAllMenuMerchantByIdMerchant($id_m_merchant){
-            return $this->db->select('*')
+            return $this->db->select('a.*, b.nama_jenis_menu, c.nama_kategori_menu')
                             ->from('m_menu_merchant a')
+                            ->join('m_jenis_menu b', 'a.id_m_jenis_menu = b.id', 'left')
+                            ->join('m_kategori_menu c', 'a.id_m_kategori_menu = c.id', 'left')
                             ->where('a.id_m_merchant', $id_m_merchant)
                             ->where('a.flag_active', 1)
                             ->order_by('a.nama_menu_merchant', 'asc')
@@ -89,6 +92,26 @@
                             ->order_by('a.nama_menu_merchant')
                             ->group_by('a.id')
                             ->get()->result_array();
+        }
+
+        public function editJenisMenu($data, $id_m_user){
+            $this->db->trans_begin();
+
+            $this->db->where('id', $data['id'])
+                    ->where('id_m_merchant', $data['id_m_merchant'])
+                    ->update('m_jenis_menu', [
+                        'nama_jenis_menu' => $data['nama_jenis_menu'],
+                        'updated_by' => $id_m_user
+                    ]);
+            
+            if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                return 0;
+            } else {
+                $this->db->trans_commit();
+                return 1;
+            }
+            return $this->db;
         }
 
 	}
