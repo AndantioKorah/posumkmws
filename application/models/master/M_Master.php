@@ -111,7 +111,124 @@
                 $this->db->trans_commit();
                 return 1;
             }
-            return $this->db;
+        }
+
+        public function deleteJenisMenu($data, $id_m_user){
+            $this->db->trans_begin();
+
+            $this->db->where('id', $data['id'])
+                    ->where('id_m_merchant', $data['id_m_merchant'])
+                    ->update('m_jenis_menu', [
+                        'flag_active' => 0,
+                        'updated_by' => $id_m_user
+                    ]);
+            
+            if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                return 0;
+            } else {
+                $this->db->trans_commit();
+                return 1;
+            }
+        }
+
+        public function tambahJenisMenu($data, $id_m_user){
+            $this->db->trans_begin();
+
+            $exist = $this->db->select('*')
+                            ->from('m_jenis_menu')
+                            ->where('id_m_merchant', $data['id_m_merchant'])
+                            ->where('nama_jenis_menu', $data['nama_jenis_menu'])
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+            if($exist){
+                $this->db->trans_rollback();
+                return 2;
+            }
+
+            $this->db->insert('m_jenis_menu', [
+                'nama_jenis_menu' => $data['nama_jenis_menu'],
+                'id_m_merchant' => $data['id_m_merchant'],
+                'created_by' => $id_m_user
+            ]);
+
+            if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                return 0;
+            } else {
+                $this->db->trans_commit();
+                return 1;
+            }
+        }
+
+        public function editKategoriMenu($data, $id_m_user){
+            $this->db->trans_begin();
+
+            $this->db->where('id', $data['id'])
+                    ->where('id_m_merchant', $data['id_m_merchant'])
+                    ->update('m_kategori_menu', [
+                        'nama_kategori_menu' => $data['nama_kategori_menu'],
+                        'id_m_jenis_menu' => $data['id_m_jenis_menu'],
+                        'updated_by' => $id_m_user
+                    ]);
+            
+            if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                return 0;
+            } else {
+                $this->db->trans_commit();
+                return 1;
+            }
+        }
+
+        public function deleteKategoriMenu($data, $id_m_user){
+            $this->db->trans_begin();
+
+            $this->db->where('id', $data['id'])
+                    ->where('id_m_merchant', $data['id_m_merchant'])
+                    ->update('m_kategori_menu', [
+                        'flag_active' => 0,
+                        'updated_by' => $id_m_user
+                    ]);
+            
+            if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                return 0;
+            } else {
+                $this->db->trans_commit();
+                return 1;
+            }
+        }
+
+        public function tambahKategoriMenu($data, $id_m_user){
+            $this->db->trans_begin();
+
+            $exist = $this->db->select('*')
+                            ->from('m_kategori_menu')
+                            ->where('id_m_merchant', $data['id_m_merchant'])
+                            ->where('id_m_jenis_menu', $data['id_m_jenis_menu'])
+                            ->where('nama_kategori_menu', $data['nama_kategori_menu'])
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+            if($exist){
+                $this->db->trans_rollback();
+                return 2;
+            }
+
+            $this->db->insert('m_kategori_menu', [
+                'nama_kategori_menu' => $data['nama_kategori_menu'],
+                'id_m_jenis_menu' => $data['id_m_jenis_menu'],
+                'id_m_merchant' => $data['id_m_merchant'],
+                'created_by' => $id_m_user
+            ]);
+
+            if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                return 0;
+            } else {
+                $this->db->trans_commit();
+                return 1;
+            }
         }
 
 	}
