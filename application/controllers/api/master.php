@@ -248,7 +248,7 @@ class master extends RestController
     }
 
     public function tambahKategoriMenu_post(){
-        $res = $this->general_library->validateParam(['nama_kategori_menu', 'id_m_merchant', 'id_m_jenis_menu'], 'POST', 1);
+        $res = $this->general_library->validateParam(['nama_kategori_menu', 'id_m_merchant'], 'POST', 1);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
@@ -264,6 +264,101 @@ class master extends RestController
                 } else if($result == 2) {
                     $res['code'] = 500;
                     $res['message'] = 'Nama Kategori "'.$req['nama_kategori_menu'].'" sudah ada';
+                    $res['data'] = null;
+                    $res['status'] = false;
+                } else {
+                    $res['code'] = 500;
+                    $res['message'] = 'Terjadi kesalahan saat menghapus data';
+                    $res['data'] = null;
+                    $res['status'] = false;
+                }
+            } else {
+                $res['code'] = 403;
+                $res['message'] = 'Bad Credentials';
+                $res['data'] = null;
+                $res['status'] = false;
+            }
+            $this->response($res, $res['code']);
+        }
+    }
+
+    public function editMenuMerchant_post(){
+        $res = $this->general_library->validateParam(['nama_menu_merchant', 'id', 'id_m_merchant', 'id_m_jenis_menu', 'id_m_kategori_menu', 'harga'], 'POST', 1);
+        if($res['code'] != 200){
+            $this->response($res, $res['code']);
+        } else {
+            $req = $this->input->post();
+            $user = $this->m_user->checkUserCredentialsLibrary($req);
+            if($user){
+                $result = $this->master->editMenuMerchant($req, $user['id_m_user']);
+                if($result == 1){
+                    $res['code'] = 200;
+                    $res['message'] = 'Data Berhasil Terupdate';
+                    $res['data'] = null;
+                    $res['status'] = true;
+                } else {
+                    $res['code'] = 500;
+                    $res['message'] = 'Terjadi kesalahan saat menyimpan data';
+                    $res['data'] = null;
+                    $res['status'] = false;
+                }
+            } else {
+                $res['code'] = 403;
+                $res['message'] = 'Bad Credentials';
+                $res['data'] = null;
+                $res['status'] = false;
+            }
+            $this->response($res, $res['code']);
+        }
+    }
+
+    public function deleteMenumerchant_post(){
+        $res = $this->general_library->validateParam(['id', 'id_m_merchant'], 'POST', 1);
+        if($res['code'] != 200){
+            $this->response($res, $res['code']);
+        } else {
+            $req = $this->input->post();
+            $user = $this->m_user->checkUserCredentialsLibrary($req);
+            if($user){
+                $result = $this->master->deleteMenumerchant($req, $user['id_m_user']);
+                if($result == 1){
+                    $res['code'] = 200;
+                    $res['message'] = 'Data Berhasil Dihapus';
+                    $res['data'] = null;
+                    $res['status'] = true;
+                } else {
+                    $res['code'] = 500;
+                    $res['message'] = 'Terjadi kesalahan saat menghapus data';
+                    $res['data'] = null;
+                    $res['status'] = false;
+                }
+            } else {
+                $res['code'] = 403;
+                $res['message'] = 'Bad Credentials';
+                $res['data'] = null;
+                $res['status'] = false;
+            }
+            $this->response($res, $res['code']);
+        }
+    }
+
+    public function tambahMenuMerchant_post(){
+        $res = $this->general_library->validateParam(['nama_menu_merchant', 'id_m_merchant', 'id_m_jenis_menu', 'id_m_kategori_menu', 'harga'], 'POST', 1);
+        if($res['code'] != 200){
+            $this->response($res, $res['code']);
+        } else {
+            $req = $this->input->post();
+            $user = $this->m_user->checkUserCredentialsLibrary($req);
+            if($user){
+                $result = $this->master->tambahMenuMerchant($req, $user['id_m_user']);
+                if($result == 1){
+                    $res['code'] = 201;
+                    $res['message'] = 'Data Berhasil Ditambahkan';
+                    $res['data'] = null;
+                    $res['status'] = true;
+                } else if($result == 2) {
+                    $res['code'] = 500;
+                    $res['message'] = 'Nama Menu "'.$req['nama_menu_merchant'].'" sudah ada dengan jenis, kategori dan harga yang sama';
                     $res['data'] = null;
                     $res['status'] = false;
                 } else {

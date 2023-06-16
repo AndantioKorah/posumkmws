@@ -231,5 +231,80 @@
             }
         }
 
+        public function editMenuMerchant($data, $id_m_user){
+            $this->db->trans_begin();
+
+            $this->db->where('id', $data['id'])
+                    ->where('id_m_merchant', $data['id_m_merchant'])
+                    ->update('m_menu_merchant', [
+                        'nama_menu_merchant' => $data['nama_menu_merchant'],
+                        'id_m_jenis_menu' => $data['id_m_jenis_menu'],
+                        'id_m_kategori_menu' => $data['id_m_kategori_menu'],
+                        'updated_by' => $id_m_user
+                    ]);
+            
+            if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                return 0;
+            } else {
+                $this->db->trans_commit();
+                return 1;
+            }
+        }
+
+        public function deleteMenuMerchant($data, $id_m_user){
+            $this->db->trans_begin();
+
+            $this->db->where('id', $data['id'])
+                    ->where('id_m_merchant', $data['id_m_merchant'])
+                    ->update('m_menu_merchant', [
+                        'flag_active' => 0,
+                        'updated_by' => $id_m_user
+                    ]);
+            
+            if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                return 0;
+            } else {
+                $this->db->trans_commit();
+                return 1;
+            }
+        }
+
+        public function tambahMenuMerchant($data, $id_m_user){
+            $this->db->trans_begin();
+
+            $exist = $this->db->select('*')
+                            ->from('m_menu_merchant')
+                            ->where('id_m_merchant', $data['id_m_merchant'])
+                            ->where('id_m_jenis_menu', $data['id_m_jenis_menu'])
+                            ->where('id_m_kategori_menu', $data['id_m_kategori_menu'])
+                            ->where('nama_menu_merchant', $data['nama_menu_merchant'])
+                            ->where('harga', $data['harga'])
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+            if($exist){
+                $this->db->trans_rollback();
+                return 2;
+            }
+
+            $this->db->insert('m_kategori_menu', [
+                'nama_menu_merchant' => $data['nama_menu_merchant'],
+                'id_m_jenis_menu' => $data['id_m_jenis_menu'],
+                'id_m_merchant' => $data['id_m_merchant'],
+                'id_m_kategori_menu' => $data['id_m_kategori_menu'],
+                'harga' => $data['harga'],
+                'created_by' => $id_m_user
+            ]);
+
+            if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                return 0;
+            } else {
+                $this->db->trans_commit();
+                return 1;
+            }
+        }
+
 	}
 ?>
