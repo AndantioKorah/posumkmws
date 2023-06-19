@@ -34,8 +34,27 @@ class user extends RestController
         }
     }
 
+    public function logout_post(){
+        $res = $this->general_library->validateParam([], 'POST', 2);
+        if($res['code'] != 200){
+            $this->response($res, $res['code']);
+        } else {
+            $req = $this->input->post();
+            $user = $this->user->logoutWs($req);
+            if($user['code'] == 200){
+                $res['data'] = null;
+                $res['status'] = true;
+                $res['message'] = 'Logout berhasil';
+            } else {
+                $res['code'] = $user['code'];
+                $res['message'] = $user['message'];
+            }
+            $this->response($res, $res['code']);
+        }
+    }
+
     public function changePassword_post(){
-        $res = $this->general_library->validateParam(['old_password', 'new_password', 'confirm_new_password'], 'POST');
+        $res = $this->general_library->validateParam(['old_password', 'new_password', 'confirm_new_password',], 'POST');
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {

@@ -30,8 +30,12 @@ class General_library
         $res = ['code' => 200,'data' => null,'message' => ""];
         array_push($arr, 'username');
         array_push($arr, 'password');
+        if($flag_login != 2){
+            array_push($arr, 'device_id');
+        }
         $username = null;
         $password = null;
+        $device_id = null;
         if($method == 'POST'){
             foreach($arr as $a){
                 if(!$this->nikita->input->post($a)){
@@ -42,6 +46,8 @@ class General_library
                         $username = $this->nikita->input->post($a);
                     } else if($a == 'password'){
                         $password = $this->nikita->input->post($a);
+                    } else if($a == 'device_id'){
+                        $device_id = $this->nikita->input->post($a);
                     }
                 }
             }
@@ -55,6 +61,8 @@ class General_library
                         $username = $this->nikita->delete($a);
                     } else if($a == 'password'){
                         $password = $this->nikita->delete($a);
+                    } else if($a == 'device_ide'){
+                        $device_ide = $this->nikita->delete($a);
                     }
                 }
             }
@@ -68,6 +76,8 @@ class General_library
                         $username = $this->nikita->get($a);
                     } else if($a == 'password'){
                         $password = $this->nikita->get($a);
+                    } else if($a == 'device_id'){
+                        $device_id = $this->nikita->get($a);
                     }
                 }
             }
@@ -75,11 +85,20 @@ class General_library
             $res['code'] = 403;
             $res['message'] = "Undefined Method";
         }
-        
+
         if($res['code'] == 200 && $flag_login == 0){
             $user = $this->nikita->m_user->checkUserCredentialsLibrary(['username' => $username, 'password' => $password]);
             if($user){
                 $res['data'] = $user;
+                if($flag_login != 2){ //bukan logout? cek device id dan expire date
+                    $validate = $this->nikita->m_user->validateMerchant($user, $device_id);
+                    if($validate['code'] != 0){
+                        $res['code'] = 302;
+                        $res['status'] = false;
+                        $res['data'] = null;
+                        $res['message'] = $validate['message'];
+                    }
+                }
             } else {
                 $res['code'] = 403;
                 $res['status'] = false;

@@ -78,6 +78,19 @@ class C_Master extends CI_Controller
         redirect('master/merchant');
     }
 
+    public function editMasterMerchant($id){
+        $this->master->editMasterMerchant($id);
+    }
+
+    public function deleteLogo($id){
+        $this->master->deleteLogo($id);
+    }
+
+    public function openModalEditMerchant($id){
+        $data['result'] = $this->general->get('m_merchant', 'id', $id)[0];
+        $this->load->view('master/V_MasterEditMerchant', $data);
+    }
+
     public function loadAllMerchant(){
         $data['list_jenis_pesan'] = $this->general->getAllWithOrder('m_merchant');
         $this->load->view('master/V_MasterMerchantItem', $data);

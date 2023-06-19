@@ -16,6 +16,54 @@
                     ->update($tablename, ['flag_active' => 0]);
         }
 
+        public function editMasterMerchant($id){
+            $merchant = $this->db->select('*')
+                                ->from('m_merchant')
+                                ->where('id', $id)
+                                ->where('flag_active', 1)
+                                ->get()->row_array();
+
+            $data = $this->input->post();
+            $photo = $_FILES['logo_merchant']['name'] ? $_FILES['logo_merchant']['name'] : null;
+            $upload = null;
+            if($photo){
+                $upload = $this->general_library->uploadLogoMerchant('logo_merchant','logo_merchant');
+            }
+            if($photo && $upload['code'] != 0){
+                $this->session->set_flashdata('message', $upload['message']);
+            } else {
+                if($photo && $upload['code'] == 0){
+                    $data['logo'] =  $photo ? $upload['data']['file_name'] : null;
+                    if($data['logo'] && $merchant['logo']){
+                        $file = 'assets/logo_merchant/'.$merchant['logo'];
+                        unlink($file);
+                    }
+                }
+                $data['updated_by'] = $this->general_library->getId();
+                // $file = 'assets/logo_merchant/'.$merchant['logo'];
+                // unlink($file);
+                // dd(unlink($file));
+                $this->db->where('id', $id)
+                        ->update('m_merchant', $data);
+            }
+        }
+
+        public function deleteLogo($id){
+            $merchant = $this->db->select('*')
+                                ->from('m_merchant')
+                                ->where('id', $id)
+                                ->where('flag_active', 1)
+                                ->get()->row_array();
+
+            $file = 'assets/logo_merchant/'.$merchant['logo'];
+            unlink($file);
+            $this->db->where('id', $id)
+                    ->update('m_merchant', [
+                        'logo' => null,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+        }
+
         public function getKategoriMenuByIdJenis($id_m_jenis_menu){
             return $this->db->select('a.*, b.nama_jenis_menu')
                             ->from('m_kategori_menu a')
@@ -27,7 +75,12 @@
         }
 
         public function getKategoriMenuByIdMerchant($id_m_merchant){
-            return $this->db->select('a.*, b.nama_jenis_menu')
+            return $this->db->select('a.*, b.nama_jenis_menu,
+            (   SELECT count(c.id)
+                FROM m_menu_merchant c 
+                WHERE c.id_m_kategori_menu = a.id
+                AND c.flag_active = 1) as jumlah_menu
+            ')
                             ->from('m_kategori_menu a')
                             ->join('m_jenis_menu b', 'a.id_m_jenis_menu = b.id', 'left')
                             ->where('a.id_m_merchant', $id_m_merchant)
@@ -56,7 +109,15 @@
         }
 
         public function getAllJenisMenuByIdMerchant($id){
-            return $this->db->select('a.*, b.nama_merchant')
+            return $this->db->select('a.*, b.nama_merchant,
+            (SELECT count(c.id)
+                FROM m_kategori_menu c 
+                WHERE c.id_m_jenis_menu = a.id
+                AND c.flag_active = 1) as jumlah_kategori,
+            (SELECT count(d.id)
+                FROM m_menu_merchant d 
+                WHERE d.id_m_jenis_menu = a.id
+                AND d.flag_active = 1) as jumlah_menu,')
                             ->from('m_jenis_menu a')
                             ->join('m_merchant b', 'a.id_m_merchant = b.id')
                             ->where('a.id_m_merchant', $id)

@@ -15,7 +15,7 @@ class master extends RestController
     }
 
     public function getAllMasterMenu_post(){
-        $res = $this->general_library->validateParam(['id_m_merchant'], 'POST', 1);
+        $res = $this->general_library->validateParam(['id_m_merchant'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
@@ -36,7 +36,7 @@ class master extends RestController
     }
 
     public function getAllJenisMenu_post(){
-        $res = $this->general_library->validateParam(['id_m_merchant'], 'POST', 1);
+        $res = $this->general_library->validateParam(['id_m_merchant'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
@@ -55,7 +55,7 @@ class master extends RestController
     }
 
     public function getAllKategoriMenu_post(){
-        $res = $this->general_library->validateParam(['id_m_merchant'], 'POST', 1);
+        $res = $this->general_library->validateParam(['id_m_merchant'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
@@ -74,7 +74,7 @@ class master extends RestController
     }
 
     public function getAllMenu_post(){
-        $res = $this->general_library->validateParam(['id_m_merchant'], 'POST', 1);
+        $res = $this->general_library->validateParam(['id_m_merchant'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
@@ -93,7 +93,7 @@ class master extends RestController
     }
 
     public function editJenisMenu_post(){
-        $res = $this->general_library->validateParam(['nama_jenis_menu', 'id', 'id_m_merchant'], 'POST', 1);
+        $res = $this->general_library->validateParam(['nama_jenis_menu', 'id', 'id_m_merchant'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
@@ -123,7 +123,7 @@ class master extends RestController
     }
 
     public function deleteJenisMenu_post(){
-        $res = $this->general_library->validateParam(['id', 'id_m_merchant'], 'POST', 1);
+        $res = $this->general_library->validateParam(['id', 'id_m_merchant'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
@@ -153,7 +153,7 @@ class master extends RestController
     }
 
     public function tambahJenisMenu_post(){
-        $res = $this->general_library->validateParam(['nama_jenis_menu', 'id_m_merchant'], 'POST', 1);
+        $res = $this->general_library->validateParam(['nama_jenis_menu', 'id_m_merchant'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
@@ -188,7 +188,7 @@ class master extends RestController
     }
 
     public function editKategoriMenu_post(){
-        $res = $this->general_library->validateParam(['nama_kategori_menu', 'id', 'id_m_merchant', 'id_m_jenis_menu'], 'POST', 1);
+        $res = $this->general_library->validateParam(['nama_kategori_menu', 'id', 'id_m_merchant', 'id_m_jenis_menu'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
@@ -218,7 +218,7 @@ class master extends RestController
     }
 
     public function deleteKategoriMenu_post(){
-        $res = $this->general_library->validateParam(['id', 'id_m_merchant'], 'POST', 1);
+        $res = $this->general_library->validateParam(['id', 'id_m_merchant'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
@@ -248,7 +248,7 @@ class master extends RestController
     }
 
     public function tambahKategoriMenu_post(){
-        $res = $this->general_library->validateParam(['nama_kategori_menu', 'id_m_merchant'], 'POST', 1);
+        $res = $this->general_library->validateParam(['nama_kategori_menu', 'id_m_merchant'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
@@ -283,7 +283,7 @@ class master extends RestController
     }
 
     public function editMenuMerchant_post(){
-        $res = $this->general_library->validateParam(['nama_menu_merchant', 'id', 'id_m_merchant', 'id_m_jenis_menu', 'id_m_kategori_menu', 'harga'], 'POST', 1);
+        $res = $this->general_library->validateParam(['nama_menu_merchant', 'id', 'id_m_merchant', 'id_m_jenis_menu', 'id_m_kategori_menu', 'harga'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
@@ -313,7 +313,7 @@ class master extends RestController
     }
 
     public function deleteMenumerchant_post(){
-        $res = $this->general_library->validateParam(['id', 'id_m_merchant'], 'POST', 1);
+        $res = $this->general_library->validateParam(['id', 'id_m_merchant'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
@@ -343,7 +343,7 @@ class master extends RestController
     }
 
     public function tambahMenuMerchant_post(){
-        $res = $this->general_library->validateParam(['nama_menu_merchant', 'id_m_merchant', 'id_m_jenis_menu', 'id_m_kategori_menu', 'harga'], 'POST', 1);
+        $res = $this->general_library->validateParam(['nama_menu_merchant', 'id_m_merchant', 'id_m_jenis_menu', 'id_m_kategori_menu', 'harga'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {

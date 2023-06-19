@@ -3,34 +3,55 @@
         <h3 class="card-title">TAMBAH MERCHANT</h3>
     </div>
     <div class="card-body" style="display: block;">
-        <form id="form_tambah_jenis_pesan" action="<?=base_url("master/C_Master/createMasterMerchant")?>" method="POST" enctype="multipart/form-data">
+        <form id="form_tambah_jenis_pesan" action="<?=base_url("master/C_Master/edit")?>" method="POST" enctype="multipart/form-data">
             <div class="row">
-                <div class="col-4">
+                <div class="col-3">
                     <div class="form-group">
                         <label class="bmd-label-floating">Nama Merchant</label>
                         <input class="form-control" autocomplete="off" name="nama_merchant" id="nama_merchant" required/>
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-3">
                     <div class="form-group">
                         <label class="bmd-label-floating">Alamat</label>
                         <input class="form-control" autocomplete="off" name="alamat" id="alamat"/>
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label class="bmd-label-floating">Expire Date</label>
+                        <input type="date" value="<?=date('Y-m-d')?>" class="form-control" autocomplete="off" name="expire_date" id="expire_date"/>
+                    </div>
+                </div>
+                <div class="col-3">
                     <div class="form-group">
                         <label class="bmd-label-floating">Logo</label>
                         <input class="form-control" accept="image/x-png,image/gif,image/jpeg" type="file" name="logo_merchant" id="logo_merchant">
                     </div>
                 </div>
-                <div class="col-4"></div>
-                <div class="col-8 text-right">
+                <div class="col-3"></div>
+                <div class="col-9 text-right">
                     <label class="bmd-label-floating" style="color: white;">..</label>
                     <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-save"></i> SIMPAN</button>
                 </div>
             </div>
         </form>
     </div>
+</div>
+
+<div class="modal fade" id="edit_data_merchant" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div id="modal-dialog" class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h6 class="modal-title">EDIT DATA MERCHANT</h6>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div id="edit_data_merchant_content">
+          </div>
+      </div>
+  </div>
 </div>
 
 <div class="card card-default">
@@ -46,6 +67,13 @@
 
 <script>
     $(function(){
+        // $('#expire_date').datetimepicker({
+        //     format: 'yyyy-mm-dd',
+        //     autoclose: true,
+        //     todayHighlight: true,
+        //     todayBtn: true,
+        // })
+
         loadAllMerchant()
 
         $(function(){

@@ -460,11 +460,47 @@
             return $this->db->get()->result_array();
         }
 
+        public function logoutWs($req){
+            $resp = ['code' => 200, 'message' => '', 'data' => null];
+
+            $this->db->trans_begin();
+
+            $user = $this->db->select('*')
+                            ->from('m_user')
+                            ->where('username', $req['username'])
+                            ->where('password', $req['password'])
+                            ->get()->row_array();
+
+            if($user){
+                $this->db->where('id', $user['id'])
+                    ->update('m_user', [
+                        'device_id' => null,
+                        'updated_by' => $user['id']
+                    ]);
+
+            } else {
+                $this->db->trans_rollback();
+                $resp['code'] = 500;
+                $resp['message'] = 'Terjadi Kesalahan';
+                return $resp;
+            }
+            
+            if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                $resp['code'] = 500;
+                $resp['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
+            }
+
+            return $resp;
+        }
+
         public function loginWs($data){
             $resp = ['code' => 200, 'message' => '', 'data' => null];
-            
+
             $user = $this->db->select('a.username, a.password, a.nama as nama_user, a.id as id_m_user, b.id as id_m_role, c.id as id_m_merchant,
-            d.nama as nama_role, d.role_name as kode_nama_role, c.id as id_m_merchant, c.nama_merchant, c.alamat, c.logo')
+            d.nama as nama_role, d.role_name as kode_nama_role, c.id as id_m_merchant, c.nama_merchant, c.alamat, c.logo, a.device_id, c.expire_date')
             ->from('m_user a')
             ->join('m_user_role b', 'a.id = b.id_m_user')
             ->join('m_merchant c', 'a.id_m_merchant = c.id', 'left')
@@ -480,7 +516,17 @@
             if($user){
                 $password = $this->general_library->encrypt($data['username'], $data['password']);
                 if($user['password'] == $password){
-                    $resp = ['code' => 200, 'message' => '', 'data' => $user];
+                    $validate = $this->validateMerchant($user, $data['device_id'], 1);
+                    if($validate['code'] == 0){
+                        $resp = ['code' => 200, 'message' => '', 'data' => $user];
+                        $this->db->where('id', $user['id_m_user'])
+                                ->update('m_user', [
+                                    'device_id' => $data['device_id'],
+                                    'updated_by' => $user['id_m_user']
+                                ]);
+                    } else {
+                        $resp = ['code' => 302, 'message' => $validate['message'], 'data' => null, 'status' => false];
+                    }
                 } else {
                     $resp = ['code' => 404, 'message' => 'Password salah'];
                 }
@@ -510,8 +556,8 @@
 
         public function checkUserCredentialsLibrary($data){
             // $data['password'] = $this->general_library->encrypt($data['username'], $data['password']);
-            return $this->db->select('a.username, a.password, a.nama as nama_user, a.id as id_m_user, b.id as id_m_role, c.id as id_m_merchant,
-                            d.nama as nama_role, d.role_name as kode_nama_role, c.id as id_m_merchant, c.nama_merchant, c.alamat, c.logo')
+            return $this->db->select('a.username, a.password, a.nama as nama_user, a.id as id_m_user, b.id as id_m_role, c.id as id_m_merchant, c.expire_date,
+                            d.nama as nama_role, d.role_name as kode_nama_role, c.id as id_m_merchant, c.nama_merchant, c.alamat, c.logo, a.device_id')
                             ->from('m_user a')
                             ->join('m_user_role b', 'a.id = b.id_m_user')
                             ->join('m_merchant c', 'a.id_m_merchant = c.id', 'left')
@@ -523,6 +569,22 @@
                             ->group_by('a.id')
                             // ->where('c.flag_active', 1)
                             ->get()->row_array();
+        }
+
+        public function validateMerchant($user, $device_id, $flag_login = 0){
+            $res = ['code' => 0, 'message' => ''];
+
+            if($user['device_id'] && $user['device_id'] != $device_id){
+                $res = ['code' => 1, 'message' => 'User ini telah login di device lain.'];
+            } else if (date('Y-m-d') > $user['expire_date']){
+                $res = ['code' => 1, 'message' => 'Akun Merchant sudah expire. Hubungi Admin untuk extend'];
+            }
+
+            if(!$user['device_id'] && $flag_login == 0){ //jika device id null dan bukan login, redirect logout
+                $res = ['code' => 1, 'message' => 'Silahkan melakukan login kembali'];
+            }
+
+            return $res;
         }
 
         public function changePasswordWs($data){

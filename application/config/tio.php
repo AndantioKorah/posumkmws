@@ -11,6 +11,7 @@ $route['master/kategori-menu'] = 'master/C_Master/masterKategoriMenu';
 
 //api
 $route['api/login'] = 'api/C_User/';
+$route['api/logout'] = 'api/user/logout';
 
 //master
 $route['api/master/menu/jenis'] = 'api/master/getAllJenisMenu';
