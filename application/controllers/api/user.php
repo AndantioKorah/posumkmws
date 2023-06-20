@@ -2,7 +2,7 @@
 
 use chriskacerguis\RestServer\RestController;
 
-class user extends RestController 
+class User extends RestController 
 {
     public $response;
 

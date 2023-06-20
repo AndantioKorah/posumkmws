@@ -295,12 +295,19 @@
         public function editMenuMerchant($data, $id_m_user){
             $this->db->trans_begin();
 
+            $kategori = $this->db->select('a.*')
+                            ->from('m_kategori_menu a')
+                            ->join('m_jenis_menu b', 'a.id_m_jenis_menu = b.id')
+                            ->where('a.id', $data['id_m_kategori_menu'])
+                            ->get()->row_array();
+
             $this->db->where('id', $data['id'])
                     ->where('id_m_merchant', $data['id_m_merchant'])
                     ->update('m_menu_merchant', [
                         'nama_menu_merchant' => $data['nama_menu_merchant'],
-                        'id_m_jenis_menu' => $data['id_m_jenis_menu'],
                         'id_m_kategori_menu' => $data['id_m_kategori_menu'],
+                        'harga' => $data['harga'],
+                        'id_m_jenis_menu' => $kategori ? $kategori['id_m_jenis_menu'] : null,
                         'updated_by' => $id_m_user
                     ]);
             
@@ -338,7 +345,6 @@
             $exist = $this->db->select('*')
                             ->from('m_menu_merchant')
                             ->where('id_m_merchant', $data['id_m_merchant'])
-                            ->where('id_m_jenis_menu', $data['id_m_jenis_menu'])
                             ->where('id_m_kategori_menu', $data['id_m_kategori_menu'])
                             ->where('nama_menu_merchant', $data['nama_menu_merchant'])
                             ->where('harga', $data['harga'])
@@ -349,9 +355,15 @@
                 return 2;
             }
 
-            $this->db->insert('m_kategori_menu', [
+            $kategori = $this->db->select('a.*')
+                            ->from('m_kategori_menu a')
+                            ->join('m_jenis_menu b', 'a.id_m_jenis_menu = b.id')
+                            ->where('a.id', $data['id_m_kategori_menu'])
+                            ->get()->row_array();
+
+            $this->db->insert('m_menu_merchant', [
                 'nama_menu_merchant' => $data['nama_menu_merchant'],
-                'id_m_jenis_menu' => $data['id_m_jenis_menu'],
+                'id_m_jenis_menu' => $kategori ? $kategori['id_m_jenis_menu'] : null,
                 'id_m_merchant' => $data['id_m_merchant'],
                 'id_m_kategori_menu' => $data['id_m_kategori_menu'],
                 'harga' => $data['harga'],

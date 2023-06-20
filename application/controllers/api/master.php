@@ -2,7 +2,7 @@
 
 use chriskacerguis\RestServer\RestController;
 
-class master extends RestController 
+class Master extends RestController 
 {
     public $response;
 
@@ -283,7 +283,7 @@ class master extends RestController
     }
 
     public function editMenuMerchant_post(){
-        $res = $this->general_library->validateParam(['nama_menu_merchant', 'id', 'id_m_merchant', 'id_m_jenis_menu', 'id_m_kategori_menu', 'harga'], 'POST', 0);
+        $res = $this->general_library->validateParam(['nama_menu_merchant', 'id', 'id_m_merchant', 'id_m_kategori_menu', 'harga'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
@@ -343,7 +343,7 @@ class master extends RestController
     }
 
     public function tambahMenuMerchant_post(){
-        $res = $this->general_library->validateParam(['nama_menu_merchant', 'id_m_merchant', 'id_m_jenis_menu', 'id_m_kategori_menu', 'harga'], 'POST', 0);
+        $res = $this->general_library->validateParam(['nama_menu_merchant', 'id_m_merchant', 'id_m_kategori_menu', 'harga'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
