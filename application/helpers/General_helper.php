@@ -33,6 +33,17 @@ function imageToBytes($filename){
     dd($contents);
 }
 
+function generateNomorTransaksi($id_m_merchant, $last_transaksi){
+    if($last_transaksi){
+        $last_trx_num = floatval(substr($last_transaksi['nomor_transaksi'], 10)) + 1;
+        if($last_trx_num > 9999){
+            return str_pad($id_m_merchant, 4, '0', STR_PAD_LEFT).date('ymd').$last_trx_num;
+        }
+        return str_pad($id_m_merchant, 4, '0', STR_PAD_LEFT).date('ymd').str_pad($last_trx_num, 4, "0", STR_PAD_LEFT);
+    }
+    return str_pad($id_m_merchant, 4, '0', STR_PAD_LEFT).date('ymd').str_pad("1", 4, "0", STR_PAD_LEFT);
+}
+
 function generateNorm($last_norm){
     if($last_norm){
         $cur_count_norm = ltrim($last_norm, '0');

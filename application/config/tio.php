@@ -29,5 +29,8 @@ $route['api/master/merchant/menu/edit'] = 'api/Master/editMenuMerchant';
 $route['api/master/merchant/menu/delete'] = 'api/Master/deleteMenuMerchant';
 $route['api/master/merchant/menu/create'] = 'api/Master/tambahMenuMerchant';
 
+//transaction
+$route['api/transaction/create'] = 'api/Transaction/createTransaction';
+
 
 $route['api/master/menu'] = 'api/Master/getAllMasterMenu';
