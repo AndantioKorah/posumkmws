@@ -90,10 +90,11 @@
             $rs['status'] = true;
             $rs['data'] = null;
 
-            $pembayaran = $this->db->select('*')
-                                    ->from('t_pembayaran')
-                                    ->where('id_t_transaksi', $data['id'])
-                                    ->where('flag_active', 1)
+            $pembayaran = $this->db->select('a.*, b.nama_jenis_pembayaran')
+                                    ->from('t_pembayaran a')
+                                    ->join('m_jenis_pembayaran b', 'a.id_m_jenis_pembayaran = b.id')
+                                    ->where('a.id_t_transaksi', $data['id'])
+                                    ->where('a.flag_active', 1)
                                     ->get()->row_array();
             
             $transaksi = $this->db->select('*')
@@ -113,6 +114,116 @@
             $result['transaksi'] = $transaksi;
             $result['transaksi']['detail'] = $transaksi_detail;
             $rs['data'] = $result;
+
+            return $rs;
+        }
+
+        public function createPembayaran($data, $user){
+            $data['id'] = $data['id_t_transaksi'];
+            $rs['code'] = 200;
+            $rs['message'] = "";
+            $rs['status'] = true;
+            $rs['data'] = null;
+
+            $this->db->trans_begin();
+
+            $exists = $this->db->select('*')
+                            ->from('t_pembayaran')
+                            ->where('id_t_transaksi', $data['id_t_transaksi'])
+                            ->where('flag_active', 1)
+                            ->get()->row_array();
+            if($exists){
+                $this->db->where('id', $data['id_t_transaksi'])
+                        ->update('t_transaksi', [
+                            'status_transaksi' => 'Lunas',
+                            'updated_by' => $user['id_m_user']
+                        ]);
+
+                $rs['code'] = 409;
+                $rs['message'] = "Sudah ada data pembayaran";
+                $rs['status'] = false; 
+                $rs['data'] = $this->getPembayaranDetail($data, $user)['data'];
+                $this->db->trans_commit();
+                return $rs;
+            } else {
+                $tanggal_pembayaran = extractTanggalWs($data['tanggal_pembayaran']);
+
+                $this->db->insert('t_pembayaran', [
+                    'id_t_transaksi' => $data['id_t_transaksi'],
+                    'id_m_merchant' => $data['id_m_merchant'],
+                    'tanggal_pembayaran' => $tanggal_pembayaran['formatted'],
+                    'nama_pembayar' => $data['nama_pembayar'],
+                    'id_m_jenis_pembayaran' => $data['id_m_jenis_pembayaran'],
+                    'total_pembayaran' => $data['total_pembayaran'],
+                    'kembalian' => clearString($data['kembalian']),
+                    'nomor_pembayaran' => str_pad($data['id_m_merchant'], 4, '0', STR_PAD_LEFT).date('ymdhis'),
+                    'created_by' => $user['id_m_user']
+                ]);
+
+                $this->db->where('id', $data['id_t_transaksi'])
+                        ->update('t_transaksi', [
+                            'status_transaksi' => 'Lunas',
+                            'updated_by' => $user['id_m_user']
+                        ]);
+            }
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 500;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
+                $rs['code'] = 201;
+                $rs['message'] = "Pembayaran berhasil dilakukan";
+                $rs['status'] = true;
+                $rs['data'] = $this->getPembayaranDetail($data, $user)['data'];
+            }
+
+            return $rs;
+        }
+
+        public function deletePembayaran($data, $user){
+            $rs['code'] = 200;
+            $rs['message'] = "";
+            $rs['status'] = true;
+            $rs['data'] = null;
+
+            $this->db->trans_begin();
+
+            $pembayaran = $this->db->select('*')
+                                ->from('t_pembayaran')
+                                ->where('id', $data['id'])
+                                ->where('flag_active', 1)
+                                ->get()->row_array();
+            if($pembayaran){
+                $this->db->where('id', $data['id'])
+                ->update('t_pembayaran', [
+                    'flag_active' => 0,
+                    'updated_by' => $user['id_m_user']
+                ]);
+
+                $this->db->where('id', $pembayaran['id_t_transaksi'])
+                ->update('t_transaksi', [
+                    'status_transaksi' => "Belum Lunas",
+                    'updated_by' => $user['id_m_user']
+                ]);
+
+                $data['id'] = $pembayaran['id_t_transaksi'];
+            } else {
+                return null;
+            }
+
+            if($this->db->trans_status() == FALSE){
+                $this->db->trans_rollback();
+                $rs['code'] = 500;
+                $rs['message'] = 'Terjadi Kesalahan';
+            } else {
+                $this->db->trans_commit();
+                $rs['code'] = 200;
+                $rs['message'] = "Pembayaran berhasil dihapus";
+                $rs['status'] = true;
+                $rs['data'] = $this->getPembayaranDetail($data, $user)['data'];
+            }
 
             return $rs;
         }

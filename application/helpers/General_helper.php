@@ -33,6 +33,18 @@ function imageToBytes($filename){
     dd($contents);
 }
 
+function extractTanggalWs($tanggal){
+    $tanggal_explode = explode(" ", $tanggal);
+    $date = explode("/", $tanggal_explode[0]);
+    $result['formatted'] = $date[2].'-'.$date[1].'-'.$date[0].' '.$tanggal_explode[1];
+    $result['year'] = $date[2];
+    $result['month'] = $date[1];
+    $result['date'] = $date[0];
+    $result['time'] = $tanggal_explode[1];
+
+    return $result;
+}
+
 function generateNomorTransaksi($id_m_merchant, $last_transaksi){
     if($last_transaksi){
         $last_trx_num = floatval(substr($last_transaksi['nomor_transaksi'], 10)) + 1;

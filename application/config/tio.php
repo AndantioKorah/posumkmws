@@ -34,6 +34,8 @@ $route['api/transaction/create'] = 'api/Transaction/createTransaction';
 
 //payment
 $route['api/payment/detail/get'] = 'api/Transaction/getPembayaranDetail';
+$route['api/payment/create'] = 'api/Transaction/createPembayaran';
+$route['api/payment/delete'] = 'api/Transaction/deletePembayaran';
 
 
 $route['api/master/menu'] = 'api/Master/getAllMasterMenu';
