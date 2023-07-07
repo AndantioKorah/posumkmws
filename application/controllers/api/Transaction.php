@@ -59,6 +59,29 @@ class Transaction extends RestController
         }
     }
 
+    public function getTransactionDetail_post(){
+        $res = $this->general_library->validateParam([], 'POST', 0);
+        if($res['code'] != 200){
+            $this->response($res, $res['code']);
+        } else {
+            $req = $this->input->post();
+            $user = $this->m_user->checkUserCredentials($req);
+            $result = $this->trx->getTransactionDetail($req, $user);
+            if(!$result){
+                $res['code'] = 404;
+                $res['message'] = 'Data Tidak Ditemukan';
+                $res['data'] = null;
+                $res['status'] = false;
+            } else {
+                $res['code'] = $result['code'];
+                $res['message'] = $result['message'];
+                $res['data'] = $result['data'];
+                $res['status'] = true;
+            }
+            $this->response($res, $res['code']);
+        }
+    }
+
     public function createPembayaran_post(){
         $res = $this->general_library->validateParam(
             [

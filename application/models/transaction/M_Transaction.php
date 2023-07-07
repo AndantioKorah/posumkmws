@@ -118,6 +118,48 @@
             return $rs;
         }
 
+        public function getTransactionDetail($data, $user){
+            $rs['code'] = 200;
+            $rs['message'] = "";
+            $rs['status'] = true;
+            $rs['data'] = null;
+            
+            $transaksi = $this->db->select('*')
+                                    ->from('t_transaksi')
+                                    ->where('id', $data['id'])
+                                    ->where('flag_active', 1)
+                                    ->get()->row_array();
+
+            $transaksi_detail = $this->db->select('a.*, b.id_m_merchant, d.id as id_m_kategori_menu,
+            d.id_m_jenis_menu, c.deskripsi, e.nama_jenis_menu, d.nama_kategori_menu, d.deskripsi')
+                                    ->from('t_transaksi_detail a')
+                                    ->join('t_transaksi b', 'a.id_t_transaksi = b.id')
+                                    ->join('m_menu_merchant c', 'a.id_m_menu_merchant = c.id')
+                                    ->join('m_kategori_menu d', 'c.id_m_kategori_menu = d.id')
+                                    ->join('m_jenis_menu e', 'd.id_m_jenis_menu = e.id')
+                                    ->where('a.id_t_transaksi', $data['id'])
+                                    ->where('a.flag_active', 1)
+                                    ->order_by('a.nama_menu_merchant')
+                                    ->get()->result_array();
+
+            $list_menu = $this->db->select('a.*, b.nama_jenis_menu, c.nama_kategori_menu')
+                    ->from('m_menu_merchant a')
+                    ->join('m_jenis_menu b', 'a.id_m_jenis_menu = b.id', 'left')
+                    ->join('m_kategori_menu c', 'a.id_m_kategori_menu = c.id', 'left')
+                    ->where('a.id_m_merchant', $user['id_m_merchant'])
+                    ->where('a.flag_active', 1)
+                    ->order_by('a.nama_menu_merchant', 'asc')
+                    ->group_by('a.id')
+                    ->get()->result_array();
+
+            $result['transaksi'] = $transaksi;
+            $result['list_menu'] = $list_menu;
+            $result['transaksi']['detail'] = $transaksi_detail;
+            $rs['data'] = $result;
+
+            return $rs;
+        }
+
         public function createPembayaran($data, $user){
             $data['id'] = $data['id_t_transaksi'];
             $rs['code'] = 200;

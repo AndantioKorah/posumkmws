@@ -97,6 +97,7 @@
                             ->where('a.id_m_merchant', $id_m_merchant)
                             ->where('a.flag_active', 1)
                             ->order_by('a.nama_menu_merchant', 'asc')
+                            ->group_by('a.id')
                             ->get()->result_array();
         }
 
