@@ -16,13 +16,117 @@
             $rs['message'] = "Transaksi Berhasil Dibuat";
             $rs['status'] = true;
             $rs['data'] = null;
-
+            
             $this->db->trans_begin();
 
             $tanggal = explode(" ", $data['tanggal_transaksi']);
             $date = explode("/", $tanggal[0]);
 
-            $last_trx = $this->db->select('*')
+            if($data['id'] != "0"){
+                $trx_detail = json_decode($data['data'], true);
+                if(!$trx_detail){ //cek jika data yang dikirim kosong
+                    $this->db->trans_rollback();
+                    $rs['code'] = 400;
+                    $rs['message'] = 'Belum ada item yang dipilih';
+                    return $rs;
+                } else { // jika ada
+                    $detail = $this->db->select('*')
+                                ->from('t_transaksi_detail')
+                                ->where('flag_active', 1)
+                                ->where('id_t_transaksi', $data['id'])
+                                ->get()->result_array();
+                    if(!$detail){ // cek jika detail di database kosong
+                        $detail = [];
+                        $i = 0;
+                        $total_harga = 0;
+                        foreach($trx_detail as $td){
+                            $detail[$i]['id_t_transaksi'] = $data['id'];
+                            $detail[$i]['id_m_menu_merchant'] = $td['id'];
+                            $detail[$i]['harga'] = $td['harga'];
+                            $detail[$i]['nama_menu_merchant'] = $td['nama_menu_merchant'];
+                            $detail[$i]['qty'] = $td['selectedCount'];
+                            $detail[$i]['created_by'] = $user['id_m_user'];
+
+                            $total_harga_item = floatval($td['selectedCount']) * floatval($td['harga']);
+                            $total_harga += $total_harga_item;
+                            
+                            $detail[$i]['total_harga'] = $total_harga_item;
+                            $i++;
+                        }
+
+                        $this->db->insert_batch('t_transaksi_detail', $detail);
+
+                        $this->db->where('id', $data['id'])
+                                ->update('t_transaksi', ['total_harga' => $total_harga]);
+
+                        $rs['data'] = $data['id'];
+                    } else { //jika tidak kosong
+                        $tempAdd = null;
+                        $tempDel = null;
+                        foreach($trx_detail as $td){
+                            $flag_tambah = 1;
+                            foreach($detail as $d){
+                                if($td['id'] == $d['id_m_menu_merchant']){ //cek jika ada data yang dikirim dan belum ada di database
+                                    if($td['selectedCount'] != $d['qty']){
+                                        $this->db->where('id', $d['id'])
+                                                ->update('t_transaksi_detail',[
+                                                    'qty' => $td['selectedCount'],
+                                                    'total_harga' => floatval($td['selectedCount']) * floatval($td['harga']),
+                                                    'updated_by' => $user['id_m_user']
+                                                ]);
+                                    }
+                                    $flag_tambah = 0;
+                                }
+                            }
+                            if($flag_tambah == 1){ //jika tidak ada di database, tambah di list untuk di insert
+                                $tempAdd[] = $td;
+                            }
+                        }
+
+                        foreach($detail as $d){
+                            $flag_hapus = 1;
+                            foreach($trx_detail as $td){
+                                if($d['id_m_menu_merchant'] == $td['id']){
+                                    $flag_hapus = 0;
+                                }
+                            }
+                            if($flag_hapus == 1){ //jika ada di database dan tidak ada di data yang dikirim, maka dihapus
+                                $tempDel[] = $d['id'];
+                            }
+                        }
+
+                        if($tempDel){
+                            $this->db->where_in('id', $tempDel)
+                                    ->update('t_transaksi_detail', [
+                                        'flag_active' => 0,
+                                        'updated_by' => $user['id_m_user']
+                                    ]);
+                        }
+
+                        if($tempAdd){
+                            $new_detail = [];
+                            $i = 0;
+                            foreach($tempAdd as $ta){
+                                $new_detail[$i]['id_t_transaksi'] = $data['id'];
+                                $new_detail[$i]['id_m_menu_merchant'] = $ta['id'];
+                                $new_detail[$i]['harga'] = $ta['harga'];
+                                $new_detail[$i]['nama_menu_merchant'] = $ta['nama_menu_merchant'];
+                                $new_detail[$i]['qty'] = $ta['selectedCount'];
+                                $new_detail[$i]['created_by'] = $user['id_m_user'];
+                                $total_harga_item = floatval($td['selectedCount']) * floatval($td['harga']);
+                                $total_harga += $total_harga_item;
+                                
+                                $new_detail[$i]['total_harga'] = $total_harga_item;
+                                $i++;
+                            }
+
+                            $this->db->insert_batch('t_transaksi_detail', $new_detail);
+                        }
+                    }
+                }
+                $rs['data'] = $data['id'];        
+            } else {
+                $last_trx = $this->db->select('*')
                                 ->from('t_transaksi')
                                 ->where('id_m_merchant', $user['id_m_merchant'])
                                 ->where('YEAR(tanggal_transaksi)', $date[2])
@@ -32,56 +136,78 @@
                                 ->limit(1)
                                 ->get()->row_array();
 
-            $nomor_transaksi = generateNomorTransaksi($user['id_m_merchant'], $last_trx);
+                $nomor_transaksi = generateNomorTransaksi($user['id_m_merchant'], $last_trx);
 
-            $trx_detail = json_decode($data['data'], true);
-            if(!$trx_detail){
-                $this->db->trans_rollback();
-                $rs['code'] = 400;
-                $rs['message'] = 'Belum ada item yang dipilih';
-                return $rs;
+                $trx_detail = json_decode($data['data'], true);
+                if(!$trx_detail){
+                    $this->db->trans_rollback();
+                    $rs['code'] = 400;
+                    $rs['message'] = 'Belum ada item yang dipilih';
+                    return $rs;
+                }
+
+                $this->db->insert('t_transaksi',[
+                    'nomor_transaksi' => $nomor_transaksi,
+                    'tanggal_transaksi' => $date[2].'-'.$date[1].'-'.$date[0].' '.$tanggal[1],
+                    'nama' => $data['nama'],
+                    'id_m_merchant' => $user['id_m_merchant'],
+                    'created_by' => $user['id_m_user'],
+                ]);
+
+                $lastId = $this->db->insert_id();
+                
+                $detail = [];
+                $i = 0;
+                $total_harga = 0;
+                foreach($trx_detail as $td){
+                    $detail[$i]['id_t_transaksi'] = $lastId;
+                    $detail[$i]['id_m_menu_merchant'] = $td['id'];
+                    $detail[$i]['harga'] = $td['harga'];
+                    $detail[$i]['nama_menu_merchant'] = $td['nama_menu_merchant'];
+                    $detail[$i]['qty'] = $td['selectedCount'];
+
+                    $total_harga_item = floatval($td['selectedCount']) * floatval($td['harga']);
+                    $total_harga += $total_harga_item;
+                    
+                    $detail[$i]['total_harga'] = $total_harga_item;
+                    $i++;
+                }
+
+                $this->db->insert_batch('t_transaksi_detail', $detail);
+
+                $this->db->where('id', $lastId)
+                        ->update('t_transaksi', ['total_harga' => $total_harga]);
+                
+                $rs['data'] = $lastId;
             }
-
-            $this->db->insert('t_transaksi',[
-                'nomor_transaksi' => $nomor_transaksi,
-                'tanggal_transaksi' => $date[2].'-'.$date[1].'-'.$date[0].' '.$tanggal[1],
-                'nama' => $data['nama'],
-                'id_m_merchant' => $user['id_m_merchant'],
-                'created_by' => $user['id_m_user'],
-            ]);
-
-            $lastId = $this->db->insert_id();
-            
-            $detail = [];
-            $i = 0;
-            $total_harga = 0;
-            foreach($trx_detail as $td){
-                $detail[$i]['id_t_transaksi'] = $lastId;
-                $detail[$i]['id_m_menu_merchant'] = $td['id'];
-                $detail[$i]['harga'] = $td['harga'];
-                $detail[$i]['nama_menu_merchant'] = $td['nama_menu_merchant'];
-                $detail[$i]['qty'] = $td['selectedCount'];
-
-                $total_harga += floatval($td['selectedCount']) * floatval($td['harga']);
-                $detail[$i]['total_harga'] = $total_harga;
-                $i++;
-            }
-
-            $this->db->insert_batch('t_transaksi_detail', $detail);
-
-            $this->db->where('id', $lastId)
-                    ->update('t_transaksi', ['total_harga' => $total_harga]);
-            
-            $rs['data'] = $lastId;
 
             if($this->db->trans_status() == FALSE){
                 $this->db->trans_rollback();
                 $rs['code'] = 500;
                 $rs['message'] = 'Terjadi Kesalahan';
             } else {
+                $this->updateTotalHargaTransaksi($rs['data']);
                 $this->db->trans_commit();
             }
             return $rs;
+        }
+
+        public function updateTotalHargaTransaksi($id){
+            $detail = $this->db->select('*')
+                                ->from('t_transaksi_detail')
+                                ->where('flag_active', 1)
+                                ->where('id_t_transaksi', $id)
+                                ->get()->result_array();
+            if($detail){
+                $total_harga = 0;
+                foreach($detail as $d){
+                    $total_harga += (floatval($d['qty']) * floatval($d['harga']));
+                }
+                $this->db->where('id', $id)
+                        ->update('t_transaksi', [
+                            'total_harga' => $total_harga
+                        ]);
+            }
         }
 
         public function getPembayaranDetail($data, $user){

@@ -14,7 +14,7 @@ class Transaction extends RestController
     }
 
     public function createTransaction_post(){
-        $res = $this->general_library->validateParam(['data', 'nama', 'tanggal_transaksi'], 'POST', 0);
+        $res = $this->general_library->validateParam(['data', 'nama', 'tanggal_transaksi', 'id'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
