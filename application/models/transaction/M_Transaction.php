@@ -395,5 +395,54 @@
 
             return $rs;
         }
+
+        public function getAllTransaction($data, $user){
+            $rs['code'] = 200;
+            $rs['message'] = "Refresh Data Berhasil";
+            $rs['status'] = true;
+            $rs['data'] = null;
+
+            $tanggal = explode("/", $data['tanggal']);
+
+            $temp = $this->db->select('a.*, b.qty, b.harga, b.total_harga, b.nama_menu_merchant, a.total_harga as total_harga_transaksi')
+                                ->from('t_transaksi a')
+                                ->join('t_transaksi_detail b', 'a.id = b.id_t_transaksi')
+                                ->where('YEAR(a.tanggal_transaksi)', $tanggal[2])
+                                ->where('MONTH(a.tanggal_transaksi)', $tanggal[1])
+                                ->where('DAY(a.tanggal_transaksi)', $tanggal[0])
+                                ->where('a.flag_active', 1)
+                                ->where('b.flag_active', 1)
+                                ->where('a.id_m_merchant', $user['id_m_merchant'])
+                                ->order_by('a.tanggal_transaksi', 'desc')
+                                ->get()->result_array();
+            $result = array();
+            $finalresult = array();
+            if($temp){
+                foreach($temp as $t){
+                    if(isset($result[$t['id']])){
+                        $result[$t['id']]['total_item'] += $t['qty'];
+                        $result[$t['id']]['list_nama_item'] = $result[$t['id']]['list_nama_item'].', '.$t['qty'].' '.$t['nama_menu_merchant'];
+                    } else {
+                        $result[$t['id']]['id'] = $t['id'];
+                        $result[$t['id']]['id_m_merchant'] = $t['id_m_merchant'];
+                        $result[$t['id']]['tanggal_transaksi'] = $t['tanggal_transaksi'];
+                        $result[$t['id']]['nomor_transaksi'] = $t['nomor_transaksi'];
+                        $result[$t['id']]['nama'] = $t['nama'];
+                        $result[$t['id']]['total_harga'] = $t['total_harga_transaksi'];
+                        $result[$t['id']]['status_transaksi'] = $t['status_transaksi'];
+                        $result[$t['id']]['total_item'] = $t['qty'];
+                        $result[$t['id']]['list_nama_item'] = $t['qty'].' '.$t['nama_menu_merchant'];
+                    }
+                }
+                if($result){
+                    foreach($result as $res){
+                        $finalresult[] = $res;
+                    }
+                }
+            }
+
+            $rs['data'] = $finalresult;
+            return $rs;
+        }
 	}
 ?>

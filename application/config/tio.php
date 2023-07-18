@@ -32,6 +32,7 @@ $route['api/master/merchant/menu/create'] = 'api/Master/tambahMenuMerchant';
 //transaction
 $route['api/transaction/create'] = 'api/Transaction/createTransaction';
 $route['api/transaction/detail'] = 'api/Transaction/getTransactionDetail';
+$route['api/transaction/get'] = 'api/Transaction/getAllTransaction';
 
 //payment
 $route['api/payment/detail/get'] = 'api/Transaction/getPembayaranDetail';
