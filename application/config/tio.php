@@ -13,6 +13,9 @@ $route['master/kategori-menu'] = 'master/C_Master/masterKategoriMenu';
 $route['api/login'] = 'api/C_User/';
 $route['api/logout'] = 'api/User/logout';
 
+//users
+$route['api/merchant/users'] = 'api/User/listUserMerchant';
+
 //master
 $route['api/master/menu/jenis'] = 'api/Master/getAllJenisMenu';
 $route['api/master/menu/jenis/edit'] = 'api/Master/editJenisMenu';

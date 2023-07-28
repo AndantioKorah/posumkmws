@@ -34,6 +34,22 @@ class User extends RestController
         }
     }
 
+    public function listUserMerchant_post(){
+        $res = $this->general_library->validateParam(['id_m_merchant'], 'POST', 2);
+        if($res['code'] != 200){
+            $this->response($res, $res['code']);
+        } else {
+            $req = $this->input->post();
+            $list_user = $this->user->getUserMerchant($req);
+
+            $res['code'] = $list_user['code'];
+            $res['message'] = $list_user['message'];
+            $res['data'] = $list_user['data'];
+
+            $this->response($res, $res['code']);
+        }
+    }
+
     public function logout_post(){
         $res = $this->general_library->validateParam([], 'POST', 2);
         if($res['code'] != 200){

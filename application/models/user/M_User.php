@@ -599,5 +599,15 @@
             }
             return $res;
         }
+
+        public function getUserMerchant($req){
+            $list = $this->db->select('*')
+                            ->from('m_user a')
+                            ->where('id_m_merchant', $req['id_m_merchant'])
+                            ->order_by('nama', 'asc')
+                            ->get()->result_array();
+            $res = ['code' => 200, 'message' => '', 'data' => $list];
+            return $res;
+        }
 	}
 ?>
