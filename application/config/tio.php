@@ -44,3 +44,6 @@ $route['api/payment/delete'] = 'api/Transaction/deletePembayaran';
 
 
 $route['api/master/menu'] = 'api/Master/getAllMasterMenu';
+
+//webhook
+$route['telegram/webhook'] = 'telegram/C_Telegram/webhook';

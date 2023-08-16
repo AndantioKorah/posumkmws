@@ -3,14 +3,38 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Telegramlib extends CI_Model{
 
+  protected $telelib;
+
+  public function __construct()
+  {
+      $this->telelib = &get_instance();
+      $this->telelib->load->model('general/M_General', 'general');
+  }
+
   public function hashTelegram()
   {
-      $token = "1827474004:AAH8TDfeAh8WR_iXIG-vL0CDuF0KZbwtNUk";
+      $token = "6512973023:AAGdBTzhV9cN_0Sh652TsHWNEE2BxQKnd0E";
       $url = "https://api.telegram.org/bot$token/";
       return [
           'token' => $token,
           'url' => $url
       ];
+  }
+
+  function webhookCapture() {
+    $webhookContent = '';
+
+    $webhook = fopen('php://input' , 'rb');
+    
+    while (!feof($webhook)) {
+        $webhookContent .= fread($webhook, 4096);
+    }
+
+    fclose($webhook);
+
+    error_log($webhookContent);
+
+    return json_decode($webhookContent);
   }
 
   
@@ -42,32 +66,36 @@ class Telegramlib extends CI_Model{
       return $result;
   }
 
-  public function send_curl_exec($method, $method_telegram, $send_to, $data = [])
+  public function send_curl_exec($method_telegram, $send_to, $message)
   {
     $url = $this->hashTelegram()['url'];
+    $parameter = null;
 
     if($method_telegram == 'sendMessage'){
-        $url = $url.$method_telegram.'?chat_id='.$send_to.'&text='.$data['message'];
+        $url = $url.$method_telegram;
+        $parameter = [
+          'chat_id' => $send_to,
+          'text' => $message,
+          'parse_mode' => "html"
+        ];
     }
-    
-    $session = curl_init();
+    $curl = curl_init();
 
-    $header[] = "Content-Type: application/json";
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_POST, count($parameter));
+    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($parameter));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-    curl_setopt($session, CURLOPT_HTTPHEADER, $header);
-    curl_setopt($session, CURLOPT_URL, $url);
-    curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 100);
-    curl_setopt($session, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
-    
-    $result = curl_exec($session);
-
+    $result = curl_exec($curl);
     $message = null;
     if(!$result){
-        $message = curl_error($session);
+        $message = curl_error($curl);
     }
-    curl_close($session);
+    curl_close($curl);
+    $this->general->insert('t_log_webhook', [
+      'request' => json_encode($result),
+      'response' => json_encode($message)
+    ]);
     
     return ['result' => $result, 'message' => $message];
   }
