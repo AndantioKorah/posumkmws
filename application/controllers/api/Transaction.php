@@ -14,7 +14,7 @@ class Transaction extends RestController
     }
 
     public function createTransaction_post(){
-        $res = $this->general_library->validateParam(['data', 'nama', 'tanggal_transaksi', 'id'], 'POST', 0);
+        $res = $this->general_library->validateParam(['data', 'tanggal_transaksi'], 'POST', 0);
         if($res['code'] != 200){
             $this->response($res, $res['code']);
         } else {
@@ -89,7 +89,7 @@ class Transaction extends RestController
                 'id_m_merchant',
                 'tanggal_pembayaran',
                 'id_m_jenis_pembayaran',
-                'nama_pembayar',
+                // 'nama_pembayar',
                 'total_pembayaran',
             ], 'POST', 0);
         if($res['code'] != 200){
@@ -144,6 +144,29 @@ class Transaction extends RestController
             $req = $this->input->post();
             $user = $this->m_user->checkUserCredentials($req);
             $result = $this->trx->getAllTransaction($req, $user);
+            if(!$result){
+                $res['code'] = 404;
+                $res['message'] = 'Data Tidak Ditemukan';
+                $res['data'] = null;
+                $res['status'] = false;
+            } else {
+                $res['code'] = $result['code'];
+                $res['message'] = $result['message'];
+                $res['data'] = $result['data'];
+                $res['status'] = true;
+            }
+            $this->response($res, $res['code']);
+        }
+    }
+
+    public function getDataDashboard_post(){
+        $res = $this->general_library->validateParam(['username', 'password', 'device_id'], 'POST', 0);
+        if($res['code'] != 200){
+            $this->response($res, $res['code']);
+        } else {
+            $req = $this->input->post();
+            $user = $this->m_user->checkUserCredentials($req);
+            $result = $this->trx->getDataDashboard($req, $user);
             if(!$result){
                 $res['code'] = 404;
                 $res['message'] = 'Data Tidak Ditemukan';

@@ -30,6 +30,12 @@
                     $rs['message'] = 'Belum ada item yang dipilih';
                     return $rs;
                 } else { // jika ada
+                    $this->db->where('id', $data['id'])
+                            ->update('t_transaksi',
+                            [
+                                'tanggal_transaksi' => $date[2].'-'.$date[1].'-'.$date[0].' '.$tanggal[1],
+                                'nama' => $data['nama']
+                            ]);
                     $detail = $this->db->select('*')
                                 ->from('t_transaksi_detail')
                                 ->where('flag_active', 1)
@@ -396,6 +402,21 @@
             return $rs;
         }
 
+        public function getDataDashboard($data, $user){
+            $rs['code'] = 200;
+            $rs['message'] = "Refresh Data Berhasil";
+            $rs['status'] = true;
+            $rs['data'] = null;
+
+            $date = date('Y-m-d');
+
+            $rs['data']['total_penjualan'] = '34491238';
+            $rs['data']['total_transaksi'] = '123';
+            $rs['data']['total_item'] = '583';
+
+            return $rs;
+        }
+
         public function getAllTransaction($data, $user){
             $rs['code'] = 200;
             $rs['message'] = "Refresh Data Berhasil";
@@ -413,6 +434,7 @@
                                 ->where('a.flag_active', 1)
                                 ->where('b.flag_active', 1)
                                 ->where('a.id_m_merchant', $user['id_m_merchant'])
+                                ->order_by('a.status_transaksi', 'asc')
                                 ->order_by('a.tanggal_transaksi', 'desc')
                                 ->get()->result_array();
             $result = array();
