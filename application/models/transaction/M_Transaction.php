@@ -410,9 +410,55 @@
 
             $date = date('Y-m-d');
 
-            $rs['data']['total_penjualan'] = '34491238';
-            $rs['data']['total_transaksi'] = '123';
-            $rs['data']['total_item'] = '583';
+            if(isset($data['tanggal'])){
+                $date = $data['tanggal'];
+            }
+
+            $rs['data']['total_penjualan'] = 0;
+            $rs['data']['total_penjualan_lunas'] = 0;
+            $rs['data']['total_penjualan_belum_lunas'] = 0;
+            $rs['data']['total_transaksi'] = 0;
+            $rs['data']['total_transaksi_lunas'] = 0;
+            $rs['data']['total_transaksi_belum_lunas'] = 0;
+            $rs['data']['total_item'] = 0;
+            $rs['data']['total_item_lunas'] = 0;
+            $rs['data']['total_item_belum_lunas'] = 0;
+
+            $list_id_transaksi = [];
+
+            $data_transaksi = $this->db->select('*, a.id as id_transaksi, b.id as id_transaksi_detail, b.total_harga as harga_detail')
+                                    ->from('t_transaksi a')
+                                    ->join('t_transaksi_detail b',' a.id = b.id_t_transaksi')
+                                    ->where('a.tanggal_transaksi >=', $date.' 00:00:00')
+                                    ->where('a.tanggal_transaksi <=', $date.' 23:59:59')
+                                    ->where('a.flag_active', 1)
+                                    ->where('b.flag_active', 1)
+                                    ->order_by('a.id')
+                                    ->get()->result_array();
+
+            if($data_transaksi){
+                foreach($data_transaksi as $dt){
+                    $flag_lunas = $dt['status_transaksi'] == 'Belum Lunas' ? 0 : 1;
+                    $rs['data']['total_penjualan'] += $dt['harga_detail'];
+                    $rs['data']['total_item'] += $dt['qty'];
+                    if($flag_lunas == 1){
+                        $rs['data']['total_penjualan_lunas'] += $dt['harga_detail'];
+                        $rs['data']['total_item_lunas'] += $dt['qty'];
+                    } else {
+                        $rs['data']['total_penjualan_belum_lunas'] += $dt['harga_detail'];
+                        $rs['data']['total_item_belum_lunas'] += $dt['qty'];
+                    }
+                    if(!in_array($dt['id_transaksi'], $list_id_transaksi)){
+                        if($flag_lunas == 1){
+                            $rs['data']['total_transaksi_lunas']++;
+                        } else {
+                            $rs['data']['total_transaksi_belum_lunas']++;
+                        }
+                        array_push($list_id_transaksi, $dt['id_transaksi']); 
+                    }
+                }
+                $rs['data']['total_transaksi'] = count($list_id_transaksi);
+            }
 
             return $rs;
         }
