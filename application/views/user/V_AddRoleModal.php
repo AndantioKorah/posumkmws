@@ -11,11 +11,11 @@
                     <a class="nav-link active" aria-current="page" href="#role_tab" data-toggle="tab">Role</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="#merchant_tab" data-toggle="tab">Merchant</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="#password_tab" data-toggle="tab">Password</a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" onclick="refreshListVerifBidang()" href="#verif_tab" data-toggle="tab">Verifikasi</a>
-                </li> -->
             </ul>
         </div>
         <div class="tab-content col-12" id="myTabContent">
@@ -35,7 +35,7 @@
                                     <option value="<?=$r['id']?>"><?=$r['nama']?></option>
                                 <?php } } } ?>
                             </select>
-                            <input style="display: none;" class="form-control form-control-sm" name="id_m_user" value="<?=$user['id']?>"/>
+                            <input style="display: none;" class="form-control form-control-sm" name="id_m_user" value="<?=$user['id_m_user']?>"/>
                             <button class="btn btn-sm btn-navy float-right mt-3"><i class="fa fa-save"></i> Simpan</button>
                         </form>
                     </div>
@@ -43,6 +43,30 @@
                     <div class="col-12">
                         <label>Role:</label>
                         <div id="list_role" class="table-responsive"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="merchant_tab">
+                <div class="row">
+                    <div class="col-12">
+                        <form id="form_ganti_merchant">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>Merchant Saat Ini:</label><br>
+                                    <input id="nama_merchant_now" class="form-control" disabled value="<?=$user['nama_merchant']?>" />
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>Pilih Merchant:</label><br>
+                                    <select style="width: 100%;" class="form-control select2_this select2-navy" 
+                                        data-dropdown-css-class="select2-navy" name="id_m_merchant" id="id_m_merchant">
+                                            <?php foreach($list_merchant as $m){ ?>
+                                                <option <?=$m['id'] == $user['id_m_merchant'] ? 'selected' : '';?> value="<?=$m['id'].';'.$m['nama_merchant']?>"><?=$m['nama_merchant']?></option>
+                                            <?php } ?>
+                                    </select>
+                                <button class="btn btn-sm btn-navy float-right mt-3"><i class="fa fa-save"></i> Simpan</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -61,7 +85,7 @@
                                 </div>
                                 <div class="col-9"></div>
                                 <div class="col-3 text-right">
-                                    <input style="display: none;" class="form-control form-control-sm" name="id_m_user" value="<?=$user['id']?>"/>
+                                    <input style="display: none;" class="form-control form-control-sm" name="id_m_user" value="<?=$user['id_m_user']?>"/>
                                     <button class="btn btn-sm btn-navy float-right mt-3"><i class="fa fa-save"></i> Simpan</button>
                                 </div>
                             </div>
@@ -75,7 +99,7 @@
 <script>
     $(function(){
         $('.select2_this').select2()
-        loadListRole('<?=$user['id']?>')
+        loadListRole('<?=$user['id_m_user']?>')
     })
 
     function loadListRole(id){
@@ -85,6 +109,23 @@
 
         })
     }
+
+    $('#form_ganti_merchant').on('submit', function(e){
+        e.preventDefault()
+        $.ajax({
+            url: '<?=base_url("user/C_User/changeMerchantUser/".$user['id_m_user'])?>',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(data){
+                let rs = JSON.parse(data)
+                $('#nama_merchant_now').val(rs.nama_merchant)                
+                $('#nama_merchant_user_list_'+'<?=$user['id_m_user']?>').html(rs.nama_merchant)                
+                successtoast('Berhasil')
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    })
 
     $('#form_ganti_password').on('submit', function(e){
         e.preventDefault()
@@ -119,7 +160,7 @@
                 } else {
                     errortoast(rs.message)
                 }
-                loadListRole('<?=$user['id']?>')
+                loadListRole('<?=$user['id_m_user']?>')
             }, error: function(e){
                 errortoast('Terjadi Kesalahan')
             }

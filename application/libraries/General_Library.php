@@ -328,6 +328,11 @@ class General_library
         return $this->userLoggedIn['nama_user'];
     }
 
+    public function getIdMerchant(){
+        // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
+        return $this->userLoggedIn['id_m_merchant'];
+    }
+
     public function getId(){
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
         return $this->userLoggedIn['id'];

@@ -5,21 +5,26 @@
     <div class="card-body" style="display: block;">
         <form id="form_tambah_menu_merchant">
             <div class="row">
-                <div class="col-4">
-                    <div class="form-group">
-                        <label class="bmd-label-floating">Pilih Merchant</label>
-                        <select class="form-control select2-navy" style="width: 100%"
-                        id="id_m_merchant" data-dropdown-css-class="select2-navy" name="id_m_merchant">
-                            <?php if($list_merchant){
-                                foreach($list_merchant as $lm){
-                                ?>
-                                <option value="<?=$lm['id']?>">
-                                    <?=$lm['nama_merchant']?>
-                                </option>
-                            <?php } } ?>
-                        </select>
+                <?php if($this->general_library->isProgrammer()){ ?>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Pilih Merchant</label>
+                            <select class="form-control select2-navy" style="width: 100%"
+                            id="id_m_merchant" data-dropdown-css-class="select2-navy" name="id_m_merchant">
+                                <option value="0" selected>Pilih Merchant</option>
+                                <?php if($list_merchant){
+                                    foreach($list_merchant as $lkm){
+                                    ?>
+                                    <option value="<?=$lkm['id']?>">
+                                        <?=$lkm['nama_merchant']?>
+                                    </option>
+                                <?php } } ?>
+                            </select>
+                        </div>
                     </div>
-                </div>
+                <?php } else { ?>
+                    <input name="id_m_merchant" id="id_m_merchant" value="<?=$this->general_library->getIdMerchant()?>" style="display: none;" />
+                <?php } ?>
                 <div class="col-4">
                     <div class="form-group">
                         <label class="bmd-label-floating">Jenis Menu</label>

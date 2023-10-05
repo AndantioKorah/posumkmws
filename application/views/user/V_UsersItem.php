@@ -15,7 +15,7 @@
                         <td align="center"><?=$no++;?></td>
                         <td><?=$rs['nama_user'];?></td>
                         <td><?=$rs['username'];?></td>
-                        <td><?=$rs['nama_merchant'];?></td>
+                        <td><span id="nama_merchant_user_list_<?=$rs['id']?>"><?=$rs['nama_merchant'];?></span></td>
                         <td><?=$rs['no_hp'];?></td>
                         <td>
                             <button type="button" data-toggle="modal" href="#add_role_modal" onclick="openAddRoleModal('<?=$rs['id']?>')" class="btn btn-sm btn-info"

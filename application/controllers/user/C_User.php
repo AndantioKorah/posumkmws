@@ -31,8 +31,9 @@ class C_User extends CI_Controller
     }
 
     public function openAddRoleModal($id_m_user){
-        $data['user'] = $this->general->getOne('m_user', 'id', $id_m_user, 1);
+        $data['user'] = $this->user->getUserInfo($id_m_user);
         $data['roles'] = $this->general->getAllWithOrder('m_role', 'nama', 'asc');
+        $data['list_merchant'] = $this->general->getAllWithOrder('m_merchant', 'nama_merchant', 'asc');
         $this->load->view('user/V_AddRoleModal', $data);
     }
 
@@ -158,5 +159,9 @@ class C_User extends CI_Controller
 
     public function deleteRole($id){
         echo json_encode($this->user->deleteRole($id));
+    }
+
+    public function changeMerchantUser($id_user){
+        echo json_encode($this->user->changeMerchantUser($id_user, $this->input->post()));
     }
 }

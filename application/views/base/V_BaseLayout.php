@@ -36,6 +36,15 @@
 
 
   <style>
+    :root {
+    --primary: #001f3f;
+    --primary-hover: #05519e;
+    --secondary: #d6df22;
+    --black-theme: #4a5562;
+    --black-theme-hover: #3d444c;
+    --red-delete: #e0535b;
+  }
+
     body{
       font-size: 15px !important;
     }

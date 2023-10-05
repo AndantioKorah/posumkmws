@@ -322,12 +322,17 @@
                 $i = 0;
                 foreach($list_menu as $l){
                     $list_menu[$i]['child'] = null;
-                    $list_menu[$i]['child'] = $this->db->select('*')
-                                                        ->from('m_menu')
-                                                        ->where('id_m_menu_parent', $l['id'])
-                                                        ->where('flag_active', 1)
-                                                        ->order_by('nama_menu', 'asc')
-                                                        ->get()->result_array();
+                    $this->db->select('*')
+                            ->from('m_menu a')
+                            ->where('a.id_m_menu_parent', $l['id'])
+                            ->where('a.flag_active', 1)
+                            ->order_by('a.nama_menu', 'asc');
+                    if($role_name != 'programmer'){
+                        $this->db->join('m_menu_role b', 'b.id_m_menu = a.id')
+                                ->where('b.id_m_role', $id_role)    
+                                ->where('b.flag_active', 1);    
+                    }
+                    $list_menu[$i]['child'] = $this->db->get()->result_array();
                     $i++;
                 }
             }
@@ -608,6 +613,27 @@
                             ->get()->result_array();
             $res = ['code' => 200, 'message' => '', 'data' => $list];
             return $res;
+        }
+
+        public function getUserInfo($id){
+            return $this->db->select('*, a.id as id_m_user')
+                            ->from('m_user a')
+                            ->join('m_merchant b', 'a.id_m_merchant = b.id')
+                            ->where('a.id', $id)
+                            ->get()->row_array();
+        }
+
+        public function changeMerchantUser($id_m_user, $data){
+            $this->db->where('id', $id_m_user)
+                    ->update('m_user', [
+                        'id_m_merchant' => $data['id_m_merchant']
+                    ]);
+
+            return $this->db->select('*')
+                        ->from('m_merchant')
+                        ->where('id', $data['id_m_merchant'])
+                        ->where('flag_active', 1)
+                        ->get()->row_array();
         }
 	}
 ?>

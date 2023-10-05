@@ -14,6 +14,7 @@ class C_Master extends CI_Controller
 
     public function masterKategoriMenu(){
         $data['list_merchant'] = $this->general->getAllWithOrder('m_merchant');
+        $data['list_jenis'] = $this->master->getAllJenisMenuByIdMerchant($this->general_library->getIdMerchant());
         render('master/V_MasterKategoriMenu', '', '', $data);
     }
 
@@ -21,8 +22,13 @@ class C_Master extends CI_Controller
         echo json_encode($this->master->getAllJenisMenuByIdMerchant($id_merchant));
     }
 
-    public function loadKategoriMenuMerchant($id_m_jenis_menu){
-        $data['result'] = $this->master->getKategoriMenuByIdJenis($id_m_jenis_menu);
+    // public function loadKategoriMenuMerchant($id_m_jenis_menu){
+    //     $data['result'] = $this->master->getKategoriMenuByIdJenis($id_m_jenis_menu);
+    //     $this->load->view('master/V_MasterKategoriMenuItem', $data);
+    // }
+
+    public function loadKategoriMenuMerchant($id_m_merchant = 0){
+        $data['result'] = $this->master->getKategoriMenuMerchant($id_m_merchant);
         $this->load->view('master/V_MasterKategoriMenuItem', $data);
     }
 

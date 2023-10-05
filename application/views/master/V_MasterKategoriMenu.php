@@ -5,6 +5,7 @@
     <div class="card-body" style="display: block;">
         <form id="form_tambah_kategori_menu">
             <div class="row">
+            <?php if($this->general_library->isProgrammer()){ ?>
                 <div class="col-3">
                     <div class="form-group">
                         <label>Pilih Merchant</label>
@@ -21,11 +22,17 @@
                         </select>
                     </div>
                 </div>
+                <?php } else { ?>
+                    <input name="id_m_merchant" id="id_m_merchant" value="<?=$this->general_library->getIdMerchant()?>" style="display: none;" />
+                <?php } ?>
                 <div class="col-3">
                     <div class="form-group">
                         <label class="bmd-label-floating">Jenis Menu</label>
                         <select class="form-control select2-navy" style="width: 100%"
                         id="id_m_jenis_menu" data-dropdown-css-class="select2-navy" name="id_m_jenis_menu">
+                            <?php if(!$this->general_library->isProgrammer()){ foreach($list_jenis as $lj) {?>
+                                <option value="<?=$lj['id']?>"><?=$lj['nama_jenis_menu']?></option>
+                            <?php } } ?>
                         </select>
                     </div>
                 </div>
@@ -64,7 +71,9 @@
 
 <script>
     $(function(){
-        $('#id_m_merchant').select2()
+        <?php if($this->general_library->isProgrammer()){ ?>
+            $('#id_m_merchant').select2()
+        <?php } ?>
         $('#id_m_jenis_menu').select2()
 
         $(function(){
@@ -73,6 +82,9 @@
             <?php } ?>
             <?php if($this->session->flashdata('message') == '0'){ ?>
                 successtoast('UPDATE BERHASIL')
+            <?php } ?>
+            <?php if(!$this->general_library->isProgrammer()){ ?>
+                loadKategoriMenuMerchant()
             <?php } ?>
         })
     })
@@ -88,23 +100,30 @@
                 for(let i = 0; i < rs.length; i++){
                     $('#id_m_jenis_menu').append('<option value="'+rs[i].id+'">'+rs[i].nama_jenis_menu+'</option>')
                 }
-                loadKategoriMenuMerchant($('#id_m_jenis_menu').val())
+                // loadKategoriMenuMerchant($('#id_m_jenis_menu').val())
+                loadKategoriMenuMerchant()
             }, error: function(e){
                 errortoast('Terjadi Kesalahan')
             }
         })
     })
 
-    $('#id_m_jenis_menu').on('change', function(){
-        loadKategoriMenuMerchant($(this).val())
-    })
+    // $('#id_m_jenis_menu').on('change', function(){
+    //     loadKategoriMenuMerchant($(this).val())
+    // })
 
     function loadKategoriMenuMerchant(){
         $('#list_kategori_menu').html('')
         $('#list_kategori_menu').append(divLoaderNavy)
-        $('#list_kategori_menu').load('<?=base_url("master/C_Master/loadKategoriMenuMerchant/")?>'+$('#id_m_jenis_menu').val(), function(){
-            $('#loader').hide()
-        })
+        <?php if($this->general_library->isProgrammer()){ ?>
+            $('#list_kategori_menu').load('<?=base_url("master/C_Master/loadKategoriMenuMerchant/")?>'+$('#id_m_merchant').val(), function(){
+                $('#loader').hide()
+            })
+        <?php } else { ?>
+            $('#list_kategori_menu').load('<?=base_url("master/C_Master/loadKategoriMenuMerchant")?>', function(){
+                $('#loader').hide()
+            })
+        <?php } ?>
     }
 
     $('#form_tambah_kategori_menu').on('submit', function(e){

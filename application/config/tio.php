@@ -9,6 +9,10 @@ $route['master/jenis-menu'] = 'master/C_Master/masterJenisMenu';
 $route['master/kategori-menu'] = 'master/C_Master/masterKategoriMenu';
 
 
+//website
+$route['kasir'] = 'kasir/C_Kasir/kasir';
+
+
 //api
 $route['api/login'] = 'api/C_User/';
 $route['api/logout'] = 'api/User/logout';

@@ -48,7 +48,7 @@
     display: none;
   }
 </style>
-<nav class="main-header navbar navbar-expand navbar-dark navbar-red">
+<nav class="main-header navbar navbar-expand navbar-dark navbar-navy">
     <!-- <form class="form-inline ml-3">
       <div class="row">
         <div class="input-group input-group-sm div_search_bar">
@@ -67,9 +67,9 @@
       </div>
     </form> -->
     <ul class="navbar-nav">
-      <!-- <li class="nav-item">
+      <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-      </li> -->
+      </li>
       <li class="nav-item">
         <a style="font-weight: bold; color: white;" id="live_date_time" class="nav-link"></a>
       </li>

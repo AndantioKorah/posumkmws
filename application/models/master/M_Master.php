@@ -74,6 +74,19 @@
                             ->get()->result_array();
         }
 
+        public function getKategoriMenuMerchant($id_m_merchant){
+            if($id_m_merchant == 0){
+                $id_m_merchant = $this->general_library->getIdMerchant();
+            }
+            return $this->db->select('a.*, b.nama_jenis_menu')
+                            ->from('m_kategori_menu a')
+                            ->join('m_jenis_menu b', 'a.id_m_jenis_menu = b.id')
+                            ->where('a.flag_active', 1)
+                            ->where('a.id_m_merchant', $id_m_merchant)
+                            ->order_by('a.nama_kategori_menu', 'asc')
+                            ->get()->result_array();
+        }
+
         public function getKategoriMenuByIdMerchant($id_m_merchant){
             return $this->db->select('a.*, b.nama_jenis_menu,
             (   SELECT count(c.id)

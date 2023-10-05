@@ -5,6 +5,7 @@
     <div class="card-body" style="display: block;">
         <form id="form_tambah_jenis_menu">
             <div class="row">
+                <?php if($this->general_library->isProgrammer()){ ?>
                 <div class="col-4">
                     <div class="form-group">
                         <label>Pilih Merchant</label>
@@ -21,6 +22,9 @@
                         </select>
                     </div>
                 </div>
+                <?php } else { ?>
+                    <input name="id_m_merchant" id="id_m_merchant" value="<?=$this->general_library->getIdMerchant()?>" style="display: none;" />
+                <?php } ?>
                 <div class="col-4">
                     <div class="form-group">
                         <label class="bmd-label-floating">Nama Jenis Menu</label>
@@ -56,8 +60,10 @@
 
 <script>
     $(function(){
-        $('#id_m_merchant').select2()
-
+        <?php if($this->general_library->isProgrammer()){ ?>
+            $('#id_m_merchant').select2()
+        <?php } ?>
+        
         loadJenisMenuByMerchant()
 
         $(function(){
