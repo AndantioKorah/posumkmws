@@ -52,4 +52,12 @@ class C_Kasir extends CI_Controller
         $data['detail'] = $this->session->userdata('list_detail');
         $this->load->view('kasir/V_ListMenu', $data);
     }
+
+    public function changeSelectedMenu(){
+        echo json_encode($this->kasir->changeSelectedMenu($this->input->post()));
+    }
+
+    public function deleteSelectedMenu(){
+        $this->kasir->deleteSelectedMenu($this->input->post());
+    }
 }

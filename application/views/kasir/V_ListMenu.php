@@ -87,7 +87,8 @@
             // $('#badge_qty_'+id).addClass('badge-secondary')
         }
         $('#badge_qty_'+id).html(new_val);
-        getListSelectedMenuFromListMenu()
+        // getListSelectedMenuFromListMenu()
+        changeSelectedMenu(id, 'minus')
     }
 
     function plusMenu(id){
@@ -98,7 +99,8 @@
             $('#badge_qty_'+id).addClass('badge-success')
         }
         $('#badge_qty_'+id).html(new_val);
-        getListSelectedMenuFromListMenu()
+        // getListSelectedMenuFromListMenu()
+        changeSelectedMenu(id, 'plus')
     }
 
     function getListSelectedMenuFromListMenu(){
@@ -108,9 +110,48 @@
         })
     }
 
+    function formatRupiah(angka, prefix = "Rp ") {
+        var number_string = angka.toString(),
+            split = number_string.split(","),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if (ribuan) {
+            separator = sisa ? "." : "";
+            rupiah += separator + ribuan.join(".");
+        }
+
+        rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+        return prefix == undefined ? rupiah : rupiah ? rupiah : "";
+    }
+
+    function changeSelectedMenu(id, type){
+        $.ajax({
+            url: '<?=base_url("kasir/C_Kasir/changeSelectedMenu")?>',
+            method: 'post',
+            data: {
+                id_m_menu_merchant: id,
+                type: type,
+                id_t_transaksi: '<?=$id_t_transaksi?>'
+            },
+            success: function(data){
+                let rs = JSON.parse(data)
+                if(rs.code == 0){
+                    $('.val_detail_total_harga').html("Rp "+formatRupiah(rs.total_harga))
+                    getListSelectedMenuFromListMenu()
+                } else {
+                    errortoast(rs.message)
+                }
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    }
+
     function removeAll(id){
         $('#badge_qty_'+id).html('0')
         $('#badge_qty_'+id).removeClass('badge-success')
-        console.log('hapus '+id)
     }
 </script>

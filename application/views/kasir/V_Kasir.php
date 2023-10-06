@@ -59,7 +59,6 @@
     })
 
     function loadTransaksi(){
-        console.log('load hereee')
         $('#div_list_transaksi').html('')
         $('#div_list_transaksi').append(divLoaderNavy)
         $.ajax({

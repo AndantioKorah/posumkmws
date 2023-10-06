@@ -101,5 +101,101 @@
             }
         }
 
+        public function updateTotalHargaTransaksi($id){
+            $detail = $this->db->select('*')
+                                ->from('t_transaksi_detail')
+                                ->where('flag_active', 1)
+                                ->where('id_t_transaksi', $id)
+                                ->get()->result_array();
+            if($detail){
+                $total_harga = 0;
+                foreach($detail as $d){
+                    $total_harga += (floatval($d['qty']) * floatval($d['harga']));
+                }
+                $this->db->where('id', $id)
+                        ->update('t_transaksi', [
+                            'total_harga' => $total_harga
+                        ]);
+            }
+            return $total_harga;
+        }
+
+        public function changeSelectedMenu($data){
+            $result = ['code' => 0, 'message' => 'Berhasil', 'total_harga' => 0];
+            $exist = $this->db->select('*')
+                            ->from('t_transaksi_detail a')
+                            ->where('a.id_t_transaksi', $data['id_t_transaksi'])
+                            ->where('a.id_m_menu_merchant', $data['id_m_menu_merchant'])
+                            ->where('a.flag_active', 1)
+                            ->get()->row_array();
+
+            if($exist){
+                if($data['type'] == 'minus'){
+                    $new_qty = floatval($exist['qty']) - 1;
+                    $new_total_harga = $new_qty * $exist['harga'];
+                    
+                } else if($data['type'] == 'plus') {
+                    $new_qty = floatval($exist['qty']) + 1;
+                    $new_total_harga = $new_qty * $exist['harga'];
+                }
+                
+                if($new_qty == 0){
+                    $this->db->where('id_m_menu_merchant', $data['id_m_menu_merchant'])
+                            ->where('id_t_transaksi', $data['id_t_transaksi'])
+                            ->update('t_transaksi_detail', [
+                                'flag_active' => 0,
+                                'updated_by' => $this->general_library->getId()
+                            ]);
+                } else {
+                    $this->db->where('id_m_menu_merchant', $data['id_m_menu_merchant'])
+                            ->where('id_t_transaksi', $data['id_t_transaksi'])
+                            ->update('t_transaksi_detail', [
+                                'qty' => $new_qty,
+                                'total_harga' => $new_total_harga,
+                                'updated_by' => $this->general_library->getId()
+                            ]);
+                }
+            } else {
+                if($data['type'] == 'minus'){
+                    // $result = ['code' => 1, 'message' => 'Terjadi Kesalahan'];
+                } else if($data['type'] == 'plus') {
+                    $menu = $this->db->select('*')
+                                ->from('m_menu_merchant a')
+                                ->where('a.id', $data['id_m_menu_merchant'])
+                                ->where('a.flag_active', 1)
+                                ->get()->row_array();
+                    if($menu){
+                        $this->db->insert('t_transaksi_detail', [
+                            'id_t_transaksi' => $data['id_t_transaksi'],
+                            'id_m_menu_merchant' => $menu['id'],
+                            'harga' => $menu['harga'],
+                            'qty' => 1,
+                            'total_harga' => $menu['harga'],
+                            'nama_menu_merchant' => $menu['nama_menu_merchant'],
+                            'created_by' => $this->general_library->getId()                            
+                        ]);
+                    }
+                }
+            }
+
+            $result['total_harga'] = $this->updateTotalHargaTransaksi($data['id_t_transaksi']);
+            return $result;
+        }
+
+        public function deleteSelectedMenu($data){
+            $exist = $this->db->select('*')
+                            ->from('t_transaksi_detail')
+                            ->where('id', $data['id'])
+                            ->get()->row_array();
+
+            $this->db->where('id', $data['id'])
+                    ->update('t_transaksi_detail', [
+                        'flag_active' => 0,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+
+            $this->updateTotalHargaTransaksi($exist['id_t_transaksi']);
+        }
+
 	}
 ?>

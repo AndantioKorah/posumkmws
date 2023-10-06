@@ -12,7 +12,7 @@
         font-size: .9rem;
     }
 
-    .val_total_harga{
+    .val_detail_total_harga{
         color: black;
         font-weight: bold;
         font-size: 3rem;
@@ -69,21 +69,33 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="card card-default">
-                    <div class="card-header">
+                <div class="card card-default" style="height: 80vh !important;">
+                    <div class="card-header pl-0 pr-0 pt-1 pb-1">
                         <div class="row">
                             <div class="col-lg-12 text-center">
                                 <h5 class="lbl_total_harga">TOTAL TRANSAKSI</h5>
                             </div>
                             <div class="col-lg-12 text-center">
-                                <h3 class="val_total_harga">
+                                <h3 class="val_detail_total_harga">
                                     <?=formatCurrency($transaksi['total_harga'])?>
                                 </h3>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="row" id="div_selected_menu"></div>
+                    <div class="card-body row p-2">
+                        <div class="col-lg-12" id="div_selected_menu" style="
+                                height: 40vh !important;
+                                overflow-y: scroll;
+                                overflow-x: hidden    
+                            "></div>
+                        <div class="col-lg-12">
+                            <hr>
+                        </div>
+                        <div class="col-lg-12" style="
+                            height: 20vh;
+                        ">
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -130,6 +142,7 @@
         $('#main_view_kasir').show()
         $('#view_detail_transaksi').html('')
         $('#view_detail_transaksi').hide()
+        loadTransaksi()
     })
 
     $('#btn_refresh').on('click', function(){
