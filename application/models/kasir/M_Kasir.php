@@ -197,5 +197,14 @@
             $this->updateTotalHargaTransaksi($exist['id_t_transaksi']);
         }
 
+        public function getPembayaranTransaksi($id){
+            return $this->db->select('*')
+                            ->from('t_pembayaran a')
+                            ->join('m_jenis_pembayaran b', 'a.id_m_jenis_pembayaran = b.id')
+                            ->where('a.id', $id)
+                            ->where('a.flag_active', 1)
+                            ->get()->row_array();
+        }
+
 	}
 ?>

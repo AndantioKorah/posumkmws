@@ -84,17 +84,16 @@
                     </div>
                     <div class="card-body row p-2">
                         <div class="col-lg-12" id="div_selected_menu" style="
-                                height: 40vh !important;
+                                height: 30vh !important;
                                 overflow-y: scroll;
                                 overflow-x: hidden    
                             "></div>
-                        <div class="col-lg-12">
-                            <hr>
+                        <div class="col-lg-12 p-0">
+                            <hr style="">
                         </div>
-                        <div class="col-lg-12" style="
-                            height: 20vh;
+                        <div id="div_pembayaran" class="col-lg-12" style="
+                            height: 35vh;
                         ">
-
                         </div>
                     </div>
                 </div>
@@ -106,6 +105,7 @@
     $(function(){
         loadListMenu()
         getListSelectedMenu()
+        loadPembayaran()
     })
 
     $('#input_cari_menu').on('keyup', function(){
@@ -123,6 +123,11 @@
             }
         })
     })
+
+    function loadPembayaran(){
+        $('#div_pembayaran').load('<?=base_url('kasir/C_Kasir/getPembayaranTransaksi/'.$transaksi['id'])?>', function(){
+        })
+    }
     
     function getListSelectedMenu(){
         // $('#div_selected_menu').html('')

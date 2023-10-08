@@ -60,4 +60,11 @@ class C_Kasir extends CI_Controller
     public function deleteSelectedMenu(){
         $this->kasir->deleteSelectedMenu($this->input->post());
     }
+
+    public function getPembayaranTransaksi($id){
+        $data['result'] = $this->kasir->getPembayaranTransaksi($id);
+        $data['transaksi'] = $this->kasir->getDataTransaksi($id);
+        $data['jenis_pembayaran'] = $this->general->getAllWithOrder('m_jenis_pembayaran', 'nama_jenis_pembayaran', 'asc');
+        $this->load->view('kasir/V_Pembayaran', $data);
+    }
 }
