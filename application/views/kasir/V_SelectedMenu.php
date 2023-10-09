@@ -29,7 +29,9 @@
             <div class="col-lg-12" id="row_<?=$rs['id_m_menu_merchant']?>">
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 text-left">
-                        <i onclick="deleteSelectedItem('<?=$rs['id_m_menu_merchant']?>', '<?=$rs['total_harga']?>', '<?=$rs['id']?>')" style="color: pink; font-size: 12px;" class="fa fa-trash fa-delete"></i> 
+                        <?php if(!$pembayaran){ ?>
+                            <i onclick="deleteSelectedItem('<?=$rs['id_m_menu_merchant']?>', '<?=$rs['total_harga']?>', '<?=$rs['id']?>')" style="color: pink; font-size: 12px;" class="fa fa-trash fa-delete"></i> 
+                        <?php } ?>
                         <span class="val_selected_nama_menu"><?=$rs['nama_menu_merchant']?></span>
                     </div>
                     <div class="col-lg-9 col-md-9 col-sm-9 text-left">
@@ -58,6 +60,8 @@
                     removeAll(id)
                     let new_total_harga_selected = parseInt('<?=$total_harga?>') - parseInt(total_harga)
                     $('.val_detail_total_harga').html("Rp "+formatRupiah(new_total_harga_selected))      
+                    $('#input_total_bayar').val(formatRupiah(new_total_harga_selected))
+                    $('#input_kembalian').val("0")
                 }, error: function(e){
                     errortoast('Terjadi Kesalahan')
                 }

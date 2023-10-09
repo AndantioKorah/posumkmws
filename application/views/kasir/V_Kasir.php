@@ -1,6 +1,7 @@
 <div class="row" id="main_view_kasir" style="display: block;">
     <div class="col-lg-12">
-        <button class="btn btn-block btn-navy"><i class="fa fa-plus"></i> Transaksi Baru</button>
+        <button id="btn_new_transaksi" class="btn btn-block btn-navy"><i class="fa fa-plus"></i> Transaksi Baru</button>
+        <button style="display: none;" id="btn_loading_new_transaksi" disabled class="btn btn-block btn-navy"><i class="fa fa-spin fa-spinner"></i> Loading...</button>
     </div>
     <div class="col-lg-12 mt-3">
         <div class="card card-default">
@@ -33,12 +34,40 @@
 
 </div>
 <script>
+    let pembayaran;
+
     $(function(){
         loadTransaksi()
     })
 
     $('#date_transaksi').on('change', function(){
         loadTransaksi()
+    })
+
+    $('#btn_new_transaksi').on('click', function(){
+        $('#btn_new_transaksi').hide()
+        $('#btn_loading_new_transaksi').show()
+        $.ajax({
+            url: '<?=base_url("kasir/C_Kasir/saveTransaksi/0")?>',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(data){
+                $('#btn_new_transaksi').show()
+                $('#btn_loading_new_transaksi').hide()
+                let rs = JSON.parse(data)
+                $('#main_view_kasir').hide()
+                $('#view_detail_transaksi').show()
+                $('#view_detail_transaksi').html('')
+                $('#view_detail_transaksi').append(divLoaderNavy)
+                $('#view_detail_transaksi').load('<?=base_url('kasir/C_Kasir/detailTransaksi/')?>'+rs.id, function(){
+                    $('#loader').hide()
+                })
+            }, error: function(e){
+                $('#btn_new_transaksi').show()
+                $('#btn_loading_new_transaksi').hide()
+                errortoast('Terjadi Kesalahan')
+            }
+        })  
     })
 
     $('#search_field').on('keyup', function(){

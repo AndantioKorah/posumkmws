@@ -29,11 +29,16 @@
         color: green !important;
         transition: .2s;
     }
+
+    .bg-selected{
+        background-color: var(--green-item-selected);
+        color: white !important;
+    }
 </style>
 <div class="row">
     <?php if($list_menu){ foreach($list_menu as $lm){ ?>
         <div class="col-lg-3" style="display: inline-block">
-            <div class="card-menu-item card card-default">
+            <div id="card-menu-<?=$lm['id']?>" class="card-menu-item card card-default <?=isset($detail[$lm['id']]) ? 'bg-selected' : '' ?>">
                 <div class="card-header p-0">
                     <div class="row pl-1 pr-1">
                         <div class="col-lg-12 text-right" style="margin-bottom: -5px;">
@@ -55,22 +60,24 @@
                             </span>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4 text-right mt-1">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <i onclick="minusMenu('<?=$lm['id']?>')" style="color: grey;" class="btn-min fa fa-minus-circle"></i>
+                            <?php if(!$pembayaran){ ?>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <i onclick="minusMenu('<?=$lm['id']?>')" style="color: grey;" class="btn-min fa fa-minus-circle"></i>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <i onclick="plusMenu('<?=$lm['id']?>')" style="color: grey;" class="btn-plus fa fa-plus-circle"></i>
+                                    </div>
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <i onclick="plusMenu('<?=$lm['id']?>')" style="color: grey;" class="btn-plus fa fa-plus-circle"></i>
-                                </div>
-                            </div>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer p-0" style="background-color: white !important; border-top: 1px solid #dfdfdf;">
+                <!-- <div class="card-footer p-0" style="background-color: white !important; border-top: 1px solid #dfdfdf;">
                     <div class="row">
                         
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     <?php } } ?>
@@ -84,6 +91,7 @@
         }
         if(new_val == 0){
             $('#badge_qty_'+id).removeClass('badge-success')
+            $('#card-menu-'+id).removeClass('bg-selected')
             // $('#badge_qty_'+id).addClass('badge-secondary')
         }
         $('#badge_qty_'+id).html(new_val);
@@ -97,6 +105,7 @@
         if(new_val == 1){
             // $('#badge_qty_'+id).removeClass('badge-secondary')
             $('#badge_qty_'+id).addClass('badge-success')
+            $('#card-menu-'+id).addClass('bg-selected')
         }
         $('#badge_qty_'+id).html(new_val);
         // getListSelectedMenuFromListMenu()
@@ -140,6 +149,8 @@
                 let rs = JSON.parse(data)
                 if(rs.code == 0){
                     $('.val_detail_total_harga').html("Rp "+formatRupiah(rs.total_harga))
+                    $('#input_total_bayar').val(formatRupiah(rs.total_harga))
+                    $('#input_kembalian').val("0")
                     getListSelectedMenuFromListMenu()
                 } else {
                     errortoast(rs.message)

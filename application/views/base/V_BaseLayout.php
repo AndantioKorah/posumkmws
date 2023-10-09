@@ -31,7 +31,6 @@
   <script src="<?=base_url('assets/css/general.css')?>"></script>
 
 	<link rel="stylesheet" href="<?=base_url('assets/css/bootstrap-datetimepicker.css')?>">
-  <script src="<?=base_url('assets/js/bootstrap-datetimepicker.js')?>"></script>
   <link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>">
 
 
@@ -43,6 +42,7 @@
     --black-theme: #4a5562;
     --black-theme-hover: #3d444c;
     --red-delete: #e0535b;
+    --green-item-selected: #b1efbf;
   }
 
     body{
@@ -461,7 +461,7 @@
 <!-- <script src="<?=base_url('assets/js/demo.js')?>"></script> -->
 <script src="<?=base_url('assets/js/jquery.dataTables.min.js')?>"></script>
 <script src="<?=base_url('plugins/sweetalert2/sweetalert2.min.js')?>"></script>
-
+<script src="<?=base_url('assets/js/bootstrap-datetimepicker.js')?>"></script>
   
 </body>
 </html>

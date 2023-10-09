@@ -24,6 +24,33 @@
         font-size: .8rem;
         font-style: italic;
     }
+
+    .input-detail-transaksi{
+        height: 1.5rem;
+        font-size: 1rem;
+        padding: 0;
+        /* color: black; */
+        padding-bottom: .5rem;
+        border: 0;
+        font-weight: bold;
+        border-bottom: 1px solid grey;
+        border-radius: 0;
+        background-color: transparent !important;
+    }
+
+    .input-detail-transaksi:hover{
+        cursor: pointer;
+    }
+
+    @media  (min-width: 992px) {
+        #card_total_transaksi{
+            height: 80vh !important;
+        }
+
+        #div_pembayaran{
+            height: 35vh;
+        }
+    }
 </style>
 <div class="col-lg-6">
     <button id="btn_back" class="btn btn-sm btn-outline-navy"><i class="fa fa-arrow-left"></i> Kembali</button>
@@ -37,20 +64,27 @@
             <div class="col-lg-8">
                 <div class="card card-default">
                     <div class="card-header">
-                        <div class="row">
-                            <div class="col-lg-4 text-left">
-                                <span class="lbl_detail">Nama:</span><br>
-                                <span class="val_detail"><?=$transaksi['nama']?></span>
+                        <form id="form_data_transaksi">
+                            <div class="row">
+                                <div class="col-lg-3 col-md-3 col-sm-3 text-left">
+                                    <span class="lbl_detail">Nama:</span><br>
+                                    <input id="input_nama" name="nama" class="form-control input-detail-transaksi form-control-sm" value="<?=$transaksi['nama']?>" />
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 text-center">
+                                    <span class="lbl_detail">No. Transaksi:</span><br>
+                                    <span class="val_detail"><?=$transaksi['nomor_transaksi']?></span>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 text-center">
+                                    <span class="lbl_detail">Status:</span><br>
+                                    <span class="val_detail"><?=$transaksi['status_transaksi']?></span>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 text-right">
+                                    <span class="lbl_detail">Tanggal:</span><br>
+                                    <input id="input_tanggal_transaksi" name="tanggal_transaksi" readonly class="datetimepickermaxtodaythistransaksi input-detail-transaksi form-control form-control-sm" 
+                                    style="text-align: right;" value="<?=formatDateForEdit($transaksi['tanggal_transaksi'])?>" />
+                                </div>
                             </div>
-                            <div class="col-lg-4 text-center">
-                                <span class="lbl_detail">Status:</span><br>
-                                <span class="val_detail"><?=$transaksi['status_transaksi']?></span>
-                            </div>
-                            <div class="col-lg-4 text-right">
-                                <span class="lbl_detail">Tanggal:</span><br>
-                                <span class="val_detail"><?=formatDate($transaksi['tanggal_transaksi'])?></span>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -69,7 +103,7 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="card card-default" style="height: 80vh !important;">
+                <div class="card card-default" id="card_total_transaksi">
                     <div class="card-header pl-0 pr-0 pt-1 pb-1">
                         <div class="row">
                             <div class="col-lg-12 text-center">
@@ -91,9 +125,7 @@
                         <div class="col-lg-12 p-0">
                             <hr style="">
                         </div>
-                        <div id="div_pembayaran" class="col-lg-12" style="
-                            height: 35vh;
-                        ">
+                        <div id="div_pembayaran" class="col-lg-12">
                         </div>
                     </div>
                 </div>
@@ -102,11 +134,56 @@
     </div>
 <?php } ?> 
 <script>
+    var typingTimer;                //timer identifier
+    var doneTypingInterval = 1000;  //time in ms, 5 seconds for example
+    var input_nama = $('#input_nama');
+
     $(function(){
+        pembayaran = JSON.parse('<?=json_encode($pembayaran)?>')
         loadListMenu()
         getListSelectedMenu()
         loadPembayaran()
+        $('.datetimepickermaxtodaythistransaksi').datetimepicker({
+            format: 'yyyy-mm-dd hh:ii:ss',
+            autoclose: true,
+            todayHighlight: true,
+            todayBtn: true,
+            endDate: new Date()
+        })
     })
+
+    //on keyup, start the countdown
+    input_nama.on('keyup', function () {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(doneTyping, doneTypingInterval);
+    });
+
+    //on keydown, clear the countdown 
+    input_nama.on('keydown', function () {
+        clearTimeout(typingTimer);
+    });
+
+    //user is "finished typing," do something
+    function doneTyping () {
+        $('#form_data_transaksi').submit()    
+    }
+
+    $('.datetimepickermaxtodaythistransaksi').on('change', function(){
+        $('#form_data_transaksi').submit()    
+    })
+
+    $('#form_data_transaksi').on('submit', function(e){
+        e.preventDefault()
+        $.ajax({
+            url: '<?=base_url("kasir/C_Kasir/saveTransaksi/".$transaksi['id'])?>',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(data){
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    })    
 
     $('#input_cari_menu').on('keyup', function(){
         $('#div_list_menu').html('')

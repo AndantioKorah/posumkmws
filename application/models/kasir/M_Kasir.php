@@ -201,9 +201,78 @@
             return $this->db->select('*')
                             ->from('t_pembayaran a')
                             ->join('m_jenis_pembayaran b', 'a.id_m_jenis_pembayaran = b.id')
-                            ->where('a.id', $id)
+                            ->where('a.id_t_transaksi', $id)
                             ->where('a.flag_active', 1)
                             ->get()->row_array();
+        }
+
+        public function saveTransaksi($id){
+            $data['id'] = $id;
+            if($id != 0){
+                $data = $this->input->post();
+                $this->db->where('id', $id)
+                        ->update('t_transaksi', [
+                            'nama' => $data['nama'],
+                            'tanggal_transaksi' => $data['tanggal_transaksi']
+                        ]);
+            } else {
+                $last_trx = $this->db->select('*')
+                                ->from('t_transaksi')
+                                ->where('id_m_merchant', $this->general_library->getIdMerchant())
+                                ->where('DATE(tanggal_transaksi)', date('Y-m-d'))
+                                ->order_by('created_date', 'desc')
+                                ->limit(1)
+                                ->get()->row_array();
+                $nomor_transaksi = generateNomorTransaksi($this->general_library->getIdMerchant(), $last_trx);
+                $this->db->insert('t_transaksi',[
+                    'nomor_transaksi' => $nomor_transaksi,
+                    'tanggal_transaksi' => date('Y-m-d H:i:s'),
+                    'nama' => "",
+                    'total_harga' => 0,
+                    'id_m_merchant' => $this->general_library->getIdMerchant(),
+                    'created_by' => $this->general_library->getId(),
+                ]);
+                $data['id'] = $this->db->insert_id();
+            }
+            
+            return $data;
+        }
+
+        public function createPembayaran($id){
+            $transaksi = $this->db->select('*')
+                                ->from('t_transaksi')
+                                ->where('id', $id)
+                                ->get()->row_array();
+
+            $data = $this->input->post();
+            $kembalian = floatval(clearString($transaksi['total_pembayaran'])) - floatval($data['total_harga']);
+
+            $this->db->insert('t_pembayaran', [
+                'id_t_transaksi' => $id,
+                'id_m_merchant' => $this->general_library->getIdMerchant(),
+                'tanggal_pembayaran' => date('Y-m-d H:i:s'),
+                'nama_pembayar' => $data['nama_pembayar'],
+                'id_m_jenis_pembayaran' => $data['id_m_jenis_pembayaran'],
+                'total_pembayaran' => clearString($data['total_pembayaran']),
+                'diskon_nominal' => clearString($data['diskon_nominal']),
+                'kembalian' => $kembalian,
+                'nomor_pembayaran' => str_pad($this->general_library->getIdMerchant(), 4, '0', STR_PAD_LEFT).date('ymdhis'),
+                'created_by' => $this->general_library->getId()
+            ]);
+
+            $this->db->where('id', $id)
+                    ->update('t_transaksi', [
+                        'status_transaksi' => 'Lunas',
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+        }
+
+        public function deletePembayaran($id){
+            $this->db->where('id_t_transaksi', $id)
+                    ->update('t_pembayaran', ['flag_active' => 0, 'updated_by' => $this->general_library->getId()]);
+
+            $this->db->where('id', $id)
+                    ->update('t_transaksi', ['status_transaksi' => 'Belum Lunas', 'updated_by' => $this->general_library->getId()]);
         }
 
 	}

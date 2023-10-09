@@ -16,6 +16,14 @@
         line-height: 1px !important;
     }
 
+    .val-no-trans{
+        font-size: .7rem;
+        font-weight: bold;
+        line-height: 1px !important;
+        color: grey;
+        font-style: italic;
+    }
+
     .lbl_rp{
         color: var(--primary);
         font-weight: bold;
@@ -42,7 +50,12 @@
                 <div class="card card-default card-transaksi" onclick="detailTransaksi('<?=$rs['id']?>')">
                     <div class="card-header text-center <?=$rs['status_transaksi'] == 'Lunas' ? 'card-lunas' : 'card-belum-lunas'?>">
                         <div class="row">
-                            <div class="col-lg-12 text-center">
+                            <div style="margin-bottom: -10px;" class="col-lg-12 text-right">
+                                <span class="val-no-trans">
+                                    <?=$rs['nomor_transaksi']?>
+                                </span>
+                            </div>
+                            <div class="col-lg-12 text-left">
                                 <span class="val-nama">
                                     <?=$rs['nama'] != null && trim($rs['nama']) != "" ? $rs['nama'] : "-"?>
                                 </span>
