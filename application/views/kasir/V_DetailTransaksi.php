@@ -43,7 +43,7 @@
     }
 
     @media  (min-width: 992px) {
-        #card_total_transaksi{
+        #card_total_transaksi, .card-detail-transaksi{
             height: 80vh !important;
         }
 
@@ -62,7 +62,7 @@
     <div class="col-lg-12 mt-2">
         <div class="row">
             <div class="col-lg-8">
-                <div class="card card-default">
+                <div class="card card-default card-detail-transaksi">
                     <div class="card-header">
                         <form id="form_data_transaksi">
                             <div class="row">
