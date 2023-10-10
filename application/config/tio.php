@@ -11,6 +11,8 @@ $route['master/kategori-menu'] = 'master/C_Master/masterKategoriMenu';
 
 //website
 $route['kasir'] = 'kasir/C_Kasir/kasir';
+//laporan
+$route['laporan/penjualan'] = 'laporan/C_Laporan/laporanPenjualan';
 
 
 //api

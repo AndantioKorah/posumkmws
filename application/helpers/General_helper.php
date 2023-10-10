@@ -33,6 +33,10 @@ function imageToBytes($filename){
     dd($contents);
 }
 
+function formatDecimal($number, $long = 2){
+    return number_format((float)$number, $long, '.', '');
+}
+
 function extractTanggalWs($tanggal){
     $tanggal_explode = explode(" ", $tanggal);
     $date = explode("/", $tanggal_explode[0]);
@@ -280,6 +284,26 @@ function get_client_ip() {
     else
         $ipaddress = 'UNKNOWN';
     return $ipaddress;
+}
+
+function getProgressBarColor($progress, $use_important = true){
+    $bgcolor = '#ff0000 !important';
+    if($progress > 25 && $progress <= 50){
+        $bgcolor = '#ff7100 !important';
+    } else if($progress > 50 && $progress <= 65){
+        $bgcolor = '#ffcf00 !important';
+    } else if($progress > 65 && $progress <= 85){
+        $bgcolor = '#5bff00 !important';
+    } else if($progress > 85 && $progress <= 99){
+        $bgcolor = '#41b302 !important';
+    } else if($progress >= 100){
+        $bgcolor = '#006600 !important';
+    }
+    if(!$use_important){
+        $arr = explode(" ", $bgcolor);
+        $bgcolor = $arr[0];
+    }
+    return $bgcolor;
 }
 
 function encrypt($string1, $string2){

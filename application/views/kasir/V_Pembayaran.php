@@ -165,6 +165,7 @@
                     successtoast('Hapus Pembayaran Berhasil')
                     $('#btn_pembayaran').show()
                     $('#div_pembayaran_exists').hide()
+                    detailTransaksi('<?=$transaksi['id']?>')
                 }, error: function(e){
                     errortoast('Terjadi Kesalahan')
                     $('#btn_loading_pembayaran').hide()
@@ -197,6 +198,7 @@
                 successtoast('Pembayaran Berhasil')
                 $('#btn_loading_pembayaran').hide()
                 $('#div_pembayaran_exists').show()
+                detailTransaksi('<?=$transaksi['id']?>')
             }, error: function(e){
                 errortoast('Terjadi Kesalahan')
                 $('#btn_loading_pembayaran').hide()

@@ -11,86 +11,143 @@
             $this->db->insert($tablename, $data);
         }
 
-        public function searchLaporanPendaftaranPerPasien(){
-            $data = $this->input->post();
-            list($tanggal_awal, $tanggal_akhir) = explodeRangeDate($data['range_tanggal']);
+        public function searchLaporanPenjualan($data){
+            $tanggal = explodeRangeDate($data['range_tanggal']);
 
-            $result = $this->db->select('a.*, b.nama_pasien, c.total_tagihan, c.status_tagihan')
-                            ->from('t_pendaftaran a')
-                            ->join('m_pasien b', 'a.norm = b.norm')
-                            ->join('t_tagihan c', 'a.id = c.id_t_pendaftaran')
-                            ->where('a.tanggal_pendaftaran >=', $tanggal_awal.' 00:00:00')
-                            ->where('a.tanggal_pendaftaran <=', $tanggal_akhir.' 23:59:59')
-                            ->order_by('a.tanggal_pendaftaran', 'desc')
-                            ->get()->result_array();
-            return $result;
-        }
+            $rs['total_penjualan'] = 0;
+            $rs['total_penjualan_lunas'] = 0;
+            $rs['total_penjualan_belum_lunas'] = 0;
+            $rs['total_transaksi'] = 0;
+            $rs['total_transaksi_lunas'] = 0;
+            $rs['total_transaksi_belum_lunas'] = 0;
+            $rs['total_item'] = 0;
+            $rs['total_item_lunas'] = 0;
+            $rs['total_item_belum_lunas'] = 0;
+            $list_item = null;
+            $rs['list_item'] = null;
+            $rs['data_transaksi'] = null;
+            $rs['kategori_menu'] = null;
+            $rs['jenis_menu'] = null;
 
-        public function searchLaporanRekapHarian(){
-            $data = $this->input->post();
-            list($tanggal_awal, $tanggal_akhir) = explodeRangeDate($data['range_tanggal']);
+            $list_id_transaksi = [];
 
-            $result = $this->db->select('a.*, b.nama_pasien, c.total_tagihan, c.status_tagihan, d.jumlah_pembayaran as jumlah_bayar, e.jumlah_pembayaran as uang_muka')
-                            ->from('t_pendaftaran a')
-                            ->join('m_pasien b', 'a.norm = b.norm')
-                            ->join('t_tagihan c', 'a.id = c.id_t_pendaftaran')
-                            ->join('t_pembayaran d', 'd.id_t_pendaftaran = a.id AND d.flag_active = 1', 'left')
-                            ->join('t_uang_muka e', 'e.id_t_pendaftaran = a.id AND e.flag_active = 1', 'left')
-                            ->where('a.tanggal_pendaftaran >=', $tanggal_awal.' 00:00:00')
-                            ->where('a.tanggal_pendaftaran <=', $tanggal_akhir.' 23:59:59')
-                            ->order_by('a.tanggal_pendaftaran', 'desc')
+            $rs['menu'] = $this->db->select('*')
+                            ->from('m_menu_merchant')
+                            ->where('flag_active', 1)
+                            ->where('id_m_merchant', $this->general_library->getIdMerchant())
+                            ->order_by('nama_menu_merchant')
                             ->get()->result_array();
 
-            $total_pelunasan = 0;
-            $total_uang_muka = 0;
-            $total_belum_bayar = 0;
-            if($result){
-                foreach($result as $rs){
-                    $belum_bayar = $rs['total_tagihan'] - ($rs['uang_muka'] + $rs['jumlah_bayar']);
-                    $total_pelunasan += $rs['jumlah_bayar'];
-                    $total_uang_muka += $rs['uang_muka'];
-                    $total_belum_bayar += $belum_bayar;
+            $kategori_menu = $this->db->select('*')
+                                            ->from('m_kategori_menu')
+                                            ->where('flag_active', 1)
+                                            ->where('id_m_merchant', $this->general_library->getIdMerchant())
+                                            ->get()->result_array();
+
+            if($kategori_menu){
+                foreach($kategori_menu as $km){
+                    $rs['kategori_menu'][$km['id']] = $km;
+                    $rs['kategori_menu'][$km['id']]['total'] = 0;
+                    $rs['kategori_menu'][$km['id']]['nama'] = $km['nama_kategori_menu'];
                 }
             }
-            $total_penerimaan = $total_uang_muka + $total_pelunasan;
-            return [$result, count($result), $total_uang_muka, $total_pelunasan, $total_belum_bayar, $total_penerimaan];
+
+            $jenis_menu = $this->db->select('*')
+                                            ->from('m_jenis_menu')
+                                            ->where('flag_active', 1)
+                                            ->where('id_m_merchant', $this->general_library->getIdMerchant())
+                                            ->get()->result_array();
+            if($jenis_menu){
+                foreach($jenis_menu as $jm){
+                    $rs['jenis_menu'][$jm['id']] = $jm;
+                    $rs['jenis_menu'][$jm['id']]['total'] = 0;
+                    $rs['jenis_menu'][$jm['id']]['nama'] = $jm['nama_jenis_menu'];
+                }
+            }
+
+            $data_transaksi = $this->db->select('a.*, b.*, a.id as id_transaksi, b.id as id_transaksi_detail, b.total_harga as harga_detail, 
+                                    b.id_m_menu_merchant, c.id_m_kategori_menu, d.id_m_jenis_menu')
+                                    ->from('t_transaksi a')
+                                    ->join('t_transaksi_detail b',' a.id = b.id_t_transaksi')
+                                    ->join('m_menu_merchant c', 'b.id_m_menu_merchant = c.id')
+                                    ->join('m_kategori_menu d', 'c.id_m_kategori_menu = d.id')
+                                    ->join('m_jenis_menu e', 'd.id_m_jenis_menu = e.id')
+                                    ->where('a.tanggal_transaksi >=', $tanggal[0].' 00:00:00')
+                                    ->where('a.tanggal_transaksi <=', $tanggal[1].' 23:59:59')
+                                    ->where('a.id_m_merchant', $this->general_library->getIdMerchant())
+                                    ->where('a.flag_active', 1)
+                                    ->where('b.flag_active', 1)
+                                    ->order_by('a.tanggal_transaksi', 'desc')
+                                    ->get()->result_array();
+
+            $rs['data_transaksi'] = $this->db->select('*')
+                                    ->from('t_transaksi a')
+                                    ->where('a.tanggal_transaksi >=', $tanggal[0].' 00:00:00')
+                                    ->where('a.tanggal_transaksi <=', $tanggal[1].' 23:59:59')
+                                    ->where('a.id_m_merchant', $this->general_library->getIdMerchant())
+                                    ->where('a.flag_active', 1)
+                                    ->order_by('a.status_transaksi', 'asc')
+                                    ->order_by('a.tanggal_transaksi', 'desc')
+                                    ->get()->result_array();
+
+            if($data_transaksi){
+                foreach($data_transaksi as $dt){
+                    if(isset($rs['kategori_menu'][$dt['id_m_kategori_menu']])){
+                        $rs['kategori_menu'][$dt['id_m_kategori_menu']]['total'] += $dt['qty'];
+                    }
+                    if(isset($rs['jenis_menu'][$dt['id_m_jenis_menu']])){
+                        $rs['jenis_menu'][$dt['id_m_jenis_menu']]['total'] += $dt['qty'];
+                    }
+
+                    $flag_lunas = $dt['status_transaksi'] == 'Belum Lunas' ? 0 : 1;
+                    $rs['total_penjualan'] += $dt['harga_detail'];
+                    $rs['total_item'] += $dt['qty'];
+                    if($flag_lunas == 1){
+                        $rs['total_penjualan_lunas'] += $dt['harga_detail'];
+                        $rs['total_item_lunas'] += $dt['qty'];
+                    } else {
+                        $rs['total_penjualan_belum_lunas'] += $dt['harga_detail'];
+                        $rs['total_item_belum_lunas'] += $dt['qty'];
+                    }
+                    if(!in_array($dt['id_transaksi'], $list_id_transaksi)){
+                        if($flag_lunas == 1){
+                            $rs['total_transaksi_lunas']++;
+                        } else {
+                            $rs['total_transaksi_belum_lunas']++;
+                        }
+                        array_push($list_id_transaksi, $dt['id_transaksi']); 
+                    }
+
+                    if(isset($list_item[$dt['id_m_menu_merchant']])){
+                        $list_item[$dt['id_m_menu_merchant']]['qty'] += $dt['qty'];
+                    } else {
+                        $list_item[$dt['id_m_menu_merchant']]['qty'] = $dt['qty'];
+                    }
+                }
+                $rs['total_transaksi'] = count($list_id_transaksi);
+            }
+
+            if($list_item && $rs['menu']){
+                foreach($rs['menu'] as $m){
+                    $rs['list_item'][$m['id']] = $m;
+                    $rs['list_item'][$m['id']]['penjualan']['qty'] = 0;
+                    if(isset($list_item[$m['id']])){
+                        $rs['list_item'][$m['id']]['penjualan'] = $list_item[$m['id']];
+                    }
+                }
+
+                usort($rs['list_item'], function($a, $b) {
+                    if ($a['penjualan']['qty'] < $b['penjualan']['qty']) {
+                        return 1;
+                    } elseif ($a['penjualan']['qty'] > $b['penjualan']['qty']) {
+                        return -1;
+                    }
+                    return 0;
+                });
+            }
+
+            return [$rs, $tanggal];
         }
 
-
-        public function searchLaporanFeeDokter(){
-            $data = $this->input->post();
-            list($tanggal_awal, $tanggal_akhir) = explodeRangeDate($data['range_tanggal']);
-            // dd($data['dokter']);
-
-            if($data['dokter'] != "0"){
-                $result = $this->db->select('`a`.*, `b`.`nama_dokter`, `c`.`total_tagihan`,  sum(c.total_tagihan)as total, `c`.`status_tagihan`, b.fee')
-                                ->from('t_pendaftaran a')
-                                ->join('m_dokter b', 'a.id_m_dokter_pengirim = b.id')
-                                ->join('t_tagihan c', 'a.id = c.id_t_pendaftaran')
-                                ->where('a.tanggal_pendaftaran >=', $tanggal_awal.' 00:00:00')
-                                ->where('a.tanggal_pendaftaran <=', $tanggal_akhir.' 23:59:59')
-                                ->where('a.id_m_dokter_pengirim', $data['dokter'])
-                                ->where('c.id_m_status_tagihan', 2)
-                                ->where('a.flag_active', 1)
-                                ->group_by('a.id_m_dokter_pengirim')
-                                ->order_by('b.nama_dokter', 'asc')
-                                ->get()->result_array();
-            } else {
-                $result = $this->db->select('`a`.*, `b`.`nama_dokter`, `c`.`total_tagihan`, sum(c.total_tagihan)as total, `c`.`status_tagihan`, b.fee')
-                                ->from('t_pendaftaran a')
-                                ->join('m_dokter b', 'a.id_m_dokter_pengirim = b.id')
-                                ->join('t_tagihan c', 'a.id = c.id_t_pendaftaran')
-                                ->where('a.tanggal_pendaftaran >=', $tanggal_awal.' 00:00:00')
-                                ->where('a.tanggal_pendaftaran <=', $tanggal_akhir.' 23:59:59')                               
-                                ->where('c.id_m_status_tagihan', 2)
-                                ->where('a.flag_active', 1)
-                                ->group_by('a.id_m_dokter_pengirim')
-                                ->order_by('b.nama_dokter', 'asc')
-                                ->get()->result_array();
-            } 
-            return $result;
-        }
-
-        
 	}
 ?>

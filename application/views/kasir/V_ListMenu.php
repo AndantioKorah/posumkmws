@@ -35,7 +35,7 @@
         color: white !important;
     }
 </style>
-<div class="row" style="overflow: scroll; height: 60vh;">
+<div class="row pt-2" style="overflow-x: hidden; overflow-y: scroll; height: 60vh;">
     <?php if($list_menu){ foreach($list_menu as $lm){ ?>
         <div class="col-lg-3" style="display: inline-block">
             <div id="card-menu-<?=$lm['id']?>" class="card-menu-item card card-default <?=isset($detail[$lm['id']]) ? 'bg-selected' : '' ?>">

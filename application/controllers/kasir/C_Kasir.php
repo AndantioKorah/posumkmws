@@ -51,7 +51,7 @@ class C_Kasir extends CI_Controller
         $this->load->view('kasir/V_ListMenu', $data);
     }
 
-    public function searchMenuMerchant(){
+    public function searchMenuMerchant($id){
         $data['pembayaran'] = $this->session->userdata('pembayaran_'.$id);
         $data['list_menu'] = $this->kasir->searchMenuMerchant($this->input->post('search'));
         $data['detail'] = $this->session->userdata('list_detail');
@@ -85,5 +85,11 @@ class C_Kasir extends CI_Controller
     public function deletePembayaran($id){
         $this->session->set_userdata('pembayaran_'.$id, null);
         ($this->kasir->deletePembayaran($id));
+    }
+
+    public function openDetailBlank($id){
+        $data['id'] = $id;
+        $this->session->set_userdata('detailblank', $id);
+        echo json_encode($data);
     }
 }

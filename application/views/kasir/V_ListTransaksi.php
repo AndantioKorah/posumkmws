@@ -79,15 +79,21 @@
         <?php } ?>
     </div>
     <script>
-        function detailTransaksi(id){
-            $('#main_view_kasir').hide()
-            $('#view_detail_transaksi').show()
-            $('#view_detail_transaksi').html('')
-            $('#view_detail_transaksi').append(divLoaderNavy)
-            $('#view_detail_transaksi').load('<?=base_url('kasir/C_Kasir/detailTransaksi/')?>'+id, function(){
-                $('#loader').hide()
-            })
-        }
+        $(function(){
+            // if(idBlank != 0){
+            //     detailTransaksi(idBlank)
+            // }
+        })
+
+        // function detailTransaksi(id){
+        //     $('#main_view_kasir').hide()
+        //     $('#view_detail_transaksi').show()
+        //     $('#view_detail_transaksi').html('')
+        //     $('#view_detail_transaksi').append(divLoaderNavy)
+        //     $('#view_detail_transaksi').load('<?=base_url('kasir/C_Kasir/detailTransaksi/')?>'+id, function(){
+        //         $('#loader').hide()
+        //     })
+        // }
     </script>
 <?php } else { ?>
     <div class="row">

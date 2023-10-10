@@ -35,14 +35,31 @@
 </div>
 <script>
     let pembayaran;
+    let idBlank = 0;
 
     $(function(){
-        loadTransaksi()
+        idBlank = '<?=$this->session->userdata('detailblank')?>'
+        if(idBlank != 0){
+            <?php $this->session->set_userdata('detailblank', null) ?>
+            detailTransaksi(idBlank)
+        } else {
+            loadTransaksi()
+        }
     })
 
     $('#date_transaksi').on('change', function(){
         loadTransaksi()
     })
+
+    function detailTransaksi(id){
+        $('#main_view_kasir').hide()
+        $('#view_detail_transaksi').show()
+        $('#view_detail_transaksi').html('')
+        $('#view_detail_transaksi').append(divLoaderNavy)
+        $('#view_detail_transaksi').load('<?=base_url('kasir/C_Kasir/detailTransaksi/')?>'+id, function(){
+            $('#loader').hide()
+        })
+    }
 
     $('#btn_new_transaksi').on('click', function(){
         $('#btn_new_transaksi').hide()

@@ -122,3 +122,5 @@ define('API_KEY_MERCHANT_LENGTH', 30);
 
 define('VONAGE_API_KEY', 'b9e13f92');
 define('VONAGE_API_SECRET', 'd9b1754f4da78a5a');
+
+define('CHART_COLORS', ["#deb887", "#00ffff", "#ff0000", "#5f9ea0", "#bdb76b", "#5f9ea0", "#9400d3", "#ff00ff", "#ff4d4d", "#0059b3", "#ffff1a", "#ff1493", "#daa520", "#cd5c5c", "#20b2aa", "#f4a460", "#8b4513", "#4682b4", "#9acd32"]);

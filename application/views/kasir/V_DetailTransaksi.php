@@ -42,6 +42,17 @@
         cursor: pointer;
     }
 
+    .label-lunas-detail-transaksi{
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: black;
+    }
+
+    .card-lunas-detail-transaksi, .card-lunas-detail-transaksi span{
+        background-color: var(--primary);
+        color: white !important;
+    }
+
     @media  (min-width: 992px) {
         #card_total_transaksi, .card-detail-transaksi{
             height: 80vh !important;
@@ -63,12 +74,16 @@
         <div class="row">
             <div class="col-lg-8">
                 <div class="card card-default card-detail-transaksi">
-                    <div class="card-header">
+                    <div class="card-header <?=$pembayaran ? 'card-lunas-detail-transaksi' : '';?>">
                         <form id="form_data_transaksi">
                             <div class="row">
                                 <div class="col-lg-3 col-md-3 col-sm-3 text-left">
                                     <span class="lbl_detail">Nama:</span><br>
-                                    <input id="input_nama" name="nama" class="form-control input-detail-transaksi form-control-sm" value="<?=$transaksi['nama']?>" />
+                                    <?php if($pembayaran){ ?>
+                                        <span class="label-lunas-detail-transaksi"><?=$transaksi['nama']?></span>
+                                    <?php } else { ?>
+                                        <input id="input_nama" name="nama" class="form-control input-detail-transaksi form-control-sm" value="<?=$transaksi['nama']?>" />
+                                    <?php } ?>
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-3 text-center">
                                     <span class="lbl_detail">No. Transaksi:</span><br>
@@ -80,8 +95,12 @@
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-3 text-right">
                                     <span class="lbl_detail">Tanggal:</span><br>
-                                    <input id="input_tanggal_transaksi" name="tanggal_transaksi" readonly class="datetimepickermaxtodaythistransaksi input-detail-transaksi form-control form-control-sm" 
-                                    style="text-align: right;" value="<?=formatDateForEdit($transaksi['tanggal_transaksi'])?>" />
+                                    <?php if($pembayaran){ ?>
+                                        <span class="label-lunas-detail-transaksi"><?=formatDate($transaksi['tanggal_transaksi'])?></span>
+                                    <?php } else { ?>
+                                        <input id="input_tanggal_transaksi" name="tanggal_transaksi" readonly class="datetimepickermaxtodaythistransaksi input-detail-transaksi form-control form-control-sm" 
+                                        style="text-align: right;" value="<?=formatDateForEdit($transaksi['tanggal_transaksi'])?>" />
+                                    <?php } ?>
                                 </div>
                             </div>
                         </form>
@@ -188,7 +207,7 @@
     $('#input_cari_menu').on('keyup', function(){
         $('#div_list_menu').html('')
         $.ajax({
-            url: '<?=base_url("kasir/C_Kasir/searchMenuMerchant")?>',
+            url: '<?=base_url("kasir/C_Kasir/searchMenuMerchant/".$transaksi['id'])?>',
             method: 'post',
             data: {
                 search: $('#input_cari_menu').val()
