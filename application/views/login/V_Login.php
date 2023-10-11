@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title><?=TITLES?></title>
-  <link rel="shortcut icon" href="<?=base_url('assets/img/logo-biru-putih.png')?>" />
+  <link rel="shortcut icon" href="<?=base_url('assets/img/logo-putih-biru.png')?>" />
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -62,9 +62,9 @@
       <img src="<?=base_url('assets/img/logo-putih-biru.png')?>" style="height: 250px; width: 250px;
       margin-top: -20px;
       margin-bottom: -50px;"/>
-      <br>
+      <!-- <br>
       <span style="font-weight: bold; font-size: 25px; color: black; font-family: Verdana;"><?=TITLE_SECOND?></span>
-      <br>
+      <br> -->
       </center>
       <form action="<?=base_url('login/C_Login/authenticateAdmin')?>" method="post">
         <div class="input-group mb-3 mt-3">
@@ -106,10 +106,19 @@
 <script>
   $(function(){
     <?php if($this->session->flashdata('message')){ ?>
-      $('#error_div').show()
-      $('#error_div').append('<label>'+'<?=$this->session->flashdata('message')?>'+'</label>')
+      errortoast('<?=$this->session->flashdata('message')?>')
+      // $('#error_div').show()
+      // $('#error_div').append('<label>'+'<?=$this->session->flashdata('message')?>'+'</label>')
     <?php
       $this->session->set_flashdata('message', null);
+    } ?>
+
+<?php if($this->session->userdata('apps_error')){ ?>
+      errortoast('<?=$this->session->userdata('apps_error')?>')
+      // $('#error_div').show()
+      // $('#error_div').append('<label>'+'<?=$this->session->userdata('apps_error')?>'+'</label>')
+    <?php
+      $this->session->set_userdata('apps_error', null);
     } ?>
   })
 

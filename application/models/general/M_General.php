@@ -57,8 +57,9 @@
 
         public function authenticate($username, $password)
         {
-            $this->db->select('*, a.nama as nama_user')
+            $this->db->select('a.*, a.nama as nama_user, b.expire_date')
                         ->from('m_user a')
+                        ->join('m_merchant b', 'a.id_m_merchant = b.id')
                         ->where('a.username', $username)
                         ->where('a.password', $password);
             $result = $this->db->get()->result_array();

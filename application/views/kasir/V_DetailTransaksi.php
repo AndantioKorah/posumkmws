@@ -18,6 +18,14 @@
         font-size: 3rem;
     }
 
+    .val_detail_total_harga_hidden{
+        color: white;
+        font-weight: bold;
+        font-size: 1px;
+        font-family: "MerchantCopy";
+        /* display: none; */
+    }
+
     .lbl_total_harga{
         color: grey;
         font-weight: 500;
@@ -70,6 +78,9 @@
     <button id="btn_refresh" class="btn btn-sm btn-outline-success"><i class="fa fa-redo"></i> Refresh</button>
 </div>
 <?php if($transaksi){ ?>
+    <h3 class="val_detail_total_harga_hidden">
+        <?=formatCurrency($transaksi['total_harga'])?>
+    </h3>
     <div class="col-lg-12 mt-2">
         <div class="row">
             <div class="col-lg-8">

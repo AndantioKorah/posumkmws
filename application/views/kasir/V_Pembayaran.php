@@ -127,25 +127,33 @@
             </div>
         </div>
         <div id="div_bottom_button_pembayaran" class="col-lg-12 text-right mt-2">
-            <?php if (!$pembayaran) { ?>
-                <button id="btn_pembayaran" type="submit" class="btn btn-block btn-success"><strong>Submit Pembayaran</strong></button>
-                <button id="btn_loading_pembayaran" style="display: none;" type="button" disabled
-                class="btn btn-block btn-success"><strong><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu...</strong></button>
-            <?php } ?>
-            <div id="div_pembayaran_exists" style="display: <?=$pembayaran ? 'block' : 'none'?>;">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                        <button id="btn_print" type="button" class="btn btn-block btn-info"><strong><i class="fa fa-print"></i> Cetak Bill</strong></button>
+            <div class="row">
+                <div class="col-lg-6">
+                    <button onclick="printBill()" type="button" class="btn btn-block btn-info"><strong><i class="fa fa-print"></i> Cetak Bill</strong></button>
+                </div>
+                <div class="col-lg-6">
+                <?php if (!$pembayaran) { ?>
+                    <button id="btn_pembayaran" type="submit" class="btn btn-block btn-success"><strong>Submit Pembayaran</strong></button>
+                    <button id="btn_loading_pembayaran" style="display: none;" type="button" disabled
+                    class="btn btn-block btn-success"><strong><i class="fa fa-spin fa-spinner"></i> Mohon Menunggu...</strong></button>
+                <?php } ?>
+                <div id="div_pembayaran_exists" style="display: <?=$pembayaran ? 'block' : 'none'?>;">
+                    <div class="row">
+                        <!-- <div class="col-lg-6 col-md-6 col-sm-6">
+                            <button onclick="printBill()" type="button" class="btn btn-block btn-info"><strong><i class="fa fa-print"></i> Cetak Bill</strong></button>
+                        </div> -->
+                        <div class="col-lg-12 col-md-6 col-sm-6">
+                            <button id="btn_batal_pembayaran" type="button" class="btn btn-block btn-danger"><strong><i class="fa fa-trash"></i> Batal Bayar</strong></button>
+                        </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                        <button id="btn_batal_pembayaran" type="button" class="btn btn-block btn-danger"><strong><i class="fa fa-trash"></i> Batal Bayar</strong></button>
-                    </div>
+                </div>
                 </div>
             </div>
         </div>
     </div>
 </form>
-
+<div id="print_div" style="display:none;"></div>
+<iframe id="printing-frame" name="print_frame" src="about:blank" style="display:none;"></iframe>
 <script>
     $('.format_currency_this').on('keypress', function(event){
         if(event.charCode >= 48 && event.charCode <= 57){
@@ -154,6 +162,25 @@
             return false;
         }
     })
+
+    function printBill() {
+        // window.open('<?=base_url('kasir/C_Kasir/printBill/'.$transaksi['id'])?>', '_blank');
+
+        $("#print_div").load('<?=base_url('kasir/C_Kasir/printBill/'.$transaksi['id'])?>', function(){
+                printSpace('print_div');
+            }
+        );
+    }
+
+    function printSpace(elementId) {
+        var isi = document.getElementById(elementId).innerHTML;
+        window.frames["print_frame"].document.title = document.title;
+        window.frames["print_frame"].document.body.innerHTML = isi;
+        setTimeout(function() {
+            window.frames["print_frame"].window.focus();
+            window.frames["print_frame"].window.print();
+        }, 250);
+    }
 
     $('#btn_batal_pembayaran').on('click', function(){
         if(confirm('Apakah Anda yakin?')){

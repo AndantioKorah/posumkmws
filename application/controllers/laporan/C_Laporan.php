@@ -17,7 +17,8 @@ class C_Laporan extends CI_Controller
         render('laporan/V_LaporanPenjualan', '', '', null);
     }
 
-    public function searchLaporanPenjualan(){
+    public function searchLaporanPenjualan($flag_welcome = 0){
+        $data['flag_welcome'] = $flag_welcome;
         list($data['result'], $data['tanggal']) = $this->laporan->searchLaporanPenjualan($this->input->post());
         $this->load->view('laporan/V_LaporanPenjualanResult', $data);
     }

@@ -20,7 +20,11 @@
 </div>
 <script>
     $(function(){
-        $('#range_tanggal').daterangepicker()
+        $('#range_tanggal').daterangepicker({
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        })
         $('#form_search_laporan_penjualan').submit()
     })
 

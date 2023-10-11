@@ -92,4 +92,12 @@ class C_Kasir extends CI_Controller
         $this->session->set_userdata('detailblank', $id);
         echo json_encode($data);
     }
+
+    public function printBill($id){
+        $data['detail'] = $this->session->userdata('list_detail');
+        $data['transaksi'] = $this->kasir->getDataTransaksi($id);
+        $data['pembayaran'] = $this->session->userdata('pembayaran_'.$id);
+        $data['merchant'] = $this->general->getOne('m_merchant', 'id', $this->general_library->getIdMerchant());
+        $this->load->view('kasir/V_CetakBill', $data);
+    }
 }

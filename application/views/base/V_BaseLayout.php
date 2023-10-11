@@ -45,6 +45,13 @@
     --green-item-selected: #b1efbf;
   }
 
+    @font-face {
+      font-family: 'MerchantCopy';
+      src: url('<?=base_url('assets/fonts/MerchantCopy/MerchantCopy.ttf')?>') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
     body{
       font-size: 15px !important;
     }
@@ -176,8 +183,7 @@
       </div>
   </div>
 </div>
-<div id="print_div" style="display:none;"></div>
-<iframe id="printing-frame" name="print_frame" src="about:blank" style="display:none;"></iframe>
+
 <script>
   var live_date_time = ''
   var timertoast = 2500
@@ -374,20 +380,20 @@
     return i;
   }
 
-  $('.datetimepickerthis').datetimepicker({
-    format: 'yyyy-mm-dd hh:ii:ss',
-    autoclose: true,
-    todayHighlight: true,
-    todayBtn: true
-  })
+  // $('.datetimepickerthis').datetimepicker({
+  //   format: 'yyyy-mm-dd hh:ii:ss',
+  //   autoclose: true,
+  //   todayHighlight: true,
+  //   todayBtn: true
+  // })
 
-  $('.datetimepickermaxtodaythis').datetimepicker({
-    format: 'yyyy-mm-dd hh:ii:ss',
-    autoclose: true,
-    todayHighlight: true,
-    todayBtn: true,
-    endDate: new Date()
-  })
+  // $('.datetimepickermaxtodaythis').datetimepicker({
+  //   format: 'yyyy-mm-dd hh:ii:ss',
+  //   autoclose: true,
+  //   todayHighlight: true,
+  //   todayBtn: true,
+  //   endDate: new Date()
+  // })
 
   $('.datetimepickermaxtodaythis').on('changeDate', function (ev) {
       $(this).removeClass('realdatetimethis')

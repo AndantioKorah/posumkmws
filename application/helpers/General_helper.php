@@ -170,10 +170,16 @@ function array_flatten($array) {
     return $result; 
   }
 
-function formatDateNamaBulan($data){
-    $date_only = formatDateOnly($data);
-    $explode = explode('/', $date_only);
-    return $explode[0].' '.getNamaBulan($explode[1]).' '.$explode[2];
+function formatDateNamaBulan($data, $withTime = 0){
+    if($withTime == 1){
+        $date = formatDate($data);
+        $explode = explode('/', $date);
+        return $explode[0].' '.getNamaBulan($explode[1]).' '.$explode[2];
+    } else {
+        $date_only = formatDateOnly($data);
+        $explode = explode('/', $date_only);
+        return $explode[0].' '.getNamaBulan($explode[1]).' '.$explode[2];
+    }
 }
 
 function getNamaBulan($bulan){

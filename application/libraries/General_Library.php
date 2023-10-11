@@ -224,8 +224,13 @@ class General_library
     public function isNotMenu(){
         // return true;
         // logic belum jalan for ni menu
-        return $this->isSessionExpired();
-        // $res = 0;
+        // return $this->isSessionExpired();
+        $res = 1;
+        if(!$this->isSessionExpired()){
+            $res = 0;
+        } else if(!$this->isNotAppExp()) {
+            $res = 0;
+        }
         // if($this->isSessionExpired()){
         //     $current_url = substr($_SERVER["REDIRECT_QUERY_STRING"], 1, strlen($_SERVER["REDIRECT_QUERY_STRING"])-1);
         //     $list_url = $this->nikita->session->userdata('list_url');
@@ -236,7 +241,8 @@ class General_library
         //         }
         //     }
         // }
-        // return $res == 0 ? false : true;
+        // dd($res);
+        return $res == 0 ? false : true;
     }
 
     public function getDataProfilePicture(){
@@ -248,12 +254,14 @@ class General_library
     }
 
     public function isNotAppExp(){
-        // $exp_app = $this->getParams('PARAM_EXP_APP');
-        // if(date('Y-m-d H:i:s') <= $exp_app['parameter_value']){
-        //     return true;
-        // } else {
-        //     return false;
-        // }
+        $merchant = $this->nikita->m_general->getOne('m_merchant', 'id', $this->getIdMerchant());
+        // $exp_app = $this->getExpDateMerchant();
+        if(date('Y-m-d H:i:s') <= $merchant['expire_date']){
+            return true;
+        } else {
+            $this->nikita->session->set_userdata('apps_error', 'Akun Merchant sudah melebihi masa Expired Date. Silahkan menghubungi Developer.');
+            return false;
+        }
         return true;
     }
 
@@ -288,7 +296,7 @@ class General_library
 
     public function isSessionExpired(){
         if(!$this->userLoggedIn){
-            $this->nikita->session->set_userdata(['apps_error' => 'Sesi Anda telah habis. Silahkan Login kembali']);
+            $this->nikita->session->set_userdata('apps_error', 'Sesi Anda telah habis. Silahkan Login kembali.');
             return null;
         }
         return $this->userLoggedIn;
@@ -303,10 +311,10 @@ class General_library
             $this->nikita->session->set_userdata(['apps_error' => 'Back Date detected. Make sure Your Date and Time is not less than today. If this message occur again, call '.PROGRAMMER_PHONE.'']);
             return null;
         }
-        if(!$this->isNotAppExp()){
-            $this->nikita->session->set_userdata(['apps_error' => 'Masa Berlaku Aplikasi Anda sudah habis']);
-            return null;
-        }
+        // if(!$this->isNotAppExp()){
+        //     $this->nikita->session->set_userdata(['apps_error' => 'Masa Berlaku Aplikasi Anda sudah habis']);
+        //     return null;
+        // }
         if($this->isNotThisDevice()){
             $this->nikita->session->set_userdata(['apps_error' => 'Device tidak terdaftar']);
             return null;
@@ -331,6 +339,11 @@ class General_library
     public function getIdMerchant(){
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
         return $this->userLoggedIn['id_m_merchant'];
+    }
+
+    public function getExpDateMerchant(){
+        // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
+        return $this->userLoggedIn['expire_date'];
     }
 
     public function getId(){

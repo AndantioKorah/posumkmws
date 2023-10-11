@@ -98,8 +98,8 @@ define('KODE_TRANSAKSI_PEMBAYARAN', '02');
 define('KODE_TRANSAKSI_UANG_MUKA', '03');
 
 define('VERSION', 'Version 1.0');
-define('TITLES', 'NiKita Project | POS UMKM');
-define('TITLE_SECOND', 'POS UMKM');
+define('TITLES', 'NiCash | NiKita Cashier');
+define('TITLE_SECOND', 'NiCash');
 define('PROGRAMMER_PHONE', '082115407812');
 define('COPYRIGHT', 'Copyright &copy; 2023 <strong>NiKita Project</strong>');
 // define('COPYRIGHT', 'Copyright &copy; '.date('Y').' <strong>PATRA LAB</strong>');

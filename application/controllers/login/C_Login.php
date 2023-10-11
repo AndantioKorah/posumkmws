@@ -64,7 +64,6 @@ class C_Login extends CI_Controller
             $this->session->set_userdata([
                 'user_logged_in' => $result,
                 'params' => $params,
-                'test' => 'tiokors',
                 'list_menu' =>  $list_menu,
                 'list_role' =>  $list_role,
                 'list_url' =>  $list_url,
@@ -72,7 +71,6 @@ class C_Login extends CI_Controller
                 'active_role_id' =>  $active_role['id'],
                 'active_role_name' =>  $active_role['role_name'],
                 'landing_page' =>  $active_role['landing_page'],
-                'ID_PENDAFTARAN_PASIEN' =>  null,
             ]);
             if($params){
                 foreach($params as $p){
