@@ -21,6 +21,16 @@
     transform: scale(1, 1);
   }
 }
+
+@media  (min-width: 992px) {
+  .card_body_laporan_today{
+      height: 20vh !important;
+  }
+
+  /* #div_pembayaran{
+      height: 35vh;
+  } */
+}
 </style>
 <!-- <div class="row" style="position: fixed;
   top: 50%;
@@ -47,10 +57,10 @@
 <div class="row">
   <div class="col-lg-12">
     <div class="row" style="height: 15vh;">
-      <div class="col-lg-1">
+      <div class="col-sm-2 col-md-2 col-lg-1">
         <img class="img-circle elevation-2" id="profile_pict" style="max-width: 100px; max-height: 100px;" src="<?=$this->general_library->getProfilePicture()?>" alt="User Image">
       </div>
-      <div class="col-lg-11">
+      <div class="col-sm-10 col-md-10 col-lg-11">
         <h3>Welcome to <?=TITLE_SECOND?></h3>
         <h4><strong><?=$this->general_library->getNamaUser();?></strong></h4>
         <h6><strong>Expired Date: <?=formatDateNamaBulan($this->general_library->getExpDateMerchant())?></strong></h6>
@@ -65,23 +75,23 @@
               <h5 class="card-title">Transaksi Hari Ini</h5>
             </div>
             <div class="col-lg-6 text-right">
-              <button id="btn_laporan_welcome" class="btn btn-sm btn-navy">Lebih Banyak <i class="fa fa-arrow-right"></i></button>
+              <button id="btn_laporan_welcome" class="btn btn-sm btn-navy">Lebih Banyak <i class="fa fa-chevron-right"></i></button>
             </div>
           </div>
         </div>
-        <div class="card-bdoy p-3" style="height: 20vh;">
+        <div class="card_body_laporan_today card-body p-3">
           <div class="laporan_hari_ini">
           </div>
         </div>
       </div>
     </div>
-    <div class="col-lg-12" style="display: none;">
+    <!-- <div class="col-lg-12" style="display: none;">
       <div class="card card-default" style="height: 30vh;">
         <div class="card-header">
           <h5 class="card-title">Quick Access</h5>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>
 <script>

@@ -249,13 +249,13 @@
             <?php } ?>
         </table>
         <?php if($pembayaran){ ?>
-            <table style="width: 100%; font-size: .8rem; margin-top: -10px;">
+            <table style="width: 100%; font-size: .8rem; margin-top: -25px;">
                 <tr>
-                    <td style="text-align: center; vertical-align: middle;">
-                        <img style="width: 1.5rem; height: 1.5rem;" src="<?=base_url('assets/img/logo-poslite.png')?>" /><br>
-                        <span class="text-info-powered">
+                    <td style="text-align: center; vertical-align: middle; padding: 0px;">
+                        <img style="width: 3rem; height: 3rem;" src="<?=base_url('assets/img/logo-biru-transparent.png')?>" /><br>
+                        <!-- <span class="text-info-powered">
                             NiKita Developer
-                        </span>
+                        </span> -->
                     </td>
                 </tr>
             </table>

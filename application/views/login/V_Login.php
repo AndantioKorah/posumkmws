@@ -1,111 +1,152 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title><?=TITLES?></title>
-  <link rel="shortcut icon" href="<?=base_url('assets/img/logo-putih-biru.png')?>" />
-  <!-- Tell the browser to be responsive to screen width -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title><?=TITLES?></title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<!-- <link rel="icon" type="image/png" href="assets/new_login_1/images/icons/favicon.ico"/> -->
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="assets/new_login_1/vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="assets/new_login_1/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="assets/new_login_1/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="assets/new_login_1/vendor/animate/animate.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="assets/new_login_1/vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="assets/new_login_1/vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="assets/new_login_1/vendor/select2/select2.min.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="assets/new_login_1/vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="assets/new_login_1/css/util.css">
+	<link rel="stylesheet" type="text/css" href="assets/new_login_1/css/main.css">
+	<link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>">
+  <link rel="shortcut icon" href="<?=base_url('assets/img/logo-icon.png')?>" />
 
-    <link rel="stylesheet" href="<?=base_url('plugins/fontawesome-free/css/all.min.css')?>">
-    <!-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> -->
-    <link rel="stylesheet" href="<?=base_url('plugins/icheck-bootstrap/icheck-bootstrap.min.css')?>">
-    <link rel="stylesheet" href="<?=base_url('assets/css/adminlte.min.css')?>">
-    <link rel="stylesheet" href="<?=base_url('assets/css/general.css')?>">
-    <link rel="stylesheet" href="<?=base_url('assets/css/font.css')?>">
-    <link rel="stylesheet" href="<?=base_url('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')?>">
-    <style>
-        .login-page {
-            background-image: url('assets/img/login.jpg');
-            background-size: 100%;
-            width: 100%;
-            background-attachment: scroll;
-            background-size: cover;
-            background-repeat: repeat;
-        }
-
-        .btn-navy{
-          color: white;
-          background-color: #001f3f !important;
-          text-decoration: none;
-        }
-
-        .btn-navy:hover{
-          color: white;
-          background-color: #05519e !important;
-          text-decoration: none;
-        }
-
-        .input-group-text{
-          color: #001f3f !important;
-        }
-
-        .text-navy{
-          color: #001f3f !important;
-        }
-
-        .card:hover{
-          opacity: 1 !important;
-        }
-    </style>
+<!--===============================================================================================-->
 </head>
-<body class="hold-transition login-page">
-<div class="login-box">
-  <!-- <div class="login-logo">
-    <a href="#"><b><?=TITLES?></b></a>
-  </div> -->
-  <!-- /.login-logo -->
-  <div class="card shadow-lg mb-5 bg-white rounded" style="opacity: 1; transition: .2s">
-    <div class="card-body login-card-body">
-      <center>
-      <img src="<?=base_url('assets/img/logo-putih-biru.png')?>" style="height: 250px; width: 250px;
-      margin-top: -20px;
-      margin-bottom: -50px;"/>
-      <!-- <br>
-      <span style="font-weight: bold; font-size: 25px; color: black; font-family: Verdana;"><?=TITLE_SECOND?></span>
-      <br> -->
-      </center>
-      <form action="<?=base_url('login/C_Login/authenticateAdmin')?>" method="post">
-        <div class="input-group mb-3 mt-3">
-          <input type="text" class="form-control" onclick="hideError()" name="username" placeholder="Username">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-user"></span>
-            </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
-          <input type="password" class="form-control" onclick="hideError()" name="password" placeholder="Password">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-7">
-          </div>
-          <div class="col-5 text-right">
-            <button type="submit" class="btn btn-navy btn-sm">Sign In <i class="fas fa-sign-in-alt"></i></button>
-          </div>
-        </div>
-      </form>
+<body style="background-color: #666666;">
+	
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+        <div class="login100-more b-lazy" data-src="assets/img/login.svg">
+				</div>
+				<form class="login100-form validate-form" method="post" action="<?=base_url('login/C_Login/authenticateAdmin')?>">
+					<div class="login-form-web">
+						<span class="login100-form-title">
+							WELCOME to
+						</span>
+						<center>
+							<img style="height: 25vh; border-radius: 5px;" class="mb-4  p-1 b-lazy" src=data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+							data-src="<?=base_url('')?>assets/img/login-form.svg"/>
+						</center>
+						<div class="wrap-input100 validate-input" data-validate = "Username Anda">
+							<input class="input100" type="text" name="username">
+							<span class="focus-input100"></span>
+							<span class="label-input100">Username</span>
+						</div>
+						
+						
+						<div class="wrap-input100 validate-input" data-validate="Password Anda">
+							<input class="input100" type="password" name="password">
+							<span class="focus-input100"></span>
+							<span class="label-input100">Password</span>
+						</div>
 
-      <div class="col-12 text-center text-red mt-3" id="error_div" style="display: none;"></div>
-    </div>
-  </div>
-</div>
+						<div class="flex-sb-m w-full p-t-3 p-b-32">
+							<!-- <div class="contact100-form-checkbox">
+								<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+								<label class="label-checkbox100" for="ckb1">
+									Remember me
+								</label>
+							</div>
 
-<script src="<?=base_url('plugins/jquery/jquery.min.js')?>"></script>
-<script src="<?=base_url('plugins/bootstrap/js/bootstrap.bundle.min.js')?>"></script>
-<script src="<?=base_url('assets/js/adminlte.min.js')?>"></script>
+							<div>
+								<a href="assets/new_login_1/#" class="txt1">
+									Forgot Password?
+								</a>
+							</div> -->
+						</div>
+				
+
+						<div class="container-login100-form-btn">
+							<button type="submit" class="login100-form-btn">
+								Login
+							</button>
+						</div>
+
+						<div class="text-center p-t-30">
+							<span class="txt2">
+								<?=COPYRIGHT?>
+							</span>
+						</div>
+
+						<!-- <div class="login100-form-social flex-c-m">
+							<a href="assets/new_login_1/#" class="login100-form-social-item flex-c-m bg1 m-r-5">
+								<i class="fa fa-facebook-f" aria-hidden="true"></i>
+							</a>
+
+							<a href="assets/new_login_1/#" class="login100-form-social-item flex-c-m bg2 m-r-5">
+								<i class="fa fa-twitter" aria-hidden="true"></i>
+							</a>
+						</div> -->
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	
+
+	
+	
+<!--===============================================================================================-->
+	<script src="assets/new_login_1/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="assets/new_login_1/vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="assets/new_login_1/vendor/bootstrap/js/popper.js"></script>
+	<script src="assets/new_login_1/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="assets/new_login_1/vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="assets/new_login_1/vendor/daterangepicker/moment.min.js"></script>
+	<script src="assets/new_login_1/vendor/daterangepicker/daterangepicker.js"></script>
+<!--===============================================================================================-->
+	<script src="assets/new_login_1/vendor/countdowntime/countdowntime.js"></script>
+<!--===============================================================================================-->
+	<script src="assets/new_login_1/js/main.js"></script>
 
 </body>
 </html>
+<script src="assets/new_login_1/vendor/jquery/jquery-3.2.1.min.js"></script>
+<script src="<?=base_url('plugins/sweetalert2/sweetalert2.min.js')?>"></script>
+<script src="<?=base_url('assets/js/blazy-master/blazy.js')?>"></script>
+<script src="<?=base_url('assets/js/blazy-master/polyfills/closest.js')?>"></script>
+
 <script>
-  $(function(){
-    <?php if($this->session->flashdata('message')){ ?>
+	$(function(){
+		function errortoast(message = '', timertoast = 3000){
+			const Toast = Swal.mixin({
+			toast: true,
+			position: 'top',
+			showConfirmButton: false,
+			timer: timertoast
+			});
+
+			Toast.fire({
+			icon: 'error',
+			title: message
+			})
+		}
+
+		<?php if($this->session->flashdata('message')){ ?>
       errortoast('<?=$this->session->flashdata('message')?>')
       // $('#error_div').show()
       // $('#error_div').append('<label>'+'<?=$this->session->flashdata('message')?>'+'</label>')
@@ -113,32 +154,33 @@
       $this->session->set_flashdata('message', null);
     } ?>
 
-<?php if($this->session->userdata('apps_error')){ ?>
+    <?php if($this->session->userdata('apps_error')){ ?>
       errortoast('<?=$this->session->userdata('apps_error')?>')
       // $('#error_div').show()
       // $('#error_div').append('<label>'+'<?=$this->session->userdata('apps_error')?>'+'</label>')
     <?php
       $this->session->set_userdata('apps_error', null);
     } ?>
-  })
+	})
 
-  function errortoast(message = '', timertoast = 3000){
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top',
-      showConfirmButton: false,
-      timer: timertoast
-    });
+	function errortoast(message = '', timertoast = 3000){
+		const Toast = Swal.mixin({
+		toast: true,
+		position: 'top',
+		showConfirmButton: false,
+		timer: timertoast
+		});
 
-    Toast.fire({
-      icon: 'error',
-      title: message
-    })
-  }
+		Toast.fire({
+		icon: 'error',
+		title: message
+		})
+	}
 
-  function hideError(){
-    $('#error_div').hide()
-    $('#error_div').html('')
-  }
+	window.bLazy = new Blazy({
+		container: '.container',
+		success: function(element){
+			console.log("Element loaded: ", element.nodeName);
+		}
+	});
 </script>
-<script src="<?=base_url('plugins/sweetalert2/sweetalert2.min.js')?>"></script>
