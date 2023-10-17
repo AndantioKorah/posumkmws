@@ -1,12 +1,12 @@
 <html>
     <head>
         <style>
-            @font-face {
+            /* @font-face {
                 font-family: 'DotMatrix';
                 src: url('<?=base_url('assets/fonts/DotMatrix/DOTMATRIX.ttf')?>') format('truetype');
                 font-weight: normal;
                 font-style: normal;
-            }
+            } */
 
             /* @font-face {
                 font-family: 'MerchantCopy';
