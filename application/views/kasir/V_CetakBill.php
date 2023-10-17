@@ -2,16 +2,33 @@
     <head>
         <style>
             @font-face {
+                font-family: 'DotMatrix';
+                src: url('<?=base_url('assets/fonts/DotMatrix/DOTMATRIX.ttf')?>') format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            /* @font-face {
                 font-family: 'MerchantCopy';
                 src: url('<?=base_url('assets/fonts/MerchantCopy/MerchantCopy.ttf')?>') format('truetype');
                 font-weight: normal;
                 font-style: normal;
             }
 
+            @font-face {
+                font-family: 'ArrayPrint';
+                src: url('<?=base_url('assets/fonts/Array_Complete/Fonts/OTF/Array-Regular.otf')?>') format('opentype');
+                font-weight: normal;
+                font-style: normal;
+            } */
+
             @media print {
                 body{
                     width: 58mm;
-                    font-family: "MerchantCopy";
+                    margin: 0;
+                    padding: 0;
+                    font-family: Tahoma;
+                    /* font-family: "DotMatrix"; */
                     color: black;
                 }
             }
@@ -22,37 +39,37 @@
             } */
             
             .val_title{
-                font-size: 1.3rem;
+                font-size: .9rem;
                 font-weight: 500;
                 color: black;
             }
 
             .val_sub_title{
-                font-size: .8rem;
+                font-size: .7rem;
                 font-weight: 500;
                 color: black;
             }
 
             .val_nama_menu{
-                font-size: 1rem;
+                font-size: .7rem;
                 font-weight: 500;
                 color: black;
             }
 
             .val_qty_menu{
-                font-size: .8rem;
+                font-size: .7rem;
                 font-weight: normal;
                 color: black;
             }
             
             .val_total_harga{
-                font-size: 1rem;
+                font-size: .7rem;
                 font-weight: 500;
                 color: black;
             }
 
             .recap_table{
-                font-size: .9rem;
+                font-size: .7rem;
                 font-weight: 500;
                 color: black;
             }
@@ -60,6 +77,14 @@
             .table_pembayaran{
                 font-size: .7rem;
                 color: black;
+            }
+
+            .val_header_text{
+                font-size: .7rem;
+            }
+
+            .text-info{
+                font-size: .7rem;
             }
 
         </style>
@@ -76,13 +101,15 @@
                     <span class="val_header_text"><?=formatDateNamaBulan($transaksi['tanggal_transaksi'], 1)?></span>
                 </td>
             </tr>
-            <tr><td colspan=2><hr style="padding-top: 0; padding-bottom: 0;"></td></tr>
+            <tr><td colspan=2>
+                <!-- <hr style="border-top: dotted 1px; padding-top: 0; padding-bottom: 0;"> -->
+            </td></tr>
             <tr style="text-align: center;">
-                <td colspan=2 style="width: 100%;">
+                <!-- <td colspan=2 style="width: 100%;">
                     <img id="logo_merchant" style="width: 3rem; height: 3rem;" src="<?=base_url('assets/logo_merchant/'.$merchant['logo'])?>" />
-                </td>
+                </td> -->
             </tr>
-            <tr style="text-align: center;">
+            <tr style="text-align: center; line-height: .5rem;">
                 <td colspan=2 style="width: 100%;">
                     <span class="val_title">
                         <?=$merchant['nama_merchant']?>
@@ -100,7 +127,9 @@
         <?php if($pembayaran){ ?>
             <table style="width: 100%;" class="table_pembayaran">
                 <tr>
-                    <td colspan=3><hr style="padding-top: 0; padding-bottom: 0;"></td>
+                    <td colspan=3>
+                        <!-- <hr style="border-top: dotted 1px; padding-top: 0; padding-bottom: 0;"> -->
+                    </td>
                 </tr>
                 <tr>
                     <td style="width: 30%;">
@@ -126,7 +155,7 @@
                 </tr>
                 <tr>
                     <td style="width: 30%;">
-                        Nama Pembayar
+                        Nama
                     </td>
                     <td style="width: 5%;">
                         :
@@ -140,7 +169,9 @@
         <?php if($detail){ ?>
             <table style="width: 100%;">
                 <tr>
-                    <td colspan=2><hr style="padding-top: 0; padding-bottom: 0;"></td>
+                    <td colspan=2>
+                        <!-- <hr style="border-top: dotted 1px; padding-top: 0; padding-bottom: 0;"> -->
+                    </td>
                 </tr>
                 <?php foreach($detail as $d){ ?>
                     <tr>
@@ -154,15 +185,17 @@
                     </tr>
                 <?php } ?>
                 <tr>
-                    <td colspan=2><hr style="padding-top: 0; padding-bottom: 0;"></td>
+                    <td colspan=2>
+                        <!-- <hr style="border-top: dotted 1px; padding-top: 0; padding-bottom: 0;"> -->
+                    </td>
                 </tr>
             </table>
         <?php } ?>
         <table style="width: 100%;">
             <tr>
                 <td style="width: 50%;"></td>
-                <td style="width: 50%;">
-                    <table style="width: 100%;" class="recap_table">
+                <td style="width: 50%; padding: 0;">
+                    <table style="border-spacing: 0; border-collapse: collapse; width: 100%;" class="recap_table">
                         <tr>
                             <td style="width: 45%;">
                                 Total
@@ -213,20 +246,20 @@
                 </td>
             </tr>
         </table>
-        <table style="width: 100%; font-size: .7rem;">
-            <hr style="padding-top: 0; padding-bottom: 0;">
+        <table style="width: 100%; font-size: .6rem;">
+            <!-- <hr style="border-top: dotted 1px; padding-top: 0; padding-bottom: 0;"> -->
             <tr>
-                <td style="width: 50%;">
+                <td style="width: 50%; vertical-align: top;">
                     <span>Printed Date:</span><br>
-                    <span><?=formatDateNamaBulan(date('Y-m-d H:i:s'), 1)?></span>
+                    <span><?=formatDate(date('Y-m-d H:i:s'))?></span>
                 </td>
-                <td style="width: 50%; text-align: right">
+                <td style="width: 50%; vertical-align: top; text-align: right">
                     <span>Printed By:</span><br>
                     <span><?=$this->general_library->getNamaUser()?></span>
                 </td>
             </tr>
         </table>
-        <table style="margin-top: 15px; font-size: .9rem; width: 100%;">
+        <table style="margin-top: 15px; font-size: .6rem; width: 100%;">
             <?php if($pembayaran){ ?>
                 <tr style="text-align: center;">
                     <td>
@@ -245,11 +278,15 @@
                 </tr>
             <?php } ?>
             <?php if($pembayaran){ ?> 
-                <tr><td><hr style="padding-top: 0; padding-bottom: 0;"></td></tr>
+                <tr>
+                    <td>
+                        <!-- <hr style="border-top: dotted 1px; padding-top: 0; padding-bottom: 0;"> -->
+                    </td>
+                </tr>
             <?php } ?>
         </table>
         <?php if($pembayaran){ ?>
-            <table style="width: 100%; font-size: .8rem; margin-top: -25px;">
+            <table style="width: 100%; font-size: .7rem; margin-top: -25px;">
                 <tr>
                     <td style="text-align: center; vertical-align: middle; padding: 0px;">
                         <img style="width: 3rem; height: 3rem;" src="<?=base_url('assets/img/logo-biru-transparent.png')?>" /><br>
