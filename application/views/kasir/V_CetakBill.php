@@ -39,7 +39,7 @@
             } */
             
             .val_title{
-                font-size: .9rem;
+                font-size: 1.1rem;
                 font-weight: 500;
                 color: black;
             }
@@ -51,36 +51,36 @@
             }
 
             .val_nama_menu{
-                font-size: .7rem;
+                font-size: .8rem;
                 font-weight: 500;
                 color: black;
             }
 
             .val_qty_menu{
-                font-size: .7rem;
+                font-size: .8rem;
                 font-weight: normal;
                 color: black;
             }
             
             .val_total_harga{
-                font-size: .7rem;
+                font-size: .8rem;
                 font-weight: 500;
                 color: black;
             }
 
             .recap_table{
-                font-size: .7rem;
+                font-size: .8rem;
                 font-weight: 500;
                 color: black;
             }
 
             .table_pembayaran{
-                font-size: .7rem;
+                font-size: .8rem;
                 color: black;
             }
 
             .val_header_text{
-                font-size: .7rem;
+                font-size: .8rem;
             }
 
             .text-info{
@@ -280,13 +280,13 @@
             <?php if($pembayaran){ ?> 
                 <tr>
                     <td>
-                        <!-- <hr style="border-top: dotted 1px; padding-top: 0; padding-bottom: 0;"> -->
+                        <hr style="border-top: dotted 1px; padding-top: 0; padding-bottom: 0;">
                     </td>
                 </tr>
             <?php } ?>
         </table>
         <?php if($pembayaran){ ?>
-            <table style="width: 100%; font-size: .7rem; margin-top: -25px;">
+            <table style="width: 100%; font-size: .8rem; margin-top: -25px;">
                 <tr>
                     <td style="text-align: center; vertical-align: middle; padding: 0px;">
                         <img style="width: 3rem; height: 3rem;" src="<?=base_url('assets/img/logo-biru-transparent.png')?>" /><br>
