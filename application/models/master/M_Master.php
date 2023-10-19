@@ -393,5 +393,44 @@
             }
         }
 
+        public function openStockMenuMerchant($id){
+            $rs['item'] = $this->db->select('*')
+                            ->from('m_menu_merchant')
+                            ->where('id', $id)
+                            ->get()->row_array();
+
+            // $rs['stock'] = $this->db->select('*')
+            //                         ->from('t_stock_menu_merchant')
+            //                         ->where('id_m_menu_merchant', $id)
+            //                         ->where('flag_active', 1)
+            //                         ->order_by('tanggal', 'desc')
+            //                         ->get()->result_array();
+            return $rs;
+        }
+
+        public function loadStockMenuMerchant($id){
+            return $this->db->select('*')
+                        ->from('t_stock_menu_merchant')
+                        ->where('id_m_menu_merchant', $id)
+                        ->where('flag_active', 1)
+                        ->order_by('tanggal', 'desc')
+                        ->get()->result_array();
+        }
+
+        public function inputStockMenuMerchant($id){
+            $data = $this->input->post();
+            $data['id_m_menu_merchant'] = $id;
+            $data['created_by'] = $this->general_library->getId();
+            $this->insert('t_stock_menu_merchant', $data);
+        }
+
+        public function deleteStockMenuMerchant($id){
+            $this->db->where('id', $id)
+                    ->update('t_stock_menu_merchant', [
+                        'flag_active' => 0,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+        }
+
 	}
 ?>

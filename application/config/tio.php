@@ -13,6 +13,7 @@ $route['master/kategori-menu'] = 'master/C_Master/masterKategoriMenu';
 $route['kasir'] = 'kasir/C_Kasir/kasir';
 //laporan
 $route['laporan/penjualan'] = 'laporan/C_Laporan/laporanPenjualan';
+$route['laporan/stock/opname'] = 'laporan/C_Laporan/stockOpname';
 
 
 //api

@@ -11,6 +11,83 @@
             $this->db->insert($tablename, $data);
         }
 
+        public function searchLaporanStockOpname($data){
+            $tanggal = explodeRangeDate($data['range_tanggal']);
+
+            $menu = $this->db->select('*')
+                            ->from('m_menu_merchant')
+                            ->where('flag_active', 1)
+                            ->where('id_m_merchant', $this->general_library->getIdMerchant())
+                            ->order_by('nama_menu_merchant')
+                            ->get()->result_array();
+
+            foreach($menu as $m){
+                $rs['menu'][$m['id']] = $m;
+                $rs['menu'][$m['id']]['transaksi']['total'] = 0;
+                $rs['menu'][$m['id']]['transaksi']['stock_awal'] = 0;
+                $rs['menu'][$m['id']]['transaksi']['list'] = null;
+            }
+
+            $stock = $this->db->select('a.*')
+                                ->from('t_stock_menu_merchant a')
+                                ->join('m_menu_merchant b', 'a.id_m_menu_merchant = b.id')
+                                ->where('b.id_m_merchant', $this->general_library->getIdMerchant())
+                                ->where('a.tanggal >=', $tanggal[0].' 00:00:00')
+                                ->where('a.tanggal <=', $tanggal[1].' 23:59:59')
+                                ->where('a.flag_active', 1)
+                                ->order_by('a.tanggal', 'asc')
+                                ->group_by('a.id')
+                                ->get()->result_array();
+                                // dd(json_encode($stock));
+            if($stock){
+                $i = 0;
+                foreach($stock as $s){
+                    if($rs['menu'][$s['id_m_menu_merchant']]['transaksi']['total'] == 0){
+                        $rs['menu'][$s['id_m_menu_merchant']]['transaksi']['stock_awal'] = $s['jumlah_barang'];    
+                    }
+
+                    if(isset($rs['menu'][$s['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($s['tanggal'])])){
+                        $rs['menu'][$s['id_m_menu_merchant']]['transaksi']['stock_awal'] += $s['jumlah_barang'];
+                    }
+
+                    $rs['menu'][$s['id_m_menu_merchant']]['transaksi']['total'] += $s['jumlah_barang'];
+                    $rs['menu'][$s['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($s['tanggal'])]['tanggal'] = $s['tanggal'];
+                    if(isset($rs['menu'][$s['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($s['tanggal'])]['masuk'])){
+                        $rs['menu'][$s['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($s['tanggal'])]['masuk'] += $s['jumlah_barang'];
+                    } else {
+                        $rs['menu'][$s['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($s['tanggal'])]['masuk'] = $s['jumlah_barang'];
+                    }
+                    $i++;
+                }
+            }
+
+            $transaksi_detail = $this->db->select('a.*')
+                                        ->from('t_transaksi_detail a')
+                                        ->join('t_transaksi b', 'a.id_t_transaksi = b.id')
+                                        ->where('b.id_m_merchant', $this->general_library->getIdMerchant())
+                                        ->where('a.flag_active', 1)
+                                        ->where('b.flag_active', 1)
+                                        ->where('b.tanggal_transaksi >=', $tanggal[0].' 00:00:00')
+                                        ->where('b.tanggal_transaksi <=', $tanggal[1].' 23:59:59')
+                                        ->order_by('b.created_date', 'desc')
+                                        ->group_by('a.id')
+                                        ->get()->result_array();
+
+            if($transaksi_detail){
+                foreach($transaksi_detail as $td){
+                    $rs['menu'][$td['id_m_menu_merchant']]['transaksi']['total'] -= $td['qty'];
+                    $rs['menu'][$td['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($td['created_date'])]['tanggal'] = $td['created_date'];
+                    if(isset($rs['menu'][$td['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($td['created_date'])]['keluar'])){
+                        $rs['menu'][$td['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($td['created_date'])]['keluar'] += $td['qty'];
+                    } else {
+                        $rs['menu'][$td['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($td['created_date'])]['keluar'] = $td['qty'];
+                    }
+                }
+            }
+
+            return $rs;
+        }
+
         public function searchLaporanPenjualan($data){
             $tanggal = explodeRangeDate($data['range_tanggal']);
 

@@ -75,7 +75,7 @@
             }
 
             .table_pembayaran{
-                font-size: .8rem;
+                font-size: .6rem;
                 color: black;
             }
 

@@ -18,6 +18,8 @@
                         <td class="text-left"><?=formatCurrency($lp['harga'])?></td>
                         <td class="text-left"><?=$lp['deskripsi']?></td>
                         <td class="text-center">
+                            <button href="#modal_stock_menu" onclick="openStock('<?=$lp['id']?>')" data-toggle="modal"
+                            class="btn btn-sm btn-info"><i class="fa fa-box-open"></i> Stock</button>
                             <button onclick="deleteMenuMerchant('<?=$lp['id']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
                         </td>
                     </tr>
@@ -31,6 +33,14 @@
                 responsive: false
             });
         })
+
+        function openStock(id){
+            $('#modal_stock_menu_content').html('')
+            $('#modal_stock_menu_content').append(divLoaderNavy)
+            $('#modal_stock_menu_content').load('<?=base_url('master/C_Master/openStockMenuMerchant/')?>'+id, function(){
+                $('#loader').hide()
+            })
+        }
 
         function deleteMenuMerchant(id){
             if(confirm('Apakah Anda yakin ingin menghapus data?')){

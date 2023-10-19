@@ -133,4 +133,24 @@ class C_Master extends CI_Controller
     public function deleteMenuMerchant($id){
         $this->general->delete('id', $id, 'm_menu_merchant');
     }
+
+    public function openStockMenuMerchant($id){
+        $data['id_menu'] = $id;
+        $data['result'] = $this->master->openStockMenuMerchant($id);
+        $this->load->view('master/V_MasterMenuMerchantStock', $data);
+    }
+
+    public function loadStockMenuMerchant($id){
+        $data['id_menu'] = $id;
+        $data['result'] = $this->master->loadStockMenuMerchant($id);
+        $this->load->view('master/V_MasterMenuMerchantStockItem', $data);
+    }
+
+    public function inputStockMenuMerchant($id){
+        echo json_encode($this->master->inputStockMenuMerchant($id));
+    }
+
+    public function deleteStockMenuMerchant($id){
+        $this->master->deleteStockMenuMerchant($id);
+    }
 }

@@ -83,6 +83,20 @@
     </div>
 </div>
 
+<div class="modal fade" id="modal_stock_menu" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div id="modal-dialog" class="modal-dialog modal-xl">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h6 class="modal-title">STOCK BARANG</h6>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div id="modal_stock_menu_content">
+          </div>
+      </div>
+  </div>
+</div>
 
 <script>
     $(function(){
