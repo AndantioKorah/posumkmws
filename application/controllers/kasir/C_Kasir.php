@@ -100,4 +100,8 @@ class C_Kasir extends CI_Controller
         $data['merchant'] = $this->general->getOne('m_merchant', 'id', $this->general_library->getIdMerchant());
         $this->load->view('kasir/V_CetakBill', $data);
     }
+
+    public function deleteTransaksi($id){
+        echo json_encode($this->kasir->deleteTransaksi($id));
+    }
 }

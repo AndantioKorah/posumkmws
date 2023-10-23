@@ -225,22 +225,33 @@ class General_library
         // return true;
         // logic belum jalan for ni menu
         // return $this->isSessionExpired();
+        if($this->isProgrammer()){
+            return true;
+        }
         $res = 1;
         if(!$this->isSessionExpired()){
             $res = 0;
         } else if(!$this->isNotAppExp()) {
             $res = 0;
         }
-        // if($this->isSessionExpired()){
-        //     $current_url = substr($_SERVER["REDIRECT_QUERY_STRING"], 1, strlen($_SERVER["REDIRECT_QUERY_STRING"])-1);
-        //     $list_url = $this->nikita->session->userdata('list_url');
-        //     foreach($list_url as $lu){
-        //         if($current_url == $lu['url']){
-        //             $res = 1;
-        //             break;
-        //         }
-        //     }
-        // }
+        if($res == 1){
+            $current_url = substr($_SERVER["REDIRECT_QUERY_STRING"], 1, strlen($_SERVER["REDIRECT_QUERY_STRING"])-1);
+            $allowed_list_url = $this->nikita->session->userdata('list_url');
+            $url_exist = $this->nikita->session->userdata('list_exist_url');
+            $allowed_list_url['welcome'] = 'welcome';
+            $url_exist['welcome'] = 'welcome';
+            $found = 1;
+            
+            if(isset($url_exist[$current_url])){                
+                if(!isset($allowed_list_url[$current_url])){
+                    $found = 0;
+                }
+            }
+            $res = $found;
+            if($res == 0){
+                $this->nikita->session->set_userdata('apps_error', 'Anda tidak memiliki hak akses untuk menggunakan fitur tersebut. Silahkan login kembali.');
+            }   
+        }
         // dd($res);
         return $res == 0 ? false : true;
     }

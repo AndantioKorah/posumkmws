@@ -1,7 +1,6 @@
 <form id="form_input_stock">
-    <div class="row p-3">
+    <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <h4><?=$result['item']['nama_menu_merchant']?></h4>
             <h6 class="jumlah_stock"></h6>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12">
@@ -18,7 +17,7 @@
         </div>
     </div>
 </form>
-<div class="row p-3">
+<div class="row">
     <div class="col-lg-12" id="div_stock"></div>
 </div>
 <script>

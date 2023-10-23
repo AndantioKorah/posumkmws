@@ -164,5 +164,6 @@
     function removeAll(id){
         $('#badge_qty_'+id).html('0')
         $('#badge_qty_'+id).removeClass('badge-success')
+        $('#card-menu-'+id).removeClass('bg-selected')
     }
 </script>

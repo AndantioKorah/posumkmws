@@ -134,6 +134,12 @@ class C_Master extends CI_Controller
         $this->general->delete('id', $id, 'm_menu_merchant');
     }
 
+    public function openModalEditMenuMerchant($id){
+        $data['id_menu'] = $id;
+        $data['result'] = $this->general->getOne('m_menu_merchant', 'id', $id);
+        $this->load->view('master/V_MasterMenuMerchantModal', $data);
+    }
+
     public function openStockMenuMerchant($id){
         $data['id_menu'] = $id;
         $data['result'] = $this->master->openStockMenuMerchant($id);
@@ -152,5 +158,12 @@ class C_Master extends CI_Controller
 
     public function deleteStockMenuMerchant($id){
         $this->master->deleteStockMenuMerchant($id);
+    }
+
+    public function editHargaMenuMerchant($id){
+        $data = $this->input->post();
+        $data['updated_by'] = $this->general_library->getId();
+        $data['harga'] = clearString($data['harga']);
+        $this->general->update('id', $id, 'm_menu_merchant', $data);
     }
 }

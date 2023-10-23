@@ -15,11 +15,13 @@
                         <td class="text-center"><?=$no++;?></td>
                         <td class="text-left"><?=$lp['nama_jenis_menu'].' / '.$lp['nama_kategori_menu']?></td>
                         <td class="text-left"><?=$lp['nama_menu_merchant']?></td>
-                        <td class="text-left"><?=formatCurrency($lp['harga'])?></td>
+                        <td class="text-left">
+                            <span class="harga_item_<?=$lp['id']?>"><?=formatCurrency($lp['harga'])?></span>
+                        </td>
                         <td class="text-left"><?=$lp['deskripsi']?></td>
                         <td class="text-center">
-                            <button href="#modal_stock_menu" onclick="openStock('<?=$lp['id']?>')" data-toggle="modal"
-                            class="btn btn-sm btn-info"><i class="fa fa-box-open"></i> Stock</button>
+                            <button href="#modal_edit_menu" onclick="openModalEdit('<?=$lp['id']?>')" data-toggle="modal"
+                            class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</button>
                             <button onclick="deleteMenuMerchant('<?=$lp['id']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
                         </td>
                     </tr>
@@ -34,10 +36,10 @@
             });
         })
 
-        function openStock(id){
-            $('#modal_stock_menu_content').html('')
-            $('#modal_stock_menu_content').append(divLoaderNavy)
-            $('#modal_stock_menu_content').load('<?=base_url('master/C_Master/openStockMenuMerchant/')?>'+id, function(){
+        function openModalEdit(id){
+            $('#modal_edit_menu_content').html('')
+            $('#modal_edit_menu_content').append(divLoaderNavy)
+            $('#modal_edit_menu_content').load('<?=base_url('master/C_Master/openModalEditMenuMerchant/')?>'+id, function(){
                 $('#loader').hide()
             })
         }

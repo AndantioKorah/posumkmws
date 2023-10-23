@@ -144,11 +144,16 @@
                                     <?=formatCurrency($transaksi['total_harga'])?>
                                 </h3>
                             </div>
+                            <div class="col-lg-12 text-center" style="height: 4.5vh;">
+                                <?php if(!$pembayaran){ ?>
+                                    <button onclick="deleteTransaksi()" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus Transaksi</button>
+                                <?php } ?>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body row p-2">
                         <div class="col-lg-12" id="div_selected_menu" style="
-                                height: 30vh !important;
+                                height: 26vh !important;
                                 overflow-y: scroll;
                                 overflow-x: hidden    
                             "></div>
@@ -181,6 +186,27 @@
             endDate: new Date()
         })
     })
+
+    function deleteTransaksi(){
+        if(confirm('Apakah Anda yakin ingin menghapus transaksi ini?')){
+            $.ajax({
+                url: '<?=base_url("kasir/C_Kasir/deleteTransaksi/".$transaksi['id'])?>',
+                method: 'post',
+                data: $(this).serialize(),
+                success: function(data){
+                    let rs = JSON.parse(data)
+                    if(rs.code == 1){
+                        errortoast(rs.message)
+                    } else {
+                        successtoast('Transaksi berhasil dihapus')   
+                        $('#btn_back').click()
+                    }
+                }, error: function(e){
+                    errortoast('Terjadi Kesalahan')
+                }
+            })
+        }
+    }
 
     //on keyup, start the countdown
     input_nama.on('keyup', function () {

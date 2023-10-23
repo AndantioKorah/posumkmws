@@ -3,7 +3,7 @@
         <h3 class="card-title">TAMBAH MERCHANT</h3>
     </div>
     <div class="card-body" style="display: block;">
-        <form id="form_tambah_jenis_pesan" action="<?=base_url("master/C_Master/edit")?>" method="POST" enctype="multipart/form-data">
+        <form id="form_tambah_merchant" action="<?=base_url("master/C_Master/createMasterMerchant")?>" method="POST" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-3">
                     <div class="form-group">
@@ -94,7 +94,7 @@
         })
     }
 
-    // $('#form_tambah_jenis_pesan').on('submit', function(e){
+    // $('#form_tambah_merchant').on('submit', function(e){
     //     e.preventDefault();
     //     $.ajax({
     //         url: '<?=base_url("master/C_Master/createMasterMerchant")?>',
@@ -103,7 +103,6 @@
     //         success: function(){
     //             successtoast('Data berhasil ditambahkan')
     //             loadAllMerchant()
-    //             $('#nama_jenis_pesan').val('')
     //         }, error: function(e){
     //             errortoast('Terjadi Kesalahan')
     //         }

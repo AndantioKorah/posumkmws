@@ -48,22 +48,37 @@ class C_Login extends CI_Controller
         if($result != null){
             $params = $this->m_general->getAll('m_parameter');
             $list_menu = null;
+            $all_menu = $this->m_general->getAll('m_menu');
             $list_role = $this->user->getListRoleForUser($result[0]['id']);
             $active_role = null;
+
             if($list_role){
                 $active_role = $list_role[0];
+                if(!$active_role){
+                    $this->session->set_flashdata('message', 'Akun Anda belum memiliki Role. Silahkan menghubungi Administrator.');
+                    redirect('login');
+                }
                 $list_menu = $this->general_library->getListMenu($active_role['id'], $active_role['role_name']);
                 $list_url = $this->general_library->getListUrl($active_role['id']);
+                if($list_url){
+                    $tempUrl = $list_url;
+                    $list_url = null;
+                    foreach($tempUrl as $t){
+                        $list_url[$t['url']] = $t;
+                    }
+                }
             }
 
-            if(!$active_role){
-                $this->session->set_flashdata('message', 'Akun Anda belum memiliki Role. Silahkan menghubungi Administrator.');
-                redirect('login');
+            if($all_menu){
+                foreach($all_menu as $m){
+                    $list_exist_url[$m['url']] = 1;
+                }
             }
 
             $this->session->set_userdata([
                 'user_logged_in' => $result,
                 'params' => $params,
+                'list_exist_url' =>  $list_exist_url,
                 'list_menu' =>  $list_menu,
                 'list_role' =>  $list_role,
                 'list_url' =>  $list_url,

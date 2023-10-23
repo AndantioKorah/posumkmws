@@ -102,13 +102,13 @@
         }
 
         public function updateTotalHargaTransaksi($id){
+            $total_harga = 0;
             $detail = $this->db->select('*')
                                 ->from('t_transaksi_detail')
                                 ->where('flag_active', 1)
                                 ->where('id_t_transaksi', $id)
                                 ->get()->result_array();
             if($detail){
-                $total_harga = 0;
                 foreach($detail as $d){
                     $total_harga += (floatval($d['qty']) * floatval($d['harga']));
                 }
@@ -273,6 +273,41 @@
 
             $this->db->where('id', $id)
                     ->update('t_transaksi', ['status_transaksi' => 'Belum Lunas', 'updated_by' => $this->general_library->getId()]);
+        }
+
+        public function deleteTransaksi($id){
+            $rs['code'] = 0;
+            $rs['message'] = '';
+
+            $detail = $this->db->select('*')
+                            ->from('t_transaksi_detail')
+                            ->where('id_t_transaksi', $id)
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+
+            if($detail){
+                $rs['code'] = 1;
+                $rs['message'] = 'Data tidak dapat dihapus karena masih ada item yang tersimpan.';
+            }
+
+            $pembayaran = $this->db->select('*')
+                            ->from('t_pembayaran')
+                            ->where('id_t_transaksi', $id)
+                            ->where('flag_active', 1)
+                            ->get()->result_array();
+
+            if($pembayaran){
+                $rs['code'] = 1;
+                $rs['message'] = 'Data tidak dapat dihapus karena sudah ada pembayaran.';
+            }
+
+            if($rs['code'] == 0){
+                $this->db->where('id', $id)
+                        ->update('t_transaksi', ['flag_active' => 0]);
+            }
+
+            return $rs;
+
         }
 
 	}

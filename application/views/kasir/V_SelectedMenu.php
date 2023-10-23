@@ -23,7 +23,7 @@
         color: var(--red-delete) !important;
     }
 </style>
-        <?php if($result){ $total_harga = 0; foreach($result as $rs){ 
+        <?php $total_harga = 0; if($result){ foreach($result as $rs){ 
             $total_harga += $rs['total_harga'];
             ?>
             <div class="col-lg-12" id="row_<?=$rs['id_m_menu_merchant']?>">
