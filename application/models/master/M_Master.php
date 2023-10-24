@@ -13,7 +13,10 @@
 
         public function deleteItem($tablename, $id){
             $this->db->where('id', $id)
-                    ->update($tablename, ['flag_active' => 0]);
+                    ->update($tablename, [
+                        'flag_active' => 0,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
         }
 
         public function editMasterMerchant($id){
@@ -417,6 +420,25 @@
                         ->get()->result_array();
         }
 
+        public function getAllBahanBakumerchant(){
+            return $this->db->select('*')
+                            ->from('m_bahan_baku')
+                            ->where('id_m_merchant', $this->general_library->getIdMerchant())
+                            ->where('flag_active', 1)
+                            ->order_by('nama_bahan_baku', 'asc')
+                            ->get()->result_array();
+        }
+
+        public function loadStockBahanBaku($id){
+            return $this->db->select('a.*, b.satuan')
+                        ->from('t_stock_bahan_baku a')
+                        ->join('m_bahan_baku b', 'a.id_m_bahan_baku = b.id')
+                        ->where('a.id_m_bahan_baku', $id)
+                        ->where('a.flag_active', 1)
+                        ->order_by('a.tanggal', 'desc')
+                        ->get()->result_array();
+        }
+
         public function inputStockMenuMerchant($id){
             $data = $this->input->post();
             $data['id_m_menu_merchant'] = $id;
@@ -424,11 +446,44 @@
             $this->insert('t_stock_menu_merchant', $data);
         }
 
+        public function inputStockBahanBaku($id){
+            $data = $this->input->post();
+            $data['id_m_bahan_baku'] = $id;
+            $data['created_by'] = $this->general_library->getId();
+            $this->insert('t_stock_bahan_baku', $data);
+        }
+
         public function deleteStockMenuMerchant($id){
             $this->db->where('id', $id)
                     ->update('t_stock_menu_merchant', [
                         'flag_active' => 0,
                         'updated_by' => $this->general_library->getId()
+                    ]);
+        }
+
+        public function deleteStockBahanBaku($id){
+            $this->db->where('id', $id)
+                    ->update('t_stock_bahan_baku', [
+                        'flag_active' => 0,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
+        }
+
+        public function loadBahanBakuMenuMerchant($id){
+            return $this->db->select('a.*, b.nama_bahan_baku, b.satuan')
+                        ->from('t_bahan_baku_menu_merchant a')
+                        ->join('m_bahan_baku b', 'a.id_m_bahan_baku = b.id')
+                        ->where('a.id_m_menu_merchant', $id)
+                        ->where('a.flag_active', 1)
+                        ->order_by('a.takaran', 'asc')
+                        ->get()->result_array();
+        }
+
+        public function changeStatusStockMenuMerchant($id, $val){
+            $this->db->where('id', $id)
+                    ->update('m_menu_merchant', [
+                        'updated_by' => $this->general_library->getId(),
+                        'stock' => $val
                     ]);
         }
 

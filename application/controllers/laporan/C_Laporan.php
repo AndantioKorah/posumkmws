@@ -28,17 +28,37 @@ class C_Laporan extends CI_Controller
     }
 
     public function searchLaporanStockOpname(){
-        $data['result'] = $this->laporan->searchLaporanStockOpname($this->input->post());
-        $this->session->set_userdata('stock_opname', $data['result']);
-        $this->load->view('laporan/V_LaporanStockOpnameResult', $data);
+        $this->session->set_userdata('range_tanggal_stock_opname', $this->input->post());
+        $this->load->view('laporan/V_LaporanStockOpnameResult', null);
     }
 
-    public function openDetailStockOpname($id){
-        $stockOpname = $this->session->userdata('stock_opname');
+    function openStockOpnameMenuResult(){
+        $data['result'] = $this->laporan->searchLaporanStockOpnameMenu($this->session->userdata('range_tanggal_stock_opname'));
+        $this->session->set_userdata('stock_opname_menu', $data['result']);
+        $this->load->view('laporan/V_LaporanStockOpnameMenuResult', $data);
+    }
+
+    function openStockOpnameBahanBakuResult(){
+        $data['result'] = $this->laporan->searchLaporanStockOpnameBahanBaku($this->session->userdata('range_tanggal_stock_opname'));
+        $this->session->set_userdata('stock_opname_bahan_baku', $data['result']);
+        $this->load->view('laporan/V_LaporanStockOpnameBahanBakuResult', $data);
+    }
+
+    public function openDetailStockOpnameMenu($id){
+        $stockOpname = $this->session->userdata('stock_opname_menu');
         $data['result'] = null;
         if(isset($stockOpname['menu'][$id])){
             $data['result'] = $stockOpname['menu'][$id];
         }
-        $this->load->view('laporan/V_LaporanStockOpnameDetail', $data);
+        $this->load->view('laporan/V_LaporanStockOpnameMenuDetail', $data);
+    }
+
+    public function openDetailStockOpnameBahanBaku($id){
+        $stockOpname = $this->session->userdata('stock_opname_bahan_baku');
+        $data['result'] = null;
+        if(isset($stockOpname['bahan_baku'][$id])){
+            $data['result'] = $stockOpname['bahan_baku'][$id];
+        }
+        $this->load->view('laporan/V_LaporanStockOpnameBahanBakuDetail', $data);
     }
 }

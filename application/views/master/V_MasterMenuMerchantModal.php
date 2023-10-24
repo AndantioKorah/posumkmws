@@ -7,9 +7,16 @@
             <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#edit_harga_tab" data-toggle="tab">Edit Harga</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" onclick="openStock()" href="#stock_tab" data-toggle="tab">Stock</a>
-            </li>
+            <?php if($result['stock'] == 1){ ?>            
+                <li class="nav-item">
+                    <a class="nav-link" onclick="openStock()" href="#stock_tab" data-toggle="tab">Stock</a>
+                </li>
+            <?php } ?>
+            <?php if($result['stock'] == 0){ ?>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="openBahanBaku()" href="#bahan_baku_tab" data-toggle="tab">Bahan Baku</a>
+                </li>
+            <?php } ?>
         </ul>
     </div>
     <div class="tab-content col-12 mt-2" id="myTabContent">
@@ -29,6 +36,8 @@
             </form>
         </div>
         <div class="tab-pane" id="stock_tab">
+        </div>
+        <div class="tab-pane" id="bahan_baku_tab">
         </div>
     </div>
 </div>
@@ -68,6 +77,14 @@
         $('#stock_tab').html('')
         $('#stock_tab').append(divLoaderNavy)
         $('#stock_tab').load('<?=base_url('master/C_Master/openStockMenuMerchant/'.$id_menu)?>', function(){
+            $('#loader').hide()
+        })
+    }
+
+    function openBahanBaku(){
+        $('#bahan_baku_tab').html('')
+        $('#bahan_baku_tab').append(divLoaderNavy)
+        $('#bahan_baku_tab').load('<?=base_url('master/C_Master/openBahanBakuMenuMerchant/'.$id_menu)?>', function(){
             $('#loader').hide()
         })
     }

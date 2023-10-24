@@ -7,6 +7,7 @@ $route['master/merchant'] = 'master/C_Master/masterMerchant';
 $route['master/merchant/menu'] = 'master/C_Master/menuMerchant';
 $route['master/jenis-menu'] = 'master/C_Master/masterJenisMenu';
 $route['master/kategori-menu'] = 'master/C_Master/masterKategoriMenu';
+$route['master/bahan-baku'] = 'master/C_Master/masterBahanBaku';
 
 
 //website

@@ -66,6 +66,70 @@ class C_Master extends CI_Controller
         render('master/V_MasterMerchant', '', '', null);
     }
 
+    public function masterBahanBaku(){
+        render('master/V_MasterBahanBaku', '', '', null);
+    }
+
+    public function createMasterBahanBaku(){
+        $data = $this->input->post();
+        $data['created_by'] = $this->general_library->getId();
+        $data['id_m_merchant'] = $this->general_library->getIdMerchant();
+        $this->master->insert('m_bahan_baku', $data);
+    }
+
+    public function loadAllBahanBaku(){
+        $data['result'] = $this->master->getAllBahanBakuMerchant();
+        $this->load->view('master/V_MasterBahanBakuItem', $data);
+    }
+
+    public function deleteBahanBaku($id){
+        $this->master->deleteItem('m_bahan_baku', $id);
+    }
+
+    public function openModalEditBahanBaku($id){
+        $data['id_bahan_baku'] = $id;
+        $data['result'] = $this->general->getOne('m_bahan_baku', 'id', $id);
+        $this->load->view('master/V_MasterBahanBakuStock', $data);
+    }
+
+    public function inputStockBahanBaku($id){
+        echo json_encode($this->master->inputStockBahanBaku($id));
+    }
+
+    public function loadStockBahanBaku($id){
+        $data['id_menu'] = $id;
+        $data['result'] = $this->master->loadStockBahanBaku($id);
+        $this->load->view('master/V_MasterBahanBakuStockItem', $data);
+    }
+
+    public function deleteStockBahanBaku($id){
+        $this->master->deleteStockBahanBaku($id);
+    }
+
+    // =====================
+
+    public function openBahanBakuMenuMerchant($id){
+        $data['id_m_menu_merchant'] = $id;
+        $data['list_bahan_baku'] = $this->general->getAllWithOrder('m_bahan_baku', 'nama_bahan_baku', 'asc');
+        $this->load->view('master/V_MasterMenuMerchantBahanBaku', $data);
+    }
+
+    public function loadBahanBakuMenuMerchant($id){
+        $data['result'] = $this->master->loadBahanBakuMenuMerchant($id);
+        $this->load->view('master/V_MasterMenuMerchantBahanBakuItem', $data);
+    }
+
+    public function saveBahanBakuMenuMerchant($id){
+        $data = $this->input->post();
+        $data['id_m_menu_merchant'] = $id;
+        $data['created_by'] = $this->general_library->getId();
+        $this->master->insert('t_bahan_baku_menu_merchant', $data);
+    }
+
+    public function deleteBahanBakuMenuMerchant($id){
+        $this->master->deleteItem('t_bahan_baku_menu_merchant', $id);
+    }
+
     public function createMasterMerchant(){
         $photo = $_FILES['logo_merchant']['name'];
         $upload = $this->general_library->uploadLogoMerchant('logo_merchant','logo_merchant');
@@ -82,6 +146,10 @@ class C_Master extends CI_Controller
             }
         }
         redirect('master/merchant');
+    }
+
+    public function changeStatusStockMenuMerchant($id, $val){
+        $this->master->changeStatusStockMenuMerchant($id, $val);
     }
 
     public function editMasterMerchant($id){

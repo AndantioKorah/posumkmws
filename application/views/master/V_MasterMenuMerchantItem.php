@@ -6,6 +6,7 @@
                 <th class="text-left">Jenis / Kategori</th>
                 <th class="text-left">Nama Menu</th>
                 <th class="text-left">Harga</th>
+                <th class="text-left">Stock</th>
                 <th class="text-left">Keterangan</th>
                 <th class="text-center">Pilihan</th>
             </thead>
@@ -17,6 +18,10 @@
                         <td class="text-left"><?=$lp['nama_menu_merchant']?></td>
                         <td class="text-left">
                             <span class="harga_item_<?=$lp['id']?>"><?=formatCurrency($lp['harga'])?></span>
+                        </td>
+                        <td class="text-center">
+                            <input style="width: 1.5rem; height: 1.5rem; cursor: pointer;" class="form-check-input"
+                            type="checkbox" onclick="checkBoxClick('<?=$lp['id']?>')" id="checkBoxStock_<?=$lp['id']?>" <?=$lp['stock'] == 1 ? 'checked' : ''?>>
                         </td>
                         <td class="text-left"><?=$lp['deskripsi']?></td>
                         <td class="text-center">
@@ -35,6 +40,22 @@
                 responsive: false
             });
         })
+
+        function checkBoxClick(id){
+            let status = 0;
+            if($('#checkBoxStock_'+id).prop("checked")){
+                status = 1;
+            }
+            $.ajax({
+                url: '<?=base_url("master/C_Master/changeStatusStockMenuMerchant/")?>'+id+'/'+status,
+                method: 'post',
+                data: null,
+                success: function(){
+                }, error: function(e){
+                    errortoast('Terjadi Kesalahan')
+                }
+            })
+        }
 
         function openModalEdit(id){
             $('#modal_edit_menu_content').html('')

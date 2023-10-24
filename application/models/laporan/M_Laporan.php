@@ -11,12 +11,93 @@
             $this->db->insert($tablename, $data);
         }
 
-        public function searchLaporanStockOpname($data){
+        public function searchLaporanStockOpnameBahanBaku($data){
+            $rs = null;
             $tanggal = explodeRangeDate($data['range_tanggal']);
 
+            $bahan_baku = $this->db->select('*')
+                            ->from('m_bahan_baku')
+                            ->where('flag_active', 1)
+                            ->where('id_m_merchant', $this->general_library->getIdMerchant())
+                            ->order_by('nama_bahan_baku')
+                            ->get()->result_array();
+
+            $rs['bahan_baku'] = null;
+            if($bahan_baku){
+                foreach($bahan_baku as $bb){
+                    $rs['bahan_baku'][$bb['id']] = $bb;
+                    $rs['bahan_baku'][$bb['id']]['stock_awal'] = 0;
+                    $rs['bahan_baku'][$bb['id']]['stock_akhir'] = 0;
+                    $rs['bahan_baku'][$bb['id']]['transaksi'] = [];
+                }
+            }
+
+            $stock_bahan_baku = $this->db->select('a.*')
+                                        ->from('t_stock_bahan_baku a')
+                                        ->join('m_bahan_baku b', 'a.id_m_bahan_baku = b.id')
+                                        ->where('b.id_m_merchant', $this->general_library->getIdMerchant())
+                                        ->where('a.tanggal >=', $tanggal[0].' 00:00:00')
+                                        ->where('a.tanggal <=', $tanggal[1].' 23:59:59')
+                                        ->where('a.flag_active', 1)
+                                        ->order_by('a.tanggal', 'asc')
+                                        ->get()->result_array();
+
+            if($stock_bahan_baku){
+                foreach($stock_bahan_baku as $sb){
+                    $rs['bahan_baku'][$bb['id']]['stock_akhir'] += $sb['jumlah_barang'];
+                    if($rs['bahan_baku'][$sb['id_m_bahan_baku']]['stock_awal'] == 0){
+                        $rs['bahan_baku'][$sb['id_m_bahan_baku']]['stock_awal'] = $sb['jumlah_barang'];
+                    }
+                    $rs['bahan_baku'][$sb['id_m_bahan_baku']]['transaksi'][formatDateOnly($sb['tanggal'])]['tanggal'] = formatDateOnly($sb['tanggal']);
+
+                    if(isset($rs['bahan_baku'][$sb['id_m_bahan_baku']]['transaksi'][formatDateOnly($sb['tanggal'])]['masuk'])){
+                        $rs['bahan_baku'][$sb['id_m_bahan_baku']]['transaksi'][formatDateOnly($sb['tanggal'])]['masuk'] += $sb['jumlah_barang'];
+                    } else {
+                        $rs['bahan_baku'][$sb['id_m_bahan_baku']]['transaksi'][formatDateOnly($sb['tanggal'])]['masuk'] = $sb['jumlah_barang'];
+                    }
+                    $rs['bahan_baku'][$sb['id_m_bahan_baku']]['transaksi'][formatDateOnly($sb['tanggal'])]['keluar'] = 0;
+                }
+            }
+
+            $transaksi_detail = $this->db->select('a.qty, c.nama_menu_merchant, b.tanggal_transaksi, d.id_m_bahan_baku, d.takaran')
+                                        ->from('t_transaksi_detail a')
+                                        ->join('t_transaksi b', 'a.id_t_transaksi = b.id')
+                                        ->join('m_menu_merchant c', 'a.id_m_menu_merchant = c.id')
+                                        ->join('t_bahan_baku_menu_merchant d', 'a.id_m_menu_merchant = d.id_m_menu_merchant', 'left')
+                                        ->where('b.id_m_merchant', $this->general_library->getIdMerchant())
+                                        ->where('a.flag_active', 1)
+                                        ->where('b.flag_active', 1)
+                                        ->where('c.stock', 0)
+                                        ->where('b.tanggal_transaksi >=', $tanggal[0].' 00:00:00')
+                                        ->where('b.tanggal_transaksi <=', $tanggal[1].' 23:59:59')
+                                        ->order_by('b.created_date', 'desc')
+                                        // ->group_by('d.id')
+                                        ->get()->result_array();
+            
+            if($transaksi_detail){
+                foreach($transaksi_detail as $t){
+                    if($t['id_m_bahan_baku']){
+                        $rs['bahan_baku'][$t['id_m_bahan_baku']]['stock_akhir'] -= ($t['qty'] * $t['takaran']);
+                        $rs['bahan_baku'][$t['id_m_bahan_baku']]['transaksi'][formatDateOnly($t['tanggal_transaksi'])]['tanggal'] = formatDateOnly($t['tanggal_transaksi']);
+                        if(isset($rs['bahan_baku'][$t['id_m_bahan_baku']]['transaksi'][formatDateOnly($t['tanggal_transaksi'])]['keluar'])){
+                            $rs['bahan_baku'][$t['id_m_bahan_baku']]['transaksi'][formatDateOnly($t['tanggal_transaksi'])]['keluar'] += ($t['qty'] * $t['takaran']);
+                        } else {
+                            $rs['bahan_baku'][$t['id_m_bahan_baku']]['transaksi'][formatDateOnly($t['tanggal_transaksi'])]['keluar'] = ($t['qty'] * $t['takaran']);
+                        }
+                    }
+                }
+            }
+
+            return $rs;
+        }
+
+        public function searchLaporanStockOpnameMenu($data){
+            $tanggal = explodeRangeDate($data['range_tanggal']);
+            $rs = null;
             $menu = $this->db->select('*')
                             ->from('m_menu_merchant')
                             ->where('flag_active', 1)
+                            ->where('stock', 1)
                             ->where('id_m_merchant', $this->general_library->getIdMerchant())
                             ->order_by('nama_menu_merchant')
                             ->get()->result_array();
@@ -35,6 +116,7 @@
                                 ->where('a.tanggal >=', $tanggal[0].' 00:00:00')
                                 ->where('a.tanggal <=', $tanggal[1].' 23:59:59')
                                 ->where('a.flag_active', 1)
+                                ->where('b.stock', 1)
                                 ->order_by('a.tanggal', 'asc')
                                 ->group_by('a.id')
                                 ->get()->result_array();
@@ -64,9 +146,11 @@
             $transaksi_detail = $this->db->select('a.*')
                                         ->from('t_transaksi_detail a')
                                         ->join('t_transaksi b', 'a.id_t_transaksi = b.id')
+                                        ->join('m_menu_merchant c', 'a.id_m_menu_merchant = c.id')
                                         ->where('b.id_m_merchant', $this->general_library->getIdMerchant())
                                         ->where('a.flag_active', 1)
                                         ->where('b.flag_active', 1)
+                                        ->where('c.stock', 1)
                                         ->where('b.tanggal_transaksi >=', $tanggal[0].' 00:00:00')
                                         ->where('b.tanggal_transaksi <=', $tanggal[1].' 23:59:59')
                                         ->order_by('b.created_date', 'desc')
