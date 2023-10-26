@@ -92,7 +92,7 @@ class Telegramlib extends CI_Model{
         $message = curl_error($curl);
     }
     curl_close($curl);
-    $this->general->insert('t_log_webhook', [
+    $this->general->insert('t_mm_log_webhook', [
       'request' => json_encode($result),
       'response' => json_encode($message)
     ]);

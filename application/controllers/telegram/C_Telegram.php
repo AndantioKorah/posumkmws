@@ -5,8 +5,8 @@ class C_Telegram extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('general/M_General', 'general');
-        $this->load->model('user/M_User', 'user');
+        // $this->load->model('general/M_General', 'general');
+        // $this->load->model('user/M_User', 'user');
         $this->load->model('telegram/M_Telegram', 'tele');
         // if(!$this->general_library->isNotMenu()){
         //     redirect('logout');
