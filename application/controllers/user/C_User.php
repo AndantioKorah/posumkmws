@@ -164,4 +164,8 @@ class C_User extends CI_Controller
     public function changeMerchantUser($id_user){
         echo json_encode($this->user->changeMerchantUser($id_user, $this->input->post()));
     }
+
+    public function validatePasswordAdmin(){
+        echo json_encode($this->user->validatePasswordAdmin());
+    }
 }

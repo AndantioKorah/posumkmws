@@ -56,9 +56,13 @@
                     id: id_t_transaksi_detail
                 },
                 success: function(data){
+                    let total_harga_transaksi = parseInt(data)
                     $('#row_'+id).hide()
                     removeAll(id)
-                    let new_total_harga_selected = parseInt('<?=$total_harga?>') - parseInt(total_harga)
+                    // let new_total_harga_selected = parseInt(total_harga_transaksi) - parseInt(total_harga)
+                    let new_total_harga_selected = parseInt(total_harga_transaksi)
+                    // console.log("total_harga_transaksi "+total_harga_transaksi)
+                    // console.log("total_harga_sent "+total_harga)
                     $('.val_detail_total_harga').html("Rp "+formatRupiah(new_total_harga_selected))      
                     $('#input_total_bayar').val(formatRupiah(new_total_harga_selected))
                     $('#input_kembalian').val("0")

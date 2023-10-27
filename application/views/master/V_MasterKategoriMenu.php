@@ -49,10 +49,12 @@
                     </div>
                 </div>
                 <div class="col-4"></div>
-                <div class="col-8 text-right">
-                    <label class="bmd-label-floating" style="color: white;">..</label>
-                    <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-save"></i> SIMPAN</button>
-                </div>
+                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdmin()){ ?>
+                    <div class="col-8 text-right">
+                        <label class="bmd-label-floating" style="color: white;">..</label>
+                        <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-save"></i> SIMPAN</button>
+                    </div>
+                <?php } ?>
             </div>
         </form>
     </div>

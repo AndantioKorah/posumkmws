@@ -16,7 +16,9 @@
                         <td class="text-center">
                             <button href="#modal_edit_bahan_baku" onclick="openModalEdit('<?=$lp['id']?>')" data-toggle="modal"
                             class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</button>
-                            <button onclick="deleteBahanBaku('<?=$lp['id']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
+                            <?php if($this->general_library->isProgrammer() || $this->general_library->isAdmin()){ ?>
+                                <button onclick="deleteBahanBaku('<?=$lp['id']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
+                            <?php } ?> 
                         </td>
                     </tr>
                 <?php } ?>

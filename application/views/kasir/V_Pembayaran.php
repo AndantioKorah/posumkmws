@@ -143,7 +143,9 @@
                             <button onclick="printBill()" type="button" class="btn btn-block btn-info"><strong><i class="fa fa-print"></i> Cetak Bill</strong></button>
                         </div> -->
                         <div class="col-lg-12 col-md-6 col-sm-6">
-                            <button id="btn_batal_pembayaran" type="button" class="btn btn-block btn-danger"><strong><i class="fa fa-trash"></i> Batal Bayar</strong></button>
+                            <button href="#modal_need_password" data-toggle="modal" id="btn_batal_pembayaran" type="button" class="btn btn-block btn-danger">
+                                <strong><i class="fa fa-trash"></i> Batal Bayar</strong>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -152,8 +154,34 @@
         </div>
     </div>
 </form>
+
 <div id="print_div" style="display:none;"></div>
 <iframe id="printing-frame" name="print_frame" src="about:blank" style="display:none;"></iframe>
+
+<div class="modal fade" id="modal_need_password" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div id="modal-dialog" class="modal-dialog modal-md">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h6 class="modal-title">MASUKKAN PASSWORD</h6>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+            <form id="form_need_password">
+              <div class="col-lg-12">
+                <label>Massukkan Password Admin</label>
+                <input type="password" class="form-control" id="password_admin" name="password_admin" />
+              </div>
+              <div class="col-lg-12 text-right mt-2">
+                <button type="submit" class="btn btn-navy btn-sm">Submit</button>
+              </div>
+            </form>
+          </div>
+      </div>
+  </div>
+</div>
+
 <script>
     $('.format_currency_this').on('keypress', function(event){
         if(event.charCode >= 48 && event.charCode <= 57){
@@ -182,7 +210,28 @@
         }, 250);
     }
 
-    $('#btn_batal_pembayaran').on('click', function(){
+    $('#form_need_password').on('submit', function(e){
+        e.preventDefault(e)
+        $.ajax({
+            url: '<?=base_url("user/C_User/validatePasswordAdmin")?>',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(data){
+                let rs = JSON.parse(data)
+                $(':password').val('')
+                if(rs.code == 1){
+                    errortoast(rs.message)
+                } else {
+                    $('#modal_need_password').modal('hide')
+                    deletePembayaran()
+                }
+            }, error: function(e){
+                errortoast('Terjadi Kesalahan')
+            }
+        })
+    })
+
+    function deletePembayaran(){
         if(confirm('Apakah Anda yakin?')){
             $.ajax({
                 url: '<?=base_url("kasir/C_Kasir/deletePembayaran/".$transaksi['id'])?>',
@@ -199,7 +248,11 @@
                 }
             })
         }
-    })
+    }
+
+    // $('#btn_batal_pembayaran').on('click', function(){
+        
+    // })
 
     $('#form_pembayaran').on('submit', function(e){
         e.preventDefault()
@@ -248,8 +301,15 @@
     function countTotal(){
         var total_harga = clearString($('.val_detail_total_harga').html())
         var diskon = clearString($('#input_diskon').val())
+        if(diskon == ''){
+            diskon = 0;
+        }
         var total_bayar = clearString($('#input_total_bayar').val())
-        var kembalian = parseInt(total_bayar) + parseInt(diskon) - parseInt(total_harga)
+        var total_bayar_and_diskon = parseInt(total_bayar) + parseInt(diskon);
+        if(isNaN(total_bayar_and_diskon)){
+            total_bayar_and_diskon = 0;
+        } 
+        var kembalian = total_bayar_and_diskon - parseInt(total_harga)
         var real_kembalian = kembalian;
         if(kembalian < 0 || isNaN(kembalian)){
             kembalian = 0

@@ -15,7 +15,7 @@
                     <tr>
                         <td class="text-center"><?=$no++;?></td>
                         <td class="text-left"><?=$lp['nama_jenis_menu'].' / '.$lp['nama_kategori_menu']?></td>
-                        <td class="text-left"><?=$lp['nama_menu_merchant']?></td>
+                        <td class="nama_menu_merchant_item_<?=$lp['id']?> text-left"><?=$lp['nama_menu_merchant']?></td>
                         <td class="text-left">
                             <span class="harga_item_<?=$lp['id']?>"><?=formatCurrency($lp['harga'])?></span>
                         </td>
@@ -27,7 +27,9 @@
                         <td class="text-center">
                             <button href="#modal_edit_menu" onclick="openModalEdit('<?=$lp['id']?>')" data-toggle="modal"
                             class="btn btn-sm btn-warning"><i class="fa fa-edit"></i> Edit</button>
+                            <?php if($this->general_library->isProgrammer() || $this->general_library->isAdmin()){ ?>
                             <button onclick="deleteMenuMerchant('<?=$lp['id']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
+                            <?php } ?>
                         </td>
                     </tr>
                 <?php } ?>

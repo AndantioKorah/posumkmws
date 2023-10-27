@@ -63,7 +63,7 @@ class C_Kasir extends CI_Controller
     }
 
     public function deleteSelectedMenu(){
-        $this->kasir->deleteSelectedMenu($this->input->post());
+        echo json_encode($this->kasir->deleteSelectedMenu($this->input->post()));
     }
 
     public function getPembayaranTransaksi($id){

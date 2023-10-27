@@ -16,7 +16,9 @@
                         <td class="text-left"><?=$lp['nama_merchant']?></td>
                         <td class="text-left"><?=$lp['deskripsi']?></td>
                         <td class="text-center">
-                            <button onclick="deleteJenisMenu('<?=$lp['id']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
+                            <?php if($this->general_library->isProgrammer() || $this->general_library->isAdmin()){ ?>
+                                <button onclick="deleteJenisMenu('<?=$lp['id']?>')" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
+                            <?php } ?>
                         </td>
                     </tr>
                 <?php } ?>

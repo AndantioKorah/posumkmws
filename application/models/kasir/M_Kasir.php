@@ -112,11 +112,12 @@
                 foreach($detail as $d){
                     $total_harga += (floatval($d['qty']) * floatval($d['harga']));
                 }
-                $this->db->where('id', $id)
+            }
+            
+            $this->db->where('id', $id)
                         ->update('t_transaksi', [
                             'total_harga' => $total_harga
                         ]);
-            }
             return $total_harga;
         }
 
@@ -194,7 +195,7 @@
                         'updated_by' => $this->general_library->getId()
                     ]);
 
-            $this->updateTotalHargaTransaksi($exist['id_t_transaksi']);
+            return $this->updateTotalHargaTransaksi($exist['id_t_transaksi']);
         }
 
         public function getPembayaranTransaksi($id){

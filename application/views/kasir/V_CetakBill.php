@@ -193,8 +193,8 @@
         <?php } ?>
         <table style="width: 100%;">
             <tr>
-                <td style="width: 50%;"></td>
-                <td style="width: 50%; padding: 0;">
+                <td style="width: 30%;"></td>
+                <td style="width: 80%; padding: 0;">
                     <table style="border-spacing: 0; border-collapse: collapse; width: 100%;" class="recap_table">
                         <tr>
                             <td style="width: 45%;">

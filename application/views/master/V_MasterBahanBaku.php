@@ -1,4 +1,4 @@
-    <div class="card card-default">
+<div class="card card-default">
     <div class="card-header"  style="display: block;">
         <h3 class="card-title">TAMBAH BAHAN BAKU</h3>
     </div>
@@ -17,10 +17,12 @@
                         <input class="form-control" autocomplete="off" name="satuan" id="satuan" required/>
                     </div>
                 </div>
-                <div class="col-12 text-right">
-                    <label class="bmd-label-floating" style="color: white;">..</label>
-                    <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-save"></i> SIMPAN</button>
-                </div>
+                <?php if($this->general_library->isProgrammer() || $this->general_library->isAdmin()){ ?>
+                    <div class="col-12 text-right">
+                        <label class="bmd-label-floating" style="color: white;">..</label>
+                        <button class="btn btn-sm btn-navy" type="submit"><i class="fa fa-save"></i> SIMPAN</button>
+                    </div>
+                <?php } ?>
             </div>
         </form>
     </div>

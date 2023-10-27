@@ -635,5 +635,36 @@
                         ->where('flag_active', 1)
                         ->get()->row_array();
         }
+
+        public function validatePasswordAdmin(){
+            $rs['code'] = 0;
+            $rs['message'] = 'Berhasil';
+            $data = $this->input->post();
+        
+            $list_admin = $this->db->select('a.*')
+                                ->from('m_user a')
+                                ->join('m_user_role b', 'a.id = b.id_m_user')
+                                ->join('m_role c', 'b.id_m_role = c.id')
+                                ->where('a.id_m_merchant', $this->general_library->getIdMerchant())
+                                ->where('c.role_name', 'admin')
+                                ->where('a.flag_active', 1)
+                                ->get()->result_array();
+            $found = 0;
+            if($list_admin){
+                foreach($list_admin as $la){
+                    $password = $this->general_library->encrypt($la['username'], $data['password_admin']);
+                    if($password == $la['password']){
+                        $found = 1;
+                        break;
+                    }
+                }
+            }
+            if($found == 0){
+                $rs['code'] = 1;
+                $rs['message'] = 'Password Salah';
+            }
+
+            return $rs;
+        }
 	}
 ?>

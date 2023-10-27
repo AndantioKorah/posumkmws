@@ -1,11 +1,11 @@
 <div class="row p-3">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h4><?=$result['nama_menu_merchant']?></h4>
+        <h4 class="title_nama_menu_merchant"><?=$result['nama_menu_merchant']?></h4>
     </div>
     <div class="col-12">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#edit_harga_tab" data-toggle="tab">Edit Harga</a>
+                <a class="nav-link active" aria-current="page" href="#data_menu_merchant_tab" data-toggle="tab">Data Menu Merchant</a>
             </li>
             <?php if($result['stock'] == 1){ ?>            
                 <li class="nav-item">
@@ -20,15 +20,19 @@
         </ul>
     </div>
     <div class="tab-content col-12 mt-2" id="myTabContent">
-        <div class="tab-pane show active" id="edit_harga_tab">
+        <div class="tab-pane show active" id="data_menu_merchant_tab">
             <form id="form_edit_harga">
                 <div class="row">
-                    <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <label>Nama Menu Merchant</label>
+                        <input class="form-control" name="nama_menu_merchant" id="input_nama_menu_merchant" value="<?=($result['nama_menu_merchant'])?>" />
+                    </div>
+                    <div class="col-lg-6">
                         <label>Harga</label>
                         <input type="number" class="form-control input_format_currency" name="harga" id="input_harga" value="<?=formatCurrencyWithoutRp($result['harga'])?>" />
                     </div>
                     <div class="col-lg-12 text-right mt-2">
-                        <button id="btn_update_harga" class="btn btn-sm btn-navy"><i class="fa fa-save"></i> Update Harga</button>
+                        <button id="btn_update_harga" class="btn btn-sm btn-navy"><i class="fa fa-save"></i> Simpan</button>
                         <button style="display: none;" disabled id="btn_loading_update_harga" class="btn btn-sm btn-navy">
                             <i class="fa fa-spin fa-spinner"></i> Menyimpan...</button>
                     </div>
@@ -100,6 +104,8 @@
             success: function(res){
                 successtoast('Harga berhasil disimpan')
                 $('.harga_item_<?=$id_menu?>').html("Rp " + $('#input_harga').val())
+                $('.nama_menu_merchant_item_<?=$id_menu?>').html($('#input_nama_menu_merchant').val())
+                $('.title_nama_menu_merchant').html($('#input_nama_menu_merchant').val())
                 $('#btn_update_harga').show()
                 $('#btn_loading_update_harga').hide()
             }, error: function(e){

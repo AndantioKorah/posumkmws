@@ -110,7 +110,8 @@ class C_Master extends CI_Controller
 
     public function openBahanBakuMenuMerchant($id){
         $data['id_m_menu_merchant'] = $id;
-        $data['list_bahan_baku'] = $this->general->getAllWithOrder('m_bahan_baku', 'nama_bahan_baku', 'asc');
+        // $data['list_bahan_baku'] = $this->general->getAllWithOrder('m_bahan_baku', 'nama_bahan_baku', 'asc');
+        $data['list_bahan_baku'] = $this->master->getAllBahanBakuMerchant();
         $this->load->view('master/V_MasterMenuMerchantBahanBaku', $data);
     }
 

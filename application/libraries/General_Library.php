@@ -305,6 +305,14 @@ class General_library
         return $this->getActiveRoleName() == 'programmer';
     }
 
+    public function isAdmin(){
+        return $this->getActiveRoleName() == 'admin';
+    }
+
+    public function isKasir(){
+        return $this->getActiveRoleName() == 'kasir';
+    }
+
     public function isSessionExpired(){
         if(!$this->userLoggedIn){
             $this->nikita->session->set_userdata('apps_error', 'Sesi Anda telah habis. Silahkan Login kembali.');
