@@ -65,7 +65,7 @@
                     // console.log("total_harga_sent "+total_harga)
                     $('.val_detail_total_harga').html("Rp "+formatRupiah(new_total_harga_selected))      
                     $('#input_total_bayar').val(formatRupiah(new_total_harga_selected))
-                    $('#input_kembalian').val("0")
+                    $('#input_kembalian').html("0")
                 }, error: function(e){
                     errortoast('Terjadi Kesalahan')
                 }

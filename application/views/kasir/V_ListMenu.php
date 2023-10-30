@@ -150,7 +150,7 @@
                 if(rs.code == 0){
                     $('.val_detail_total_harga').html("Rp "+formatRupiah(rs.total_harga))
                     $('#input_total_bayar').val(formatRupiah(rs.total_harga))
-                    $('#input_kembalian').val("0")
+                    $('#input_kembalian').html("0")
                     getListSelectedMenuFromListMenu()
                 } else {
                     errortoast(rs.message)

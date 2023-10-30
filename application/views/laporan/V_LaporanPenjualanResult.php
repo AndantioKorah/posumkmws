@@ -177,7 +177,7 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class="card card-default p-3">
-                    <table border=1 class="table table-sm table-hover table-striped">
+                    <table border=1 class="table table-sm table-hover table-striped" id="table_list_transaksi_laporan">
                         <thead>
                             <th class="text-center">No</th>
                             <th class="text-center">Nomor Transaksi</th>
@@ -246,6 +246,7 @@
     <?php } ?>
     <script>
         $(function(){
+            $('#table_list_transaksi_laporan').dataTable()
             renderChart('<?=json_encode($result['jenis_menu'])?>', 'chart_jenis_menu')
             renderChart('<?=json_encode($result['kategori_menu'])?>', 'chart_kategori_menu')
         })

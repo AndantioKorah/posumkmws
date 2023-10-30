@@ -310,5 +310,75 @@
             return [$rs, $tanggal];
         }
 
+        public function searchLaporanPendapatan($data){
+            $tanggal = explodeRangeDate($data['range_tanggal']);
+            $rs['pendapatan_bersih'] = 0;
+            $rs['total_penjualan'] = 0;
+            $rs['total_pengeluaran'] = 0;
+            $rs['total_penjualan_lunas'] = 0;
+            $rs['total_penjualan_belum_lunas'] = 0;
+
+            $rs['data_transaksi'] = $this->db->select('*, a.total_harga as nominal')
+                                    ->from('t_transaksi a')
+                                    ->where('a.tanggal_transaksi >=', $tanggal[0].' 00:00:00')
+                                    ->where('a.tanggal_transaksi <=', $tanggal[1].' 23:59:59')
+                                    ->where('a.id_m_merchant', $this->general_library->getIdMerchant())
+                                    ->where('a.flag_active', 1)
+                                    // ->order_by('a.status_transaksi', 'asc')
+                                    ->order_by('a.tanggal_transaksi', 'desc')
+                                    ->get()->result_array();
+            $result = $rs['data_transaksi'];
+
+            $rs['data_pengeluaran'] = $this->db->select('*')
+                                    ->from('t_pengeluaran a')
+                                    ->where('a.tanggal_transaksi >=', $tanggal[0].' 00:00:00')
+                                    ->where('a.tanggal_transaksi <=', $tanggal[1].' 23:59:59')
+                                    ->where('a.id_m_merchant', $this->general_library->getIdMerchant())
+                                    ->order_by('a.tanggal_transaksi', 'desc')
+                                    ->where('a.flag_active', 1)
+                                    ->get()->result_array();
+            if($rs['data_pengeluaran']){
+                foreach($rs['data_pengeluaran'] as $rdp){
+                    $result[] = $rdp;
+                }
+            }
+
+            if($result){
+                function comparator($object1, $object2) { 
+                    return $object1['tanggal_transaksi'] > $object2['tanggal_transaksi']; 
+                } 
+                usort($result, 'comparator'); 
+
+                $i = 0;
+                foreach($result as $res){
+                    if(isset($res['status_transaksi'])){
+                        $rs['total_penjualan'] += $res['nominal'];
+                        if($res['status_transaksi'] == 'Lunas'){
+                            $rs['pendapatan_bersih'] += $res['nominal'];
+                            $rs['total_penjualan_lunas'] += $res['nominal'];
+                        } else if($res['status_transaksi'] == 'Belum Lunas'){
+                            $rs['total_penjualan_belum_lunas'] += $res['nominal'];
+                        }
+                    }
+                    if(isset($res['nomor_transaksi'])){
+                        $rs['result'][$i]['nama_transaksi'] = $res['nama'] == "" || $res['nama'] == null ? "-" : $res['nama'];
+                        $rs['result'][$i]['nama_transaksi'] = $res['nomor_transaksi'].' / '.$rs['result'][$i]['nama_transaksi'];
+                        $rs['result'][$i]['jenis_transaksi'] = 'pendapatan';
+                        $rs['result'][$i]['status_transaksi'] = $res['status_transaksi'];
+                    } else {
+                        $rs['pendapatan_bersih'] -= $res['nominal'];
+                        $rs['total_pengeluaran'] += $res['nominal'];
+                        $rs['result'][$i]['nama_transaksi'] = $res['nama_transaksi'];
+                        $rs['result'][$i]['jenis_transaksi'] = 'pengeluaran';
+                    }
+                    $rs['result'][$i]['nominal'] = $res['nominal'];
+                    $rs['result'][$i]['tanggal_transaksi'] = $res['tanggal_transaksi'];
+                    $i++;
+                }
+            }
+
+            return [$rs, $tanggal];
+        }
+
 	}
 ?>

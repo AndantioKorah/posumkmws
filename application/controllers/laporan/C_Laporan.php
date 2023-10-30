@@ -61,4 +61,13 @@ class C_Laporan extends CI_Controller
         }
         $this->load->view('laporan/V_LaporanStockOpnameBahanBakuDetail', $data);
     }
+
+    public function laporanPendapatan(){
+        render('laporan/V_LaporanPendapatan', '', '', null);
+    }
+    
+    public function searchLaporanPendapatan(){
+        list($data['result'], $data['tanggal']) = $this->laporan->searchLaporanPendapatan($this->input->post());
+        $this->load->view('laporan/V_LaporanPendapatanResult', $data);
+    }
 }

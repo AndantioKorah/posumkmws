@@ -246,7 +246,7 @@
                                 ->get()->row_array();
 
             $data = $this->input->post();
-            $kembalian = floatval(clearString($transaksi['total_pembayaran'])) - floatval($data['total_harga']);
+            $kembalian = floatval(clearString($data['total_pembayaran'])) - floatval($transaksi['total_harga']);
 
             $this->db->insert('t_pembayaran', [
                 'id_t_transaksi' => $id,
@@ -308,7 +308,26 @@
             }
 
             return $rs;
+        }
 
+        public function loadListPengeluaran($data){
+            $tanggal = explodeRangeDate($data['range_tanggal']);
+            return $this->db->select('*')
+                            ->from('t_pengeluaran')
+                            ->where('tanggal_transaksi >=', $tanggal[0].' 00:00:00')
+                            ->where('tanggal_transaksi <=', $tanggal[1].' 23:59:59')
+                            ->where('id_m_merchant', $this->general_library->getIdMerchant())
+                            ->where('flag_active', 1)
+                            ->order_by('tanggal_transaksi', 'desc')
+                            ->get()->result_array();
+        }
+
+        public function deleteTransaksiPengeluaran($id){
+            $this->db->where('id', $id)
+                    ->update('t_pengeluaran', [
+                        'flag_active' => 0,
+                        'updated_by' => $this->general_library->getId()
+                    ]);
         }
 
 	}

@@ -104,4 +104,25 @@ class C_Kasir extends CI_Controller
     public function deleteTransaksi($id){
         echo json_encode($this->kasir->deleteTransaksi($id));
     }
+
+    public function pengeluaran(){
+        render('kasir/V_Pengeluaran', '', '', null);
+    }
+
+    public function createTransaksiPengeluaran(){
+        $data = $this->input->post();
+        $data['nominal'] = clearString($data['nominal']);
+        $data['id_m_merchant'] = $this->general_library->getIdMerchant();
+        $data['created_by'] = $this->general_library->getId();
+        $this->general->insert('t_pengeluaran', $data);
+    }
+
+    public function loadListPengeluaran(){
+        $data['result'] = $this->kasir->loadListPengeluaran($this->input->post());
+        $this->load->view('kasir/V_PengeluaranList', $data);
+    }
+
+    public function deleteTransaksiPengeluaran($id){
+        $this->kasir->deleteTransaksiPengeluaran($id);
+    }
 }

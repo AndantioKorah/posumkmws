@@ -12,9 +12,11 @@ $route['master/bahan-baku'] = 'master/C_Master/masterBahanBaku';
 
 //website
 $route['kasir'] = 'kasir/C_Kasir/kasir';
+$route['pengeluaran'] = 'kasir/C_Kasir/pengeluaran';
 //laporan
 $route['laporan/penjualan'] = 'laporan/C_Laporan/laporanPenjualan';
 $route['laporan/stock/opname'] = 'laporan/C_Laporan/stockOpname';
+$route['laporan/pendapatan'] = 'laporan/C_Laporan/laporanPendapatan';
 
 
 //api
