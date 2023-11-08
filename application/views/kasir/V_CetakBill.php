@@ -50,7 +50,7 @@
                 color: black;
             }
 
-            .val_nama_menu{
+            .val_nama_menu_bill{
                 font-size: .8rem;
                 font-weight: 500;
                 color: black;
@@ -176,7 +176,7 @@
                 <?php foreach($detail as $d){ ?>
                     <tr>
                         <td style="width: 70%;">
-                            <span class="val_nama_menu"><?=$d['nama_menu_merchant']?></span><br>
+                            <span class="val_nama_menu_bill"><?=$d['nama_menu_merchant']?></span><br>
                             <span class="val_qty_menu"><?=formatCurrencyWithoutRp($d['qty']).' x '.formatCurrencyWithoutRp($d['harga'])?></span>
                         </td>
                         <td style="width: 30%; text-align: right; vertical-align: bottom;">

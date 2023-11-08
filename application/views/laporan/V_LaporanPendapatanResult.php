@@ -81,7 +81,8 @@
                         <td class="text-center"><?=formatDateNamaBulan($r['tanggal_transaksi'], 1)?></td>
                         <td class="text-center">
                             <span style="font-weight: bold; font-size: 1rem;" class="description-percentage <?=isset($r['status_transaksi']) ? $r['status_transaksi'] == 'Lunas' ? 'text-success' : 'text-warning' : 'text-danger'?>">
-                            <i class="fas <?=isset($r['status_transaksi']) ? $r['status_transaksi'] == 'Lunas' ? 'fa-caret-up' : 'fa-caret-left' : 'fa-caret-down'?> "></i> <?=formatCurrency($r['nominal'])?></span>
+                            <!-- <i class="fas <?=isset($r['status_transaksi']) ? $r['status_transaksi'] == 'Lunas' ? 'fa-chevron-circle-up' : 'fa-circle' : 'fa-chevron-circle-up'?> "></i> <?=formatCurrency($r['nominal'])?></span> -->
+                            <i class="fas <?=isset($r['status_transaksi']) ? $r['status_transaksi'] == 'Lunas' ? 'fa-caret-up' : 'fa-minus' : 'fa-caret-down'?> "></i> <?=formatCurrency($r['nominal'])?></span>
                         </td>
                     </tr>
                 <?php } } ?>
