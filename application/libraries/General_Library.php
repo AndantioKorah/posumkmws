@@ -235,7 +235,8 @@ class General_library
             $res = 0;
         }
         if($res == 1){
-            $current_url = substr($_SERVER["REDIRECT_QUERY_STRING"], 1, strlen($_SERVER["REDIRECT_QUERY_STRING"])-1);
+            // $current_url = substr($_SERVER["REDIRECT_QUERY_STRING"], 1, strlen($_SERVER["REDIRECT_QUERY_STRING"])-1);
+            $current_url = substr($_SERVER["REQUEST_URI"], 11, strlen($_SERVER["REQUEST_URI"])-1);
             $allowed_list_url = $this->nikita->session->userdata('list_url');
             $url_exist = $this->nikita->session->userdata('list_exist_url');
             $allowed_list_url['welcome'] = 'welcome';
@@ -358,6 +359,19 @@ class General_library
     public function getIdMerchant(){
         // $this->userLoggedIn = $this->nikita->session->userdata('user_logged_in');
         return $this->userLoggedIn['id_m_merchant'];
+    }
+
+    public function getLogoMerchant(){
+        // return base_url('assets/logo_merchant/'.$this->userLoggedIn['logo_merchant']);
+        // if ($this->userLoggedIn['logo_merchant'] != null && file_exists(base_url('assets/logo_merchant/'.$this->userLoggedIn['logo_merchant']))) {
+        //     return base_url('assets/logo_merchant/'.$this->userLoggedIn['logo_merchant']);
+        // } else {
+            return base_url('assets/img/logo-putih-biru.png');
+        // }
+    }
+
+    public function getNamaMerchant(){
+        return $this->userLoggedIn['nama_merchant'];
     }
 
     public function getExpDateMerchant(){

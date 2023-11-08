@@ -57,7 +57,7 @@
 
         public function authenticate($username, $password)
         {
-            $this->db->select('a.*, a.nama as nama_user, b.expire_date')
+            $this->db->select('a.*, a.nama as nama_user, b.expire_date, b.logo as logo_merchant, b.nama_merchant')
                         ->from('m_user a')
                         ->join('m_merchant b', 'a.id_m_merchant = b.id')
                         ->where('a.username', $username)

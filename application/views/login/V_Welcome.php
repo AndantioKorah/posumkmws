@@ -61,6 +61,10 @@
         <img class="img-circle elevation-2" id="profile_pict" style="max-width: 100px; max-height: 100px;" src="<?=$this->general_library->getProfilePicture()?>" alt="User Image">
       </div>
       <div class="col-sm-10 col-md-10 col-lg-11">
+        <?php 
+          // dd(file_exists(base_url('assets/logo_merchant/'.$this->general_library->userLoggedIn['logo_merchant'])));
+          // dd($this->general_library->userLoggedIn['logo_merchant']);
+        ?>
         <h3>Welcome to <?=TITLE_SECOND?></h3>
         <h4><strong><?=$this->general_library->getNamaUser();?></strong></h4>
         <h6><strong>Expired Date: <?=formatDateNamaBulan($this->general_library->getExpDateMerchant())?></strong></h6>
