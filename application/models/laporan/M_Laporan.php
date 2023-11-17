@@ -101,7 +101,7 @@
                             ->where('id_m_merchant', $this->general_library->getIdMerchant())
                             ->order_by('nama_menu_merchant')
                             ->get()->result_array();
-
+            
             foreach($menu as $m){
                 $rs['menu'][$m['id']] = $m;
                 $rs['menu'][$m['id']]['transaksi']['total'] = 0;
@@ -159,12 +159,14 @@
 
             if($transaksi_detail){
                 foreach($transaksi_detail as $td){
-                    $rs['menu'][$td['id_m_menu_merchant']]['transaksi']['total'] -= $td['qty'];
-                    $rs['menu'][$td['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($td['created_date'])]['tanggal'] = $td['created_date'];
-                    if(isset($rs['menu'][$td['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($td['created_date'])]['keluar'])){
-                        $rs['menu'][$td['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($td['created_date'])]['keluar'] += $td['qty'];
-                    } else {
-                        $rs['menu'][$td['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($td['created_date'])]['keluar'] = $td['qty'];
+                    if(isset($rs['menu'][$td['id_m_menu_merchant']])){
+                        $rs['menu'][$td['id_m_menu_merchant']]['transaksi']['total'] -= $td['qty'];
+                        $rs['menu'][$td['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($td['created_date'])]['tanggal'] = $td['created_date'];
+                        if(isset($rs['menu'][$td['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($td['created_date'])]['keluar'])){
+                            $rs['menu'][$td['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($td['created_date'])]['keluar'] += $td['qty'];
+                        } else {
+                            $rs['menu'][$td['id_m_menu_merchant']]['transaksi']['list'][formatDateOnly($td['created_date'])]['keluar'] = $td['qty'];
+                        }
                     }
                 }
             }

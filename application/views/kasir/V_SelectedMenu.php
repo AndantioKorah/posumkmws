@@ -35,6 +35,10 @@
                         <span class="val_selected_nama_menu"><?=$rs['nama_menu_merchant']?></span>
                     </div>
                     <div class="col-lg-9 col-md-9 col-sm-9 text-left">
+                        <?php if(!$pembayaran){ ?>
+                        <i onclick="minusMenu('<?=$rs['id_m_menu_merchant']?>')" style="color: grey;" class="btn-min fa fa-minus-circle"></i>
+                        <i onclick="plusMenu('<?=$rs['id_m_menu_merchant']?>')" style="color: grey;" class="btn-plus fa fa-plus-circle"></i>
+                        <?php } ?>
                         <span class="val_selected_qty"><?=$rs['qty'].' x '.formatCurrencyWithoutRp($rs['harga'])?></span>
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-3 text-right">
