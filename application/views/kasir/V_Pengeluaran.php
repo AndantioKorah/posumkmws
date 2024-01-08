@@ -17,7 +17,8 @@
                         </div>
                         <div class="col-lg-4">
                             <label>Nominal</label>
-                            <input type="number" class="form-control format_currency_this" name="nominal" id="input_nominal" />
+                            <!-- <input type="number" class="form-control format_currency_this" name="nominal" id="input_nominal" /> -->
+                            <input type="number" class="form-control" name="nominal" id="input_nominal" />
                         </div>
                         <div class="col-lg-12 mt-2 text-right">
                             <button type="submit" class="btn btn-sm btn-navy"><i class="fa fa-save"></i> Simpan</button>
@@ -60,6 +61,22 @@
         })
         $('#form_search_list_transaksi').submit()
     })
+
+
+    // function formatNumber(s) {
+    //     var parts = s.split(/,/)
+    //     , spaced = parts[0]
+    //         .split('').reverse().join('') // Reverse the string.
+    //         .match(/\d{1,3}/g).join(' ') // Join groups of 3 digits with spaces.
+    //         .split('').reverse().join(''); // Reverse it back.
+    //     return spaced + (parts[1] ? ','+parts[1] : ''); // Add the fractional part.
+    // }
+
+    // $('#input_nominal').on('keyup', function(){
+        // var $this = $(this);
+        // $this.val(formatNumber($this.val()));
+    // })
+
 
     $('#range_tanggal').on('change', function(){
         $('#form_search_list_transaksi').submit()
