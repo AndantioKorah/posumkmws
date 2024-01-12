@@ -431,6 +431,7 @@
                                     ->join('t_transaksi_detail b',' a.id = b.id_t_transaksi')
                                     ->where('a.tanggal_transaksi >=', $date.' 00:00:00')
                                     ->where('a.tanggal_transaksi <=', $date.' 23:59:59')
+                                    ->where('a.id_m_merchant', $user['id_m_merchant'])
                                     ->where('a.flag_active', 1)
                                     ->where('b.flag_active', 1)
                                     ->order_by('a.id')
